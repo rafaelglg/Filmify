@@ -11,7 +11,7 @@ import SwiftUI
 struct RafaDBPlayerApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            Dashboard()
         }
     }
 }
