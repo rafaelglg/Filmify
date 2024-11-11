@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct RafaDBPlayerApp: App {
+    let movieVM = MovieViewModel()
     var body: some Scene {
         WindowGroup {
             Dashboard()
+                .environment(movieVM)
         }
     }
 }

@@ -7,14 +7,31 @@
 
 import Foundation
 
-enum MovieEndingPath: String {
-    case nowPlaying = "now_playing"
+enum MovieEndingPath: Equatable {
+    case nowPlaying
     case upcoming
-    case topRated = "top_rated"
+    case topRated
     case day
     case week
-    
+    case id(String)
+
     var isTrendingAllow: Bool {
-        return self == .day || self == .week
+        switch self {
+        case .day, .week:
+            return true
+        default:
+            return false
+        }
+    }
+    
+    var pathValue: String {
+        switch self {
+        case .nowPlaying: return "now_playing"
+        case .upcoming: return "upcoming"
+        case .topRated: return "top_rated"
+        case .day: return "day"
+        case .week: return "week"
+        case .id(let id): return id
+        }
     }
 }

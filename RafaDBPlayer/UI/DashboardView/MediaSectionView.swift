@@ -9,6 +9,8 @@ import SwiftUI
 
 struct MediaSectionView: View {
     
+    @Environment(MovieViewModel.self) private var movieVM
+    
     let title: String
     let movie: [MovieResultResponse]
     @Binding var selectedMovie: MovieResultResponse?
@@ -32,7 +34,7 @@ struct MediaSectionView: View {
             .sheet(item: $selectedMovie) { movie in
                 MediaDetailView(movie: movie)
                     .onAppear {
-                        // fetch more detail movie
+                        movieVM.getMovieDetails(id: movie.id.description)
                     }
             }
             .presentationCornerRadius(15)
@@ -45,4 +47,5 @@ struct MediaSectionView: View {
 
 #Preview {
     MediaSectionView(title: "Movies", movie: [.preview], selectedMovie: .constant(.none))
+        .environment(MovieViewModel())
 }

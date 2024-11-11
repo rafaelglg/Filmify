@@ -11,6 +11,9 @@ import Combine
 protocol NetworkManagerProtocol: AnyObject {
     associatedtype PublisherReturn: Publisher<MovieModel, Error>
     func fetchNowPlayingMovies(basePath: String, endingPath path: MovieEndingPath) throws -> PublisherReturn
+    
+    associatedtype PublisherDetailReturn: Publisher<MovieDetailModel, Error>
+    func fetchDetailMovies(basePath: String, endingPath path: MovieEndingPath) throws -> PublisherDetailReturn
 }
 
 @Observable
@@ -44,7 +47,6 @@ final class NetworkManager: Sendable, NetworkManagerProtocol {
         let request = try handleURL(url: Utils.movieURL(basePath: basePath, endingPath: path))
         
         let publisher = URLSession.shared.dataTaskPublisher(for: request)
-            .receive(on: DispatchQueue.main)
             .tryMap(handleResponse)
             .mapError { error -> Error in
                 if (error as? URLError)?.code == .unsupportedURL {
@@ -57,5 +59,17 @@ final class NetworkManager: Sendable, NetworkManagerProtocol {
             .eraseToAnyPublisher()
         
         return publisher
+    }
+    
+    func fetchDetailMovies(basePath: String, endingPath path: MovieEndingPath) throws -> some Publisher<MovieDetailModel, Error> {
+        
+        let request = try handleURL(url: Utils.movieURL(basePath: basePath, endingPath: path))
+        
+        return URLSession.shared
+            .dataTaskPublisher(for: request)
+            .eraseToAnyPublisher()
+            .tryMap(handleResponse)
+            .decode(type: MovieDetailModel.self, decoder: Utils.jsonDecoder)
+            
     }
 }

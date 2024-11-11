@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MediaDetailView: View {
     
+    @Environment(MovieViewModel.self) private var movieVM
     let movie: MovieResultResponse
     @State private var progressButtonSelected: CGFloat = 37
     @State private var widthProgressBar: CGFloat = 140
@@ -16,22 +17,31 @@ struct MediaDetailView: View {
     
     var body: some View {
         
-        VStack(spacing: 150) {
-            ZStack(alignment: .bottom) {
-                backgroundImage
-                posterWithInfo
-            }
+        ZStack(alignment: .bottom) {
+            backgroundImage
+            posterWithInfo
+        }
+        
+        VStack(spacing: 180) {
             buttonSection
-            Spacer()
+            
+            ScrollView {
+                VStack(alignment: .leading, spacing: 30) {
+                    infoMovie
+                    statusFilm
+                    productionCompaniesTitle
+                    GridInfoCell()
+                }
+                .frame(maxWidth: UIWindow().screen.bounds.width * 0.80)
+                .frame(maxWidth: UIWindow().screen.bounds.width)
+            }
         }
     }
 }
 
 #Preview {
-    VStack {}
-        .sheet(isPresented: .constant(true)) {
-            MediaDetailView(movie: .preview)
-        }
+    MediaDetailView(movie: .preview)
+        .environment(MovieViewModel())
         .preferredColorScheme(.dark)
 }
 
@@ -45,21 +55,16 @@ extension MediaDetailView {
     
     var posterWithInfo: some View {
         HStack(alignment: .center) {
-            Spacer()
             posterImage
-            Spacer()
             movieMainDetails
         }
-        .frame(width: 350, height: 220)
-        .offset(x: -20, y: 140)
+        .frame(maxWidth: .infinity, alignment: .center)
+        .offset(y: 150) // To have the position between bgImage y buttons
     }
     
     var posterImage: some View {
-        createImage(urlImage: movie.posterURLImage, imageWidth: 120, imageHeight: UIScreen.main.bounds.height * 0.259, cornerRadius: 10)
-            .padding(4)
-            .background(.white)
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .shadow(color: .black.opacity(0.3), radius: 8)
+        createImage(urlImage: movie.posterURLImage, imageWidth: 120, imageHeight: 130, cornerRadius: 10, bgColor: true)
+            .frame(width: 140, alignment: .leading)
     }
     
     var movieMainDetails: some View {
@@ -67,49 +72,36 @@ extension MediaDetailView {
             Text(movie.title)
                 .font(.title2)
                 .fontWeight(.bold)
-                .frame(width: 150, alignment: .leading)
-            HStack {
-                Label("\(movie.releaseDate.toYear())", systemImage: "calendar")
-                Text("|")
-                Text(movie.id.description)
-                Text("|")
-                Text(movie.adult.description)
+                .frame(width: 180, alignment: .leading)
+            
+            VStack(alignment: .leading, spacing: 5) {
+                HStack(spacing: 4) {
+                    Label("\(movie.releaseDate.toYear())", systemImage: "calendar")
+                    Text("|")
+                    Label("\(movieVM.detailMovie?.runtime.description ?? "no info yet in") minutes", systemImage: "clock")
+                }
+                Label(movieVM.detailMovie?.genresFormatted ?? "no genre", systemImage: "ticket")
+                Label("revenue: \(movieVM.detailMovie?.revenueFormatted ?? "")", systemImage: "dollarsign")
             }
-            .fixedSize()
-            .font(.subheadline)
-            .foregroundStyle(.gray)
+            .font(.caption)
+            .foregroundStyle(.secondary)
         }
-        .padding(.top, 50)
     }
     
     @ViewBuilder
     var buttonSection: some View {
         VStack {
-            HStack {
-                Spacer()
-                buttonSection(title: "About movie") {
-                    
-                }
+            HStack(spacing: 50) {
+                buttonSection(title: "About movie") {}
                 
-                Spacer()
+                buttonSection(title: "Review") {}
                 
-                buttonSection(title: "Review") {
-                    
-                }
-                
-                Spacer()
-                
-                buttonSection(title: "Cast") {
-                    
-                }
-                
-                Spacer()
+                buttonSection(title: "Cast") {}
             }
-            .offset(x: -10)
-            .frame(maxWidth: .infinity)
+            .frame(maxWidth: .infinity, alignment: .center)
+            buttonSelectedBar
         }
-        buttonSelectedBar
-        
+        .offset(y: 180) // move the position of buttons
     }
     
     var buttonSelectedBar: some View {
@@ -119,24 +111,75 @@ extension MediaDetailView {
                 .opacity(0.2)
                 .frame(maxWidth: .infinity)
                 .frame(height: 4)
-                .offset(y: -130)
             
             Capsule(style: .continuous)
                 .fill(.blue)
                 .frame(width: widthProgressBar, height: 4)
-                .offset(x: progressButtonSelected, y: -130)
+                .offset(x: progressButtonSelected)
         }
+    }
+    
+    var infoMovie: some View {
+        VStack(alignment: .leading) {
+            Text(movie.overview)
+                .padding(.vertical, 25)
+            
+            Text("Spoken languages")
+                .font(.title2)
+                .bold()
+            VStack(alignment: .leading) {
+                if let detailMovie = movieVM.detailMovie {
+                    ForEach(detailMovie.spokenLanguages) { language in
+                        HStack(spacing: 5) {
+                            Text(language.countryFlag(countryCode: language.countryCodeName))
+                            Text(language.englishName)
+                        }
+                    }
+                    .font(.headline)
+                }
+            }
+        }
+    }
+    
+    var statusFilm: some View {
+        HStack {
+            let status = movieVM.detailMovie?.status
+            
+            Image(systemName: "movieclapper")
+            Text("Status film: ")
+                .font(.title2)
+                .bold()
+            
+            Text(status ?? "")
+                .font(.title3)
+                .bold()
+                .foregroundStyle(status == "Released" ? .green : .primary)
+        }
+    }
+    
+    var productionCompaniesTitle: some View {
+        Text("Production companies")
+            .font(.title2)
+            .bold()
     }
     
     // MARK: - Functions
     
-    func createImage(urlImage: URL, imageWidth: CGFloat, imageHeight: CGFloat? = nil, cornerRadius: CGFloat? = nil) -> some View {
+    func createImage(urlImage: URL, imageWidth: CGFloat, imageHeight: CGFloat? = nil, cornerRadius: CGFloat? = nil, bgColor: Bool = false) -> some View {
         AsyncImage(url: urlImage) { image in
             image.resizable()
                 .scaledToFit()
                 .frame(width: imageWidth)
                 .clipShape(RoundedRectangle(cornerRadius: cornerRadius ?? 0))
-            
+                .background(
+                    Group {
+                        if bgColor {
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(.white)
+                                .frame(width: 130, height: 190)
+                        }
+                    }
+                )
         } placeholder: {
             ProgressView()
                 .frame(width: imageWidth, height: imageHeight)

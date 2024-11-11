@@ -9,9 +9,10 @@ import SwiftUI
 
 struct Dashboard: View {
     
-    @State var movieVM = MovieViewModel()
+    @Environment(MovieViewModel.self) var movieVM
     
     var body: some View {
+        @Bindable var movieVM = movieVM
         NavigationStack {
             ScrollView {
                 
@@ -56,4 +57,5 @@ struct Dashboard: View {
 
 #Preview {
     Dashboard()
+        .environment(MovieViewModel())
 }

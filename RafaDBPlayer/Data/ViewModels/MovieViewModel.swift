@@ -17,6 +17,7 @@ final class MovieViewModel {
     var upcomingMovies: [MovieResultResponse] = []
     var trendingMoviesByDay: [MovieResultResponse] = []
     var trendingMoviesByWeek: [MovieResultResponse] = []
+    var detailMovie: MovieDetailModel?
     
     var selectedMovie: MovieResultResponse?
     var cancellable = Set<AnyCancellable>()
@@ -37,8 +38,7 @@ final class MovieViewModel {
                 .sink { [weak self] completion in
                     switch completion {
                         
-                    case .finished:
-                        break
+                    case .finished: break
                     case .failure(let error):
                         self?.alertMessage = error.localizedDescription
                     }
@@ -60,8 +60,7 @@ final class MovieViewModel {
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] completion in
                     switch completion {
-                    case .finished:
-                        break
+                    case .finished: break
                     case .failure(let error):
                         self?.alertMessage = error.localizedDescription
                     }
@@ -84,8 +83,7 @@ final class MovieViewModel {
                 .map(\.results)
                 .sink { [weak self] completion in
                     switch completion {
-                    case .finished:
-                        break
+                    case .finished: break
                     case .failure(let error):
                         self?.alertMessage = error.localizedDescription
                     }
@@ -116,16 +114,15 @@ final class MovieViewModel {
                 .map(\.results)
                 .sink { [weak self] completion in
                     switch completion {
-                    case .finished:
-                        break
+                    case .finished: break
                     case .failure(let error):
                         self?.alertMessage = error.localizedDescription
                     }
                 } receiveValue: { [weak self] moviesByTimePeriod in
                     
-                    if timePeriod == .day {
+                    if timePeriod == MovieEndingPath.day {
                         self?.trendingMoviesByDay = moviesByTimePeriod
-                    } else if timePeriod == .week {
+                    } else if timePeriod == MovieEndingPath.week {
                         self?.trendingMoviesByWeek = moviesByTimePeriod
                     }
                 }
@@ -133,6 +130,27 @@ final class MovieViewModel {
             
         } catch {
             self.alertMessage = error.localizedDescription
+        }
+    }
+    
+    func getMovieDetails(id: String?) {
+        do {
+            try networkManager.fetchDetailMovies(basePath: Constants.movieGeneralPath, endingPath: .id(id ?? "0"))
+                .eraseToAnyPublisher()
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] completion in
+                    switch completion {
+                    case .finished: break
+                    case .failure(let error):
+                        self?.alertMessage = error.localizedDescription
+                    }
+                } receiveValue: { [weak self] detailMovieResponse in
+                    self?.detailMovie = detailMovieResponse
+                }
+                .store(in: &cancellable)
+            
+        } catch {
+            
         }
     }
     

@@ -17,6 +17,6 @@ struct Utils {
     }()
     
     static func movieURL(basePath: String, endingPath: MovieEndingPath ) -> String {
-        return basePath + endingPath.rawValue
+        return basePath + endingPath.pathValue
     }
 }
