@@ -23,7 +23,7 @@ extension MovieDetailModel {
         Genres(id: 12, name: "Adventure")
     ]
     static let originCountry: [String] = ["US"]
-
+    
     static let productionCompanies: [ProductionCompanies] = [
         ProductionCompanies(id: 5, logoPath: "/wwemzKWzjKYJFfCeiB57q3r4Bcm.png", name: "Columbia Pictures", originCountry: "US"),
         ProductionCompanies(id: 84041, logoPath: "/nw4kyc29QRpNtFbdsBHkRSFavvt.png", name: "Pascal Pictures", originCountry: "US"),
@@ -37,6 +37,32 @@ extension MovieDetailModel {
     static let spokenLanguages: [SpokenLanguages] = [
         SpokenLanguages(englishName: "English", iso6391: "en", name: "English")
     ]
+}
+
+extension MovieReviewViewModel {
+    @MainActor static let preview: MovieReviewViewModel = {
+        var viewModel = MovieReviewViewModel()
+        viewModel.movieReviews = [.preview]
+        return viewModel
+    }()
+}
+
+extension MovieReviewResponse {
+    static let preview = MovieReviewResponse(author: "Rafaelglg", authorDetails: authorDetail, content: "Good stuff", createdAt: "2024-10-25T18:25:18.286Z", id: "671be28e9ff681d9e0a410bd", updatedAt: "2024-10-25T18:25:18.374Z", url: "https://www.themoviedb.org/review/671be28e9ff681d9e0a410bd")
+    
+    static let authorDetail = AuthorDetail(name: "Rafael", username: "rafaelglg", avatarPath: "/mwR7rFHoDcobAx1i61I3skzMW3U.jpg", rating: 7)
+}
+
+extension Data {
+    var html2AttributedString: NSAttributedString? {
+        do {
+            return try NSAttributedString(data: self, options: [.documentType: NSAttributedString.DocumentType.html, .characterEncoding: String.Encoding.utf8.rawValue], documentAttributes: nil)
+        } catch {
+            print("error:", error)
+            return  nil
+        }
+    }
+    var html2String: String { html2AttributedString?.string ?? "" }
 }
 
 extension String {
@@ -61,5 +87,12 @@ extension String {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy"
         return dateFormatter.string(from: date)
+    }
+    
+    var html2AttributedString: NSAttributedString? {
+        Data(utf8).html2AttributedString
+    }
+    var html2String: String {
+        html2AttributedString?.string ?? ""
     }
 }

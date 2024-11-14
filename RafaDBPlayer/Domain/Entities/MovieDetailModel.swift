@@ -55,7 +55,7 @@ struct ProductionCompanies: Decodable, Identifiable, Hashable {
     
     var logoURL: URL? {
         guard let url = URL(string: Constants.imageURL) else {
-            return URL(filePath: "No logo path")
+            return nil
         }
         
         return url.appending(path: logoPath ?? "")

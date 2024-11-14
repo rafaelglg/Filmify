@@ -17,7 +17,7 @@ final class MovieViewModel {
     var upcomingMovies: [MovieResultResponse] = []
     var trendingMoviesByDay: [MovieResultResponse] = []
     var trendingMoviesByWeek: [MovieResultResponse] = []
-    var detailMovie: MovieDetailModel?
+    var detailMovie: MovieDetailModel = .detailPreview
     
     var selectedMovie: MovieResultResponse?
     var cancellable = Set<AnyCancellable>()

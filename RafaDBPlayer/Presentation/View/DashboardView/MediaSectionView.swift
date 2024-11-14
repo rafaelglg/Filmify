@@ -10,12 +10,13 @@ import SwiftUI
 struct MediaSectionView: View {
     
     @Environment(MovieViewModel.self) private var movieVM
+    @State private var movieReviewVM = MovieReviewViewModel()
     
     let title: String
     let movie: [MovieResultResponse]
-    @Binding var selectedMovie: MovieResultResponse?
     
     var body: some View {
+        @Bindable var movieVM = movieVM
         VStack(alignment: .leading) {
             Text(title)
                 .font(.title3)
@@ -26,16 +27,13 @@ struct MediaSectionView: View {
                     ForEach(movie) { movie in
                         MovieCell(movie: movie, imageURL: movie.posterURLImage)
                             .onTapGesture {
-                                selectedMovie = movie
+                                movieVM.selectedMovie = movie
                             }
                     }
                 }
             }
-            .sheet(item: $selectedMovie) { movie in
-                MediaDetailView(movie: movie)
-                    .onAppear {
-                        movieVM.getMovieDetails(id: movie.id.description)
-                    }
+            .sheet(item: $movieVM.selectedMovie) { movie in
+                MediaDetailView(movie: movie, movieReviewVM: movieReviewVM)
             }
             .presentationCornerRadius(15)
             .scrollIndicators(.hidden)
@@ -46,6 +44,6 @@ struct MediaSectionView: View {
 }
 
 #Preview {
-    MediaSectionView(title: "Movies", movie: [.preview], selectedMovie: .constant(.none))
+    MediaSectionView(title: "Movies", movie: [.preview])
         .environment(MovieViewModel())
 }

@@ -16,11 +16,11 @@ struct Dashboard: View {
         NavigationStack {
             ScrollView {
                 
-                MediaSectionView(title: "Now in Cines", movie: movieVM.nowPlayingMovies, selectedMovie: $movieVM.selectedMovie)
-                MediaSectionView(title: "Top rated", movie: movieVM.topRatedMovies, selectedMovie: $movieVM.selectedMovie)
-                MediaSectionView(title: "Upcoming", movie: movieVM.upcomingMovies, selectedMovie: $movieVM.selectedMovie)
-                MediaSectionView(title: "Trending by day", movie: movieVM.trendingMoviesByDay, selectedMovie: $movieVM.selectedMovie)
-                MediaSectionView(title: "Trending by week", movie: movieVM.trendingMoviesByWeek, selectedMovie: $movieVM.selectedMovie)
+                MediaSectionView(title: "Now in Cines", movie: movieVM.nowPlayingMovies)
+                MediaSectionView(title: "Top rated", movie: movieVM.topRatedMovies)
+                MediaSectionView(title: "Upcoming", movie: movieVM.upcomingMovies)
+                MediaSectionView(title: "Trending by day", movie: movieVM.trendingMoviesByDay)
+                MediaSectionView(title: "Trending by week", movie: movieVM.trendingMoviesByWeek)
             }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {

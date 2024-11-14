@@ -14,6 +14,9 @@ protocol NetworkManagerProtocol: AnyObject {
     
     associatedtype PublisherDetailReturn: Publisher<MovieDetailModel, Error>
     func fetchDetailMovies(basePath: String, endingPath path: MovieEndingPath) throws -> PublisherDetailReturn
+    
+    associatedtype PublisherReviewReturn: Publisher<MovieReviewModel, Error>
+    func fetchMovieReviews(endingPath path: MovieEndingPath) throws -> PublisherReviewReturn
 }
 
 @Observable
@@ -72,4 +75,17 @@ final class NetworkManager: Sendable, NetworkManagerProtocol {
             .decode(type: MovieDetailModel.self, decoder: Utils.jsonDecoder)
             
     }
+    
+    func fetchMovieReviews(endingPath path: MovieEndingPath) throws -> some Publisher <MovieReviewModel, Error> {
+        
+        let request = try handleURL(url: Utils.movieReviewURL(id: path))
+        
+        let publisher = URLSession.shared.dataTaskPublisher(for: request)
+            .tryMap(handleResponse)
+            .decode(type: MovieReviewModel.self, decoder: Utils.jsonDecoder)
+            .eraseToAnyPublisher()
+        
+        return publisher
+    }
+    
 }
