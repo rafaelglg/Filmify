@@ -21,6 +21,25 @@ struct MovieReviewResponse: Decodable, Identifiable, Hashable {
     let id: String
     let updatedAt: String
     let url: String
+    
+    var creationDateFormatted: String {
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        
+        guard let date = isoFormatter.date(from: createdAt) else {
+            return ""
+        }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy MMM d"
+        dateFormatter.locale = .current
+        return dateFormatter.string(from: date)
+    }
+    
+    var creationDate: Date { // to have the date sort option.
+        let isoFormatter = ISO8601DateFormatter()
+        isoFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return isoFormatter.date(from: createdAt) ?? Date()
+    }
 }
 
 struct AuthorDetail: Decodable, Hashable {

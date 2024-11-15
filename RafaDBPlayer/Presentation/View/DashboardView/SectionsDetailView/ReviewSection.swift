@@ -29,6 +29,8 @@ struct ReviewSection<ImageView: View>: View {
                     VStack(alignment: .leading) {
                         authorName
                         rating
+                        Text("Date: \(review.creationDateFormatted)")
+                            .font(.caption)
                     }
                 }
                 // i'm using a dictionary to access the value from the key

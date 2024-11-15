@@ -1,5 +1,5 @@
 //
-//  NetworkManager.swift
+//  NetworkService.swift
 //  RafaDBPlayer
 //
 //  Created by Rafael Loggiodice on 6/11/24.
@@ -8,20 +8,15 @@
 import Foundation
 import Combine
 
-protocol NetworkManagerProtocol: AnyObject {
-    associatedtype PublisherReturn: Publisher<MovieModel, Error>
-    func fetchNowPlayingMovies(basePath: String, endingPath path: MovieEndingPath) throws -> PublisherReturn
+protocol NetworkServiceProtocol: AnyObject {
     
-    associatedtype PublisherDetailReturn: Publisher<MovieDetailModel, Error>
-    func fetchDetailMovies(basePath: String, endingPath path: MovieEndingPath) throws -> PublisherDetailReturn
-    
-    associatedtype PublisherReviewReturn: Publisher<MovieReviewModel, Error>
-    func fetchMovieReviews(endingPath path: MovieEndingPath) throws -> PublisherReviewReturn
+    func fetchNowPlayingMovies(basePath: String, endingPath path: MovieEndingPath) throws -> AnyPublisher<MovieModel, Error>
+    func fetchDetailMovies(basePath: String, endingPath path: MovieEndingPath) throws -> AnyPublisher<MovieDetailModel, Error>
+    func fetchMovieReviews(endingPath path: MovieEndingPath) throws -> AnyPublisher<MovieReviewModel, Error>
 }
 
-@Observable
-final class NetworkManager: Sendable, NetworkManagerProtocol {
-    static let shared = NetworkManager()
+final class NetworkService: Sendable, NetworkServiceProtocol {
+    static let shared = NetworkService()
     
     private init() {}
     
@@ -45,7 +40,7 @@ final class NetworkManager: Sendable, NetworkManagerProtocol {
         
     }
     
-    func fetchNowPlayingMovies(basePath: String, endingPath path: MovieEndingPath) throws -> some Publisher<MovieModel, Error> {
+    func fetchNowPlayingMovies(basePath: String, endingPath path: MovieEndingPath) throws -> AnyPublisher<MovieModel, Error> {
         
         let request = try handleURL(url: Utils.movieURL(basePath: basePath, endingPath: path))
         
@@ -64,19 +59,19 @@ final class NetworkManager: Sendable, NetworkManagerProtocol {
         return publisher
     }
     
-    func fetchDetailMovies(basePath: String, endingPath path: MovieEndingPath) throws -> some Publisher<MovieDetailModel, Error> {
+    func fetchDetailMovies(basePath: String, endingPath path: MovieEndingPath) throws -> AnyPublisher<MovieDetailModel, Error> {
         
         let request = try handleURL(url: Utils.movieURL(basePath: basePath, endingPath: path))
         
         return URLSession.shared
             .dataTaskPublisher(for: request)
-            .eraseToAnyPublisher()
             .tryMap(handleResponse)
             .decode(type: MovieDetailModel.self, decoder: Utils.jsonDecoder)
+            .eraseToAnyPublisher()
             
     }
     
-    func fetchMovieReviews(endingPath path: MovieEndingPath) throws -> some Publisher <MovieReviewModel, Error> {
+    func fetchMovieReviews(endingPath path: MovieEndingPath) throws -> AnyPublisher <MovieReviewModel, Error> {
         
         let request = try handleURL(url: Utils.movieReviewURL(id: path))
         

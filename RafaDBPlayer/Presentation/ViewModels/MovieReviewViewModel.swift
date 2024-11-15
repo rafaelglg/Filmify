@@ -8,23 +8,44 @@
 import Foundation
 import Combine
 
+enum RatingSortOption {
+    case lowToHight
+    case highToLow
+    case none
+}
+
+enum DateSortOption {
+    case newestFirst
+    case oldestFirst
+    case none
+}
+
 @Observable
 final class MovieReviewViewModel {
-    let networkManager: any NetworkManagerProtocol
+    private let movieReviewUsesCase: MovieReviewUsesCase
     var cancellable = Set<AnyCancellable>()
     var movieReviews = [MovieReviewResponse]()
     var htmlConvertedTexts: [String: String] = [:]
     
     var alertMessage: String = ""
-    
-    init(networkManager: any NetworkManagerProtocol = NetworkManager.shared) {
-        self.networkManager = networkManager
+    var currentSortOptions: RatingSortOption = .none {
+        didSet {
+            sortReviews()
+        }
+    }
+    var currentDateSort: DateSortOption = .none {
+        didSet {
+            sortByDate()
+        }
     }
     
-    func getMovieReviews(id: String) {
+    init(movieReviewUsesCase: MovieReviewUsesCase = MovieReviewUsesCaseImpl()) {
+        self.movieReviewUsesCase = movieReviewUsesCase
+    }
+    
+    func getReviews(id: String) {
         do {
-            try networkManager.fetchMovieReviews(endingPath: .id(id))
-                .eraseToAnyPublisher()
+            try movieReviewUsesCase.execute(from: .id(id))
                 .receive(on: DispatchQueue.main)
                 .map(\.results)
                 .sink { [weak self] completion in
@@ -32,8 +53,6 @@ final class MovieReviewViewModel {
                     case .finished:
                         break
                     case .failure(let error):
-                        print(error)
-                        print(error.localizedDescription)
                         self?.alertMessage = error.localizedDescription
                     }
                 } receiveValue: { [weak self] movieReview in
@@ -43,8 +62,6 @@ final class MovieReviewViewModel {
                 .store(in: &cancellable)
 
         } catch {
-            print(error)
-            print("entra por el catch")
             self.alertMessage = error.localizedDescription
         }
     }
@@ -62,5 +79,27 @@ final class MovieReviewViewModel {
                 self?.htmlConvertedTexts[reviewID] = text
             }
             .store(in: &cancellable)
+    }
+    
+    private func sortReviews() {
+        switch currentSortOptions {
+        case .lowToHight:
+            movieReviews.sort {$0.authorDetails.rating ?? 0 < $1.authorDetails.rating ?? 0}
+        case .highToLow:
+            movieReviews.sort {$0.authorDetails.rating ?? 0 > $1.authorDetails.rating ?? 0}
+        case .none:
+            break
+        }
+    }
+    
+    private func sortByDate() {
+        switch currentDateSort {
+        case .newestFirst:
+            movieReviews.sort {$0.creationDate > $1.creationDate}
+        case .oldestFirst:
+            movieReviews.sort {$0.creationDate < $1.creationDate}
+        case .none:
+            break
+        }
     }
 }

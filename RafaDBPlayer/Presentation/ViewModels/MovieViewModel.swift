@@ -10,7 +10,7 @@ import Combine
 
 @Observable
 final class MovieViewModel {
-    let networkManager: any NetworkManagerProtocol
+    let movieUsesCase: MovieUsesCases
     
     var nowPlayingMovies: [MovieResultResponse] = []
     var topRatedMovies: [MovieResultResponse] = []
@@ -25,28 +25,26 @@ final class MovieViewModel {
     var showProfile: Bool = false
     var alertMessage: String = ""
     
-    init(networkManager: any NetworkManagerProtocol = NetworkManager.shared) {
-        self.networkManager = networkManager
+    init(movieUsesCase: MovieUsesCases = MovieUsesCasesImpl()) {
+        self.movieUsesCase = movieUsesCase
     }
     
     func getNowPlayingMovies() {
         do {
-            try networkManager.fetchNowPlayingMovies(basePath: Constants.movieGeneralPath, endingPath: .nowPlaying)
-                .eraseToAnyPublisher()
-                .map(\.results)
+            try movieUsesCase.executeNowPlayingMovies()
                 .receive(on: DispatchQueue.main)
-                .sink { [weak self] completion in
+                .map(\.results)
+                .sink { completion in
                     switch completion {
-                        
-                    case .finished: break
+                    case .finished:
+                        break
                     case .failure(let error):
-                        self?.alertMessage = error.localizedDescription
+                        self.alertMessage = error.localizedDescription
                     }
                 } receiveValue: { [weak self] movieResponse in
                     self?.nowPlayingMovies = movieResponse
-                }
-                .store(in: &cancellable)
-            
+                }.store(in: &cancellable)
+
         } catch {
             self.alertMessage = error.localizedDescription
         }
@@ -54,31 +52,27 @@ final class MovieViewModel {
     
     func getTopRatedMovies() {
         do {
-            try networkManager.fetchNowPlayingMovies(basePath: Constants.movieGeneralPath, endingPath: .topRated)
-                .eraseToAnyPublisher()
-                .map(\.results)
+            try movieUsesCase.executeTopRatedMovies()
                 .receive(on: DispatchQueue.main)
+                .map(\.results)
                 .sink { [weak self] completion in
                     switch completion {
-                    case .finished: break
+                    case .finished:
+                        break
                     case .failure(let error):
                         self?.alertMessage = error.localizedDescription
                     }
                 } receiveValue: { [weak self] ratedMovies in
                     self?.topRatedMovies = ratedMovies
-                }
-                .store(in: &cancellable)
-            
+                }.store(in: &cancellable)
         } catch {
-            
             self.alertMessage = error.localizedDescription
-            
         }
     }
     
     func getUpcomingMovies() {
         do {
-            try networkManager.fetchNowPlayingMovies(basePath: Constants.movieGeneralPath, endingPath: .upcoming)
+            try movieUsesCase.executeUpcomingMovies()
                 .eraseToAnyPublisher()
                 .map(\.results)
                 .sink { [weak self] completion in
@@ -108,7 +102,7 @@ final class MovieViewModel {
         }
         
         do {
-            try networkManager.fetchNowPlayingMovies(basePath: Constants.trendingMovies, endingPath: timePeriod)
+            try movieUsesCase.executeTrendingMovies(timePeriod: timePeriod)
                 .eraseToAnyPublisher()
                 .receive(on: DispatchQueue.main)
                 .map(\.results)
@@ -135,7 +129,7 @@ final class MovieViewModel {
     
     func getMovieDetails(id: String?) {
         do {
-            try networkManager.fetchDetailMovies(basePath: Constants.movieGeneralPath, endingPath: .id(id ?? "0"))
+            try movieUsesCase.executeDetailMovies(id: id ?? "0")
                 .eraseToAnyPublisher()
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] completion in
@@ -150,7 +144,7 @@ final class MovieViewModel {
                 .store(in: &cancellable)
             
         } catch {
-            
+            self.alertMessage = error.localizedDescription
         }
     }
     

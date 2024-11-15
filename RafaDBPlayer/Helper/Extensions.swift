@@ -41,7 +41,7 @@ extension MovieDetailModel {
 
 extension MovieReviewViewModel {
     @MainActor static let preview: MovieReviewViewModel = {
-        var viewModel = MovieReviewViewModel()
+        var viewModel = MovieReviewViewModel(movieReviewUsesCase: MovieReviewUsesCaseImpl() )
         viewModel.movieReviews = [.preview]
         return viewModel
     }()

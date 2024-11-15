@@ -12,6 +12,7 @@ struct MediaDetailView: View {
     @Environment(MovieViewModel.self) private var movieVM
     let movie: MovieResultResponse
     let movieReviewVM: MovieReviewViewModel
+    
     @State private var progressButtonSelected: CGFloat = 37
     @State private var widthProgressBar: CGFloat = 140
     @State private var selectedButton: LocalizedStringKey = ""
@@ -45,7 +46,7 @@ struct MediaDetailView: View {
         }
         .onAppear {
             movieVM.getMovieDetails(id: movie.id.description)
-            movieReviewVM.getMovieReviews(id: movie.id.description)
+            movieReviewVM.getReviews(id: movie.id.description)
         }
     }
 }
@@ -103,12 +104,24 @@ extension MediaDetailView {
     
     var filterButtonMenu: some View {
         Menu {
-            Button("Sort rating (Low to High)") {
-                print("Ordenando de menor a mayor calificación")
+            Menu("Sort by Rating") {
+                Button("Low to High") {
+                    movieReviewVM.currentSortOptions = .lowToHight
+                }
+                Button("High to Low") {
+                    movieReviewVM.currentSortOptions = .highToLow
+                }
             }
-            Button("Sort rating (High to Low)") {
-                print("Ordenando de mayor a menor calificación")
+            
+            Menu("Sort by Date") {
+                Button("Newest") {
+                    movieReviewVM.currentDateSort = .newestFirst
+                }
+                Button("Oldest") {
+                    movieReviewVM.currentDateSort = .oldestFirst
+                }
             }
+
         } label: {
             Circle()
                 .fill(.pink.opacity(0.20))
