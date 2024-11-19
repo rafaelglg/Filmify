@@ -16,7 +16,9 @@ struct MediaDetailView: View {
     
     @State private var progressButtonSelected: CGFloat = 37
     @State private var widthProgressBar: CGFloat = 140
-    @State private var selectedButton: LocalizedStringKey = ""
+    @State private var selectedButton: String = ""
+    @State private var buttonPositions: [String: CGFloat] = [:]
+
     @State private var sectionSelected: SectionSelected = .aboutMovie
     
     var body: some View {
@@ -237,6 +239,9 @@ extension MediaDetailView {
             buttonSelectedBar
         }
         .offset(y: 180) // move the position of buttons in vertical
+        .onAppear {
+            updateProgressBarPosition()
+        }
     }
     
     var buttonSelectedBar: some View {
@@ -338,16 +343,28 @@ extension MediaDetailView {
     /// - Parameters:
     ///   - title: title of button
     ///   - geometry: injected from func buttonSection
-    func updateWidthAndPositionIfNeeded(for title: LocalizedStringKey, geometry: GeometryProxy) {
+    func updateWidthAndPositionIfNeeded(for title: String, geometry: GeometryProxy) {
         let buttonWidth = geometry.size.width
-        withAnimation {
-            widthProgressBar = buttonWidth + 20
+        DispatchQueue.main.async {
+            buttonPositions[title] = geometry.frame(in: .global).midX
+            if title == selectedButton {
+                withAnimation {
+                    widthProgressBar = buttonWidth + 20
+                    progressButtonSelected = geometry.frame(in: .global).midX - (widthProgressBar / 2)
+                }
+            }
+        }
+    }
 
-            progressButtonSelected = geometry.frame(in: .global).midX - (widthProgressBar / 2)
+    func updateProgressBarPosition() {
+        if let midX = buttonPositions[selectedButton] {
+            withAnimation {
+                progressButtonSelected = midX - (widthProgressBar / 2)
+            }
         }
     }
     
-    func buttonSection(title: LocalizedStringKey, action: @escaping () -> Void) -> some View {
+    func buttonSection(title: String, action: @escaping () -> Void) -> some View {
         Button {
             action()
             selectedButton = title
