@@ -53,6 +53,27 @@ extension MovieReviewResponse {
     static let authorDetail = AuthorDetail(name: "Rafael", username: "rafaelglg", avatarPath: "/mwR7rFHoDcobAx1i61I3skzMW3U.jpg", rating: 7)
 }
 
+extension CastModel {
+    static let preview = CastModel(id: 1, cast: CastResponseModel.preview, crew: CrewResponseModel.preview)
+}
+
+extension CastResponseModel {
+    static let preview = [
+        CastResponseModel(adult: false, gender: 11, id: 12, knownForDepartment: "", name: "Rafa", originalName: "Rafael", popularity: 20.00, profilePath: "/gVICVa6IypG6BMLsPhscrYICptn.jpg", castId: 10, character: "", creditId: "", order: 1),
+        CastResponseModel(adult: false, gender: 11, id: 12, knownForDepartment: "", name: "Rafa", originalName: "Rafael", popularity: 20.00, profilePath: "/fGVOikpvivopeATDy6ZzLdKYXDu.jpg", castId: 10, character: "", creditId: "", order: 1),
+        CastResponseModel(adult: false, gender: 11, id: 12, knownForDepartment: "", name: "Rafa", originalName: "Rafael", popularity: 20.00, profilePath: "", castId: 10, character: "", creditId: "", order: 1),
+        CastResponseModel(adult: false, gender: 11, id: 12, knownForDepartment: "", name: "Rafa", originalName: "Rafael", popularity: 20.00, profilePath: "", castId: 10, character: "", creditId: "", order: 1)
+        ]
+}
+
+extension CrewResponseModel {
+    static let preview = [
+        CrewResponseModel(adult: false, gender: 0, id: 12, knownForDepartment: "Science", name: "Jose", originalName: "Joseph", popularity: 19.22, profilePath: "/j9qXEqOsZENCqni8WzGH6pXginJ.jpg", creditId: "", department: "", job: "Science Fiction"),
+        CrewResponseModel(adult: false, gender: 0, id: 12, knownForDepartment: "Science", name: "Jose", originalName: "Joseph", popularity: 19.22, profilePath: "", creditId: "", department: "", job: "Science Fiction"),
+        CrewResponseModel(adult: false, gender: 0, id: 12, knownForDepartment: "Science", name: "Jose", originalName: "Joseph", popularity: 19.22, profilePath: "", creditId: "", department: "", job: "Science Fiction")
+        ]
+}
+
 extension Data {
     var html2AttributedString: NSAttributedString? {
         do {
@@ -94,5 +115,13 @@ extension String {
     }
     var html2String: String {
         html2AttributedString?.string ?? ""
+    }
+}
+
+extension Array {
+    /// This extension is because i had a error in the console saying that i have repetead ID in the models, so this help me to remove the repetitive ID in the foreach
+    func uniqued<T: Hashable>(by keyPath: KeyPath<Element, T>) -> [Element] {
+        var seen = Set<T>()
+        return filter { seen.insert($0[keyPath: keyPath]).inserted }
     }
 }

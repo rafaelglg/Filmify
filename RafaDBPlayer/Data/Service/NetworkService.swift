@@ -11,8 +11,12 @@ import Combine
 protocol NetworkServiceProtocol: AnyObject {
     
     func fetchNowPlayingMovies(basePath: String, endingPath path: MovieEndingPath) throws -> AnyPublisher<MovieModel, Error>
+    
     func fetchDetailMovies(basePath: String, endingPath path: MovieEndingPath) throws -> AnyPublisher<MovieDetailModel, Error>
+    
     func fetchMovieReviews(endingPath path: MovieEndingPath) throws -> AnyPublisher<MovieReviewModel, Error>
+    
+    func fetchCastMembers<T: Decodable>(endingPath path: MovieEndingPath) throws -> AnyPublisher<T, Error>
 }
 
 final class NetworkService: Sendable, NetworkServiceProtocol {
@@ -73,7 +77,7 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
     
     func fetchMovieReviews(endingPath path: MovieEndingPath) throws -> AnyPublisher <MovieReviewModel, Error> {
         
-        let request = try handleURL(url: Utils.movieReviewURL(id: path))
+        let request = try handleURL(url: Utils.movieURL(id: path, endingPath: .reviews))
         
         let publisher = URLSession.shared.dataTaskPublisher(for: request)
             .tryMap(handleResponse)
@@ -83,4 +87,14 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
         return publisher
     }
     
+    func fetchCastMembers<T: Decodable>(endingPath path: MovieEndingPath) throws -> AnyPublisher<T, Error> {
+        
+        let request = try handleURL(url: Utils.movieURL(id: path, endingPath: .castMembers))
+        
+        return URLSession.shared
+            .dataTaskPublisher(for: request)
+            .tryMap(handleResponse)
+            .decode(type: T.self, decoder: Utils.jsonDecoder)
+            .eraseToAnyPublisher()
+    }
 }

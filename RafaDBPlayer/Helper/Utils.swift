@@ -20,7 +20,7 @@ struct Utils {
         return basePath + endingPath.pathValue
     }
     
-    static func movieReviewURL(id: MovieEndingPath) -> String {
-        return "https://api.themoviedb.org/3/movie/\(id.pathValue)/reviews"
+    static func movieURL(id: MovieEndingPath, endingPath: MovieEndingPath) -> String {
+        return Constants.movieGeneralPath + id.pathValue + "/" + endingPath.pathValue
     }
 }

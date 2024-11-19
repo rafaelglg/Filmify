@@ -12,6 +12,7 @@ struct MediaDetailView: View {
     @Environment(MovieViewModel.self) private var movieVM
     let movie: MovieResultResponse
     let movieReviewVM: MovieReviewViewModel
+    let castMembersVM: MovieCastMembersViewModel
     
     @State private var progressButtonSelected: CGFloat = 37
     @State private var widthProgressBar: CGFloat = 140
@@ -19,40 +20,42 @@ struct MediaDetailView: View {
     @State private var sectionSelected: SectionSelected = .aboutMovie
     
     var body: some View {
-        
-        ZStack(alignment: .bottom) {
-            backgroundImage
-            posterWithInfo
-        }
-        
-        VStack(spacing: 180) {
-            buttonSection
-            
-            ScrollView {
-                VStack(alignment: .leading, spacing: 30) {
-                    switch sectionSelected {
-                    case .aboutMovie:
-                        aboutMovieInfo
-                    case .review:
-                        reviewInfo
-                    case .cast:
-                        Color.blue
-                    }
-                }
-                .frame(maxWidth: UIWindow().screen.bounds.width * 0.80)
-                .frame(maxWidth: UIWindow().screen.bounds.width)
+        NavigationStack {
+            ZStack(alignment: .bottom) {
+                backgroundImage
+                posterWithInfo
             }
-            .scrollIndicators(.hidden)
-        }
-        .onAppear {
-            movieVM.getMovieDetails(id: movie.id.description)
-            movieReviewVM.getReviews(id: movie.id.description)
+            
+            VStack(spacing: 180) {
+                buttonSection
+                
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 30) {
+                        switch sectionSelected {
+                        case .aboutMovie:
+                            aboutMovieInfo
+                        case .review:
+                            reviewInfo
+                        case .cast:
+                            castInfoSection
+                        }
+                    }
+                    .frame(maxWidth: UIWindow().screen.bounds.width * 0.80)
+                    .frame(maxWidth: UIWindow().screen.bounds.width)
+                }
+                .scrollIndicators(.hidden)
+            }
+            .onAppear {
+                movieVM.getMovieDetails(id: movie.id.description)
+                movieReviewVM.getReviews(id: movie.id.description)
+                castMembersVM.getCastMembers(id: movie.id.description)
+            }
         }
     }
 }
 
 #Preview {
-    MediaDetailView(movie: .preview, movieReviewVM: .preview)
+    MediaDetailView(movie: .preview, movieReviewVM: .preview, castMembersVM: MovieCastMembersViewModel())
         .environment(MovieViewModel())
         .preferredColorScheme(.dark)
 }
@@ -102,6 +105,42 @@ extension MediaDetailView {
         }
     }
     
+    @ViewBuilder
+    var castInfoSection: some View {
+        LazyVStack(alignment: .leading) {
+            Text("Actors")
+                .font(.title)
+                .bold()
+                .padding(.leading, 5)
+            ForEach(castMembersVM.castModel.cast.uniqued(by: \.id), id: \.id) { cast in
+                NavigationLink(value: cast) {
+                    CastSectionView(cast: cast, crew: nil)
+                        .foregroundStyle(.white)
+                }
+            }
+            
+            Text("Crew")
+                .font(.title)
+                .bold()
+                .padding(.leading, 5)
+            ForEach(castMembersVM.castModel.crew.uniqued(by: \.id), id: \.id) { crew in
+                NavigationLink(value: crew) {
+                    CastSectionView(cast: nil, crew: crew)
+                        .foregroundStyle(.white)
+                }
+            }
+        }
+        .padding(.top)
+        
+        .navigationDestination(for: CastResponseModel.self) { cast in
+            Text(cast.name)
+        }
+        .navigationDestination(for: CrewResponseModel.self) { crew in
+            Text(crew.profileImageURL.absoluteString)
+            Text(crew.name)
+        }
+    }
+    
     var filterButtonMenu: some View {
         Menu {
             Menu("Sort by Rating") {
@@ -121,7 +160,7 @@ extension MediaDetailView {
                     movieReviewVM.currentDateSort = .oldestFirst
                 }
             }
-
+            
         } label: {
             Circle()
                 .fill(.pink.opacity(0.20))
@@ -195,10 +234,9 @@ extension MediaDetailView {
                     sectionSelected = .cast
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .center)
             buttonSelectedBar
         }
-        .offset(y: 180) // move the position of buttons
+        .offset(y: 180) // move the position of buttons in vertical
     }
     
     var buttonSelectedBar: some View {
@@ -212,7 +250,7 @@ extension MediaDetailView {
             Capsule(style: .continuous)
                 .fill(.blue)
                 .frame(width: widthProgressBar, height: 4)
-                .offset(x: progressButtonSelected)
+                .offset(x: progressButtonSelected) // Move the blue bar horizontal
         }
     }
     
@@ -304,6 +342,7 @@ extension MediaDetailView {
         let buttonWidth = geometry.size.width
         withAnimation {
             widthProgressBar = buttonWidth + 20
+
             progressButtonSelected = geometry.frame(in: .global).midX - (widthProgressBar / 2)
         }
     }
@@ -321,11 +360,15 @@ extension MediaDetailView {
                 .background(
                     GeometryReader { geometry in
                         Color.clear.onAppear {
-                            updateWidthAndPositionIfNeeded(for: title, geometry: geometry)
+                            DispatchQueue.main.async {
+                                updateWidthAndPositionIfNeeded(for: title, geometry: geometry)
+                            }
                         }
                         .onChange(of: selectedButton) { _, newValue in
                             if newValue == title {
-                                updateWidthAndPositionIfNeeded(for: title, geometry: geometry)
+                                DispatchQueue.main.async {
+                                    updateWidthAndPositionIfNeeded(for: title, geometry: geometry)
+                                }
                             }
                         }
                     }

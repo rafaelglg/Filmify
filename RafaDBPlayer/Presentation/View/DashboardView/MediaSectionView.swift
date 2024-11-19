@@ -11,6 +11,7 @@ struct MediaSectionView: View {
     
     @Environment(MovieViewModel.self) private var movieVM
     @State private var movieReviewVM = MovieReviewViewModel()
+    @State private var castMemberVM = MovieCastMembersViewModel()
     
     let title: String
     let movie: [MovieResultResponse]
@@ -33,7 +34,7 @@ struct MediaSectionView: View {
                 }
             }
             .sheet(item: $movieVM.selectedMovie) { movie in
-                MediaDetailView(movie: movie, movieReviewVM: movieReviewVM)
+                MediaDetailView(movie: movie, movieReviewVM: movieReviewVM, castMembersVM: castMemberVM)
             }
             .presentationCornerRadius(15)
             .scrollIndicators(.hidden)

@@ -8,11 +8,86 @@
 import SwiftUI
 
 struct CastSectionView: View {
+    let cast: CastResponseModel?
+    let crew: CrewResponseModel?
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack(alignment: .center, spacing: 10) {
+            
+            if cast?.profilePath ?? crew?.profilePath != nil {
+                let imageURL = cast?.imageURL ?? crew?.profileImageURL
+                AsyncImage(url: imageURL) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 80, height: 80)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(Color.white, lineWidth: 2))
+                } placeholder: {
+                    ProgressView()
+                        .frame(width: 80, height: 80)
+                        .background(Color.gray)
+                        .clipShape(Circle())
+                    
+                }
+            } else {
+                noImageLogo
+            }
+            
+            LazyVStack(alignment: .leading, spacing: 5) {
+                if let character = cast?.character {
+                    Text(character)
+                        .font(.headline)
+                        .bold()
+                        .lineLimit(1)
+                } else if let job = crew?.job {
+                    Text(job)
+                        .font(.headline)
+                        .bold()
+                        .lineLimit(1)
+                }
+                
+                if let name = cast?.name ?? crew?.name {
+                    Text(name)
+                        .font(.subheadline)
+                        .lineLimit(1)
+                }
+                
+                if let department = cast?.knownForDepartment ?? crew?.department {
+                    Text(department)
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+            }
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .foregroundColor(.white)
+        }
+        .padding(10)
+        .cornerRadius(8)
     }
 }
 
 #Preview {
-    CastSectionView()
+    
+    @Previewable let combineData = Array(zip(CastResponseModel.preview, CrewResponseModel.preview))
+    
+    ForEach(combineData, id: \.0.id) { cast, crew  in
+        CastSectionView(cast: cast, crew: crew)
+            .padding()
+    }
+    .preferredColorScheme(.dark)
+}
+
+extension CastSectionView {
+    var noImageLogo: some View {
+        ZStack(alignment: .center) {
+            Circle()
+            Text("no image")
+                .foregroundStyle(Color(.black))
+                .font(.caption)
+        }
+        .frame(width: 80, height: 80)
+    }
 }
