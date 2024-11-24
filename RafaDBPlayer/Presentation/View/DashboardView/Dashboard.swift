@@ -12,7 +12,6 @@ struct Dashboard: View {
     @Environment(MovieViewModel.self) var movieVM
     
     var body: some View {
-        @Bindable var movieVM = movieVM
         NavigationStack {
             ScrollView {
                 

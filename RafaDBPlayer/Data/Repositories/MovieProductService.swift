@@ -9,7 +9,7 @@ import Combine
 
 protocol MovieProductService {
     func fetchMoviesProducts(basePath: String, endingPath: MovieEndingPath) throws -> AnyPublisher<MovieModel, Error>
-    func fetchDetailMovie(basePath: String, endingPath: MovieEndingPath) throws -> AnyPublisher<MovieDetailModel, Error>
+    func fetchDetailMovie(id: MovieEndingPath, endingPath: [MovieEndingPath]) throws -> AnyPublisher<MovieDetails, Error>
 }
 
 final class MovieProductServiceImpl: MovieProductService {
@@ -23,8 +23,8 @@ final class MovieProductServiceImpl: MovieProductService {
         return try networkService.fetchNowPlayingMovies(basePath: basePath, endingPath: endingPath)
     }
     
-    func fetchDetailMovie(basePath: String, endingPath: MovieEndingPath) throws -> AnyPublisher<MovieDetailModel, Error> {
-        return try networkService.fetchDetailMovies(basePath: basePath, endingPath: endingPath)
+    func fetchDetailMovie(id: MovieEndingPath, endingPath: [MovieEndingPath]) throws -> AnyPublisher<MovieDetails, Error> {
+        return try networkService.fetchDetailMovies(id: id, endingPath: endingPath)
     }
     
 }

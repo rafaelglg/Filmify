@@ -39,18 +39,17 @@ struct CastSectionView: View {
                     Text(character)
                         .font(.headline)
                         .bold()
-                        .lineLimit(1)
+                        .multilineTextAlignment(.leading)
                 } else if let job = crew?.job {
                     Text(job)
                         .font(.headline)
                         .bold()
-                        .lineLimit(1)
+                        .multilineTextAlignment(.leading)
                 }
                 
                 if let name = cast?.name ?? crew?.name {
                     Text(name)
                         .font(.subheadline)
-                        .lineLimit(1)
                 }
                 
                 if let department = cast?.knownForDepartment ?? crew?.department {

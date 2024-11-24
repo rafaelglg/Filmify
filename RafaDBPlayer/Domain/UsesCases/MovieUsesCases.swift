@@ -12,7 +12,7 @@ protocol MovieUsesCases {
     func executeTopRatedMovies() throws -> AnyPublisher<MovieModel, Error>
     func executeUpcomingMovies() throws -> AnyPublisher<MovieModel, Error>
     func executeTrendingMovies(timePeriod: MovieEndingPath) throws -> AnyPublisher<MovieModel, Error>
-    func executeDetailMovies(id: String) throws -> AnyPublisher<MovieDetailModel, any Error>
+    func executeDetailMovies(id: String) throws -> AnyPublisher<MovieDetails, any Error>
 }
 
 final class MovieUsesCasesImpl: MovieUsesCases {
@@ -40,8 +40,8 @@ final class MovieUsesCasesImpl: MovieUsesCases {
         return try repository.fetchMoviesProducts(basePath: Constants.trendingMovies, endingPath: timePeriod)
     }
     
-    func executeDetailMovies(id: String) throws -> AnyPublisher<MovieDetailModel, any Error> {
-        return try repository.fetchDetailMovie(basePath: Constants.movieGeneralPath, endingPath: .id(id))
+    func executeDetailMovies(id: String) throws -> AnyPublisher<MovieDetails, Error> {
+        return try repository.fetchDetailMovie(id: .id(id), endingPath: [.videos])
     }
     
 }

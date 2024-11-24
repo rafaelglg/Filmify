@@ -8,7 +8,8 @@
 import Combine
 
 protocol MovieCastMemberUsesCase {
-    func execute(from path: MovieEndingPath) throws -> AnyPublisher<CastModel, Error>
+    func executeCastMembers(from path: MovieEndingPath) throws -> AnyPublisher<CastModel, Error>
+    func executePersonDetail(from path: MovieEndingPath) throws -> AnyPublisher<PersonDetailModel, Error>
 }
 
 final class MoviecasMemberUsesCaseImpl: MovieCastMemberUsesCase {
@@ -18,7 +19,11 @@ final class MoviecasMemberUsesCaseImpl: MovieCastMemberUsesCase {
         self.repository = repository
     }
     
-    func execute(from path: MovieEndingPath) throws -> AnyPublisher<CastModel, Error> {
+    func executeCastMembers(from path: MovieEndingPath) throws -> AnyPublisher<CastModel, Error> {
         return try repository.fetchMovieCastMembers(from: path)
+    }
+    
+    func executePersonDetail(from path: MovieEndingPath) throws -> AnyPublisher<PersonDetailModel, Error> {
+        return try repository.fetchPersonDetailInfo(from: path)
     }
 }

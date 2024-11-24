@@ -19,27 +19,25 @@ struct ReviewSection<ImageView: View>: View {
     }
     
     var body: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 20) {
-                HStack {
-                    if review.authorDetails.avatarPath == nil {
-                        noImageLogo
-                    }
-                    image
-                    VStack(alignment: .leading) {
-                        authorName
-                        rating
-                        Text("Date: \(review.creationDateFormatted)")
-                            .font(.caption)
-                    }
+        LazyVStack(alignment: .leading, spacing: 20) {
+            LazyHStack {
+                if review.authorDetails.avatarPath == nil {
+                    noImageLogo
                 }
-                // i'm using a dictionary to access the value from the key
-                Text(movieReviewVM.htmlConvertedTexts[review.id] ?? "")
+                image
+                VStack(alignment: .leading) {
+                    authorName
+                    rating
+                    Text("Date: \(review.creationDateFormatted)")
+                        .font(.caption)
+                }
             }
-            .onAppear {
-                // this is used because some content from reviews has HTML tags.
-                movieReviewVM.sinkHTML2String(for: review.id, text: review.content)
-            }
+            // i'm using a dictionary to access the value from the key
+            Text(movieReviewVM.htmlConvertedTexts[review.id] ?? "")
+        }
+        .onAppear {
+            // this is used because some content from reviews has HTML tags.
+            movieReviewVM.sinkHTML2String(for: review.id, text: review.content)
         }
         .padding(.top)
     }

@@ -1,14 +1,13 @@
 //
-//  MovieDetailModel.swift
+//  MovieDetails.swift
 //  RafaDBPlayer
 //
 //  Created by Rafael Loggiodice on 9/11/24.
 //
 
 import Foundation
-import SwiftUICore
 
-struct MovieDetailModel: Decodable, Identifiable, Hashable {
+struct MovieDetails: Decodable, Identifiable {
     let adult: Bool
     let backdropPath: String
     let budget: Int
@@ -27,6 +26,7 @@ struct MovieDetailModel: Decodable, Identifiable, Hashable {
     let status: String
     let tagline: String
     let video: Bool
+    let videos: VideoResponse
     
     var revenueFormatted: String {
         if revenue == 0 {
@@ -40,6 +40,23 @@ struct MovieDetailModel: Decodable, Identifiable, Hashable {
             .map { $0.name }
             .joined(separator: ", ") // to have the names outside of the array and separated by ", "
     }
+}
+
+struct VideoResponse: Decodable {
+    let results: [ResultVideoMovies]
+}
+
+struct ResultVideoMovies: Decodable, Identifiable {
+    let iso6391: String
+    let iso31661: String
+    let name: String
+    let key: String
+    let site: String
+    let size: Int
+    let type: String
+    let official: Bool
+    let publishedAt: String
+    let id: String
 }
 
 struct Genres: Decodable, Identifiable, Hashable {

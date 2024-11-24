@@ -9,6 +9,7 @@ import Combine
 
 protocol CastMembersService {
     func fetchMovieCastMembers(from path: MovieEndingPath) throws -> AnyPublisher<CastModel, Error>
+    func fetchPersonDetailInfo(from path: MovieEndingPath) throws -> AnyPublisher <PersonDetailModel, Error>
 }
 
 final class CastMembersServiceImpl: CastMembersService {
@@ -19,6 +20,10 @@ final class CastMembersServiceImpl: CastMembersService {
     }
     
     func fetchMovieCastMembers(from path: MovieEndingPath) throws -> AnyPublisher<CastModel, Error> {
-        return try networkService.fetchCastMembers(endingPath: path)
+        return try networkService.fetchCastMembers(baseURL: Constants.movieGeneralPath, id: path, endingPath: .castMembers)
+    }
+    
+    func fetchPersonDetailInfo(from path: MovieEndingPath) throws -> AnyPublisher <PersonDetailModel, Error> {
+        return try networkService.fetchCastMembers(baseURL: Constants.personDetail, id: path, endingPath: .none )
     }
 }

@@ -17,12 +17,13 @@ final class MovieViewModel {
     var upcomingMovies: [MovieResultResponse] = []
     var trendingMoviesByDay: [MovieResultResponse] = []
     var trendingMoviesByWeek: [MovieResultResponse] = []
-    var detailMovie: MovieDetailModel = .detailPreview
+    var detailMovie: MovieDetails = .preview
     
     var selectedMovie: MovieResultResponse?
     var cancellable = Set<AnyCancellable>()
     
     var showProfile: Bool = false
+    var isLoading: Bool = false
     var alertMessage: String = ""
     
     init(movieUsesCase: MovieUsesCases = MovieUsesCasesImpl()) {
@@ -128,11 +129,17 @@ final class MovieViewModel {
     }
     
     func getMovieDetails(id: String?) {
+        isLoading = true
         do {
             try movieUsesCase.executeDetailMovies(id: id ?? "0")
                 .eraseToAnyPublisher()
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] completion in
+                    
+                    defer {
+                        self?.isLoading = false
+                    }
+                    
                     switch completion {
                     case .finished: break
                     case .failure(let error):
@@ -144,6 +151,7 @@ final class MovieViewModel {
                 .store(in: &cancellable)
             
         } catch {
+            isLoading = false
             self.alertMessage = error.localizedDescription
         }
     }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import WebKit
 
 struct MediaDetailView: View {
     
@@ -49,8 +50,6 @@ struct MediaDetailView: View {
             }
             .onAppear {
                 movieVM.getMovieDetails(id: movie.id.description)
-                movieReviewVM.getReviews(id: movie.id.description)
-                castMembersVM.getCastMembers(id: movie.id.description)
             }
         }
     }
@@ -71,17 +70,29 @@ extension MediaDetailView {
         statusFilm
         productionCompaniesTitle
         GridInfoCell()
+        
+        Text("Movie trailer")
+            .font(.title2)
+            .bold()
+        
+        let firstMovieKey = movieVM.detailMovie.videos.results.filter({$0.type == "Trailer"}).first?.key ?? ""
+        
+        WebViewWrapper(videoID: firstMovieKey) // Replace with your video ID
+            .frame(height: 250)
+            .cornerRadius(10)
     }
     
+    @ViewBuilder
     var reviewInfo: some View {
-        HStack(alignment: .top) {
-            
-            if movieReviewVM.movieReviews.isEmpty {
-                ContentUnavailableView("No review for this movie", systemImage: "pencil.slash", description: Text("Be the first one to leave a review"))
-                    .padding(.top, 80)
-            } else {
-                
-                VStack(alignment: .leading) {
+        if movieReviewVM.isLoading {
+            ProgressView()
+                .frame(width: 60, height: 100, alignment: .center)
+        } else if movieReviewVM.movieReviews.isEmpty {
+            ContentUnavailableView("No review for this movie", systemImage: "pencil.slash", description: Text("Be the first one to leave a review"))
+                .padding(.top, 80)
+        } else {
+            HStack(alignment: .top) {
+                LazyVStack(alignment: .leading) {
                     
                     ForEach(movieReviewVM.movieReviews) { review in
                         ReviewSection(review: review, movieReviewVM: movieReviewVM) {
@@ -113,11 +124,13 @@ extension MediaDetailView {
             Text("Actors")
                 .font(.title)
                 .bold()
-                .padding(.leading, 5)
+                .padding(.leading, 10)
             ForEach(castMembersVM.castModel.cast.uniqued(by: \.id), id: \.id) { cast in
                 NavigationLink(value: cast) {
-                    CastSectionView(cast: cast, crew: nil)
-                        .foregroundStyle(.white)
+                    ZStack {
+                        CastSectionView(cast: cast, crew: nil)
+                            .foregroundStyle(.white)
+                    }
                 }
             }
             
@@ -135,11 +148,29 @@ extension MediaDetailView {
         .padding(.top)
         
         .navigationDestination(for: CastResponseModel.self) { cast in
-            Text(cast.name)
+            ZStack {
+                if castMembersVM.isLoading {
+                    ProgressView()
+                } else {
+                    PersonDetailView(person: cast, personDetail: castMembersVM.personDetail)
+                }
+            }
+            .onAppear {
+                castMembersVM.getPersonDetailInfo(id: cast.id.description)
+            }
         }
+        
         .navigationDestination(for: CrewResponseModel.self) { crew in
-            Text(crew.profileImageURL.absoluteString)
-            Text(crew.name)
+            ZStack {
+                if castMembersVM.isLoading {
+                    ProgressView()
+                } else {
+                    PersonDetailView(person: crew, personDetail: castMembersVM.personDetail)
+                }
+            }
+            .onAppear {
+                castMembersVM.getPersonDetailInfo(id: crew.id.description)
+            }
         }
     }
     
@@ -230,10 +261,12 @@ extension MediaDetailView {
                 
                 buttonSection(title: "Review") {
                     sectionSelected = .review
+                    movieReviewVM.getReviews(id: movie.id.description)
                 }
                 
                 buttonSection(title: "Cast") {
                     sectionSelected = .cast
+                    castMembersVM.getCastMembers(id: movie.id.description)
                 }
             }
             buttonSelectedBar
@@ -390,6 +423,32 @@ extension MediaDetailView {
                         }
                     }
                 )
+        }
+    }
+}
+
+struct WebViewWrapper: UIViewRepresentable {
+    let videoID: String
+
+    func makeUIView(context: Context) -> WKWebView {
+
+        let configuration = WKWebViewConfiguration()
+        configuration.defaultWebpagePreferences.allowsContentJavaScript = true
+        configuration.allowsInlineMediaPlayback = false // to maximize after clicking in video
+        configuration.mediaTypesRequiringUserActionForPlayback = [.video]
+
+        let webView = WKWebView(frame: .zero, configuration: configuration)
+        return webView
+    }
+
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        guard let youtubeURL = URL(string: "https://www.youtube.com/embed/\(videoID)") else {
+            print("URL inválida")
+            return
+        }
+
+        if uiView.url != youtubeURL {
+            uiView.load(URLRequest(url: youtubeURL))
         }
     }
 }

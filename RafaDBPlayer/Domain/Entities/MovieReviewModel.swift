@@ -7,8 +7,7 @@
 
 import Foundation
 
-struct MovieReviewModel: Decodable, Identifiable, Hashable {
-    let id: Int
+struct MovieReviewModel: Decodable, Hashable {
     let page: Int
     let results: [MovieReviewResponse]
 }

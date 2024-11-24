@@ -28,6 +28,8 @@ final class MovieReviewViewModel {
     var htmlConvertedTexts: [String: String] = [:]
     
     var alertMessage: String = ""
+    var isLoading: Bool = false
+    
     var currentSortOptions: RatingSortOption = .none {
         didSet {
             sortReviews()
@@ -44,11 +46,17 @@ final class MovieReviewViewModel {
     }
     
     func getReviews(id: String) {
+        isLoading = true
         do {
             try movieReviewUsesCase.execute(from: .id(id))
                 .receive(on: DispatchQueue.main)
                 .map(\.results)
                 .sink { [weak self] completion in
+                    
+                    defer {
+                        self?.isLoading = false
+                    }
+                    
                     switch completion {
                     case .finished:
                         break
@@ -57,6 +65,7 @@ final class MovieReviewViewModel {
                     }
                 } receiveValue: { [weak self] movieReview in
                     self?.movieReviews = movieReview
+                    print(movieReview)
                 }
                 .store(in: &cancellable)
 

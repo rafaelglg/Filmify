@@ -10,9 +10,22 @@
 		532C42DA2CDB99C40031E732 /* RafaDBPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RafaDBPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		539B983B2CF2049400F75C81 /* Exceptions for "RafaDBPlayer" folder in "RafaDBPlayer" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 532C42D92CDB99C40031E732 /* RafaDBPlayer */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		532C42DC2CDB99C40031E732 /* RafaDBPlayer */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				539B983B2CF2049400F75C81 /* Exceptions for "RafaDBPlayer" folder in "RafaDBPlayer" target */,
+			);
 			path = RafaDBPlayer;
 			sourceTree = "<group>";
 		};
@@ -282,6 +295,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RafaDBPlayer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RafaDBPlayer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -315,6 +329,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RafaDBPlayer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = RafaDBPlayer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

@@ -16,6 +16,8 @@ enum MovieEndingPath: Equatable {
     case id(String)
     case castMembers
     case reviews
+    case videos
+    case none
 
     var isTrendingAllow: Bool {
         switch self {
@@ -36,6 +38,8 @@ enum MovieEndingPath: Equatable {
         case .id(let id): return id
         case .castMembers: return "credits"
         case .reviews: return "reviews"
+        case .videos: return "videos"
+        case .none: return ""
         }
     }
 }

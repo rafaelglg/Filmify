@@ -13,9 +13,9 @@ extension MovieResultResponse {
     static let preview: MovieResultResponse = MovieResultResponse(id: 1, adult: false, backdropPath: "/9oYdz5gDoIl8h67e3ccv3OHtmm2.jpg", originalLanguage: "ES", originalTitle: "Batman The Last Dance in the year of hero", overview: "batman es un superheroe muy bueno", popularity: 8.99, posterPath: "/lqoMzCcZYEFK729d6qzt349fB4o.jpg", releaseDate: "2024-09-10", title: "Batman title", video: false, voteAverage: 8.9, voteCount: 9)
 }
 
-extension MovieDetailModel {
+extension MovieDetails {
     // swiftlint:disable:next line_length
-    static let detailPreview: MovieDetailModel = MovieDetailModel(adult: false, backdropPath: "vq340s8DxA5Q209FT8PHA6CXYOx.jpg", budget: 120000000, genres: genres, homepage: "https://venom.movie", id: 912649, imdbId: "tt16366836", originCountry: originCountry, originalLanguage: "en", posterPath: "aosm8NMQ3UyoBVpSxyimorCQykC.jpg", productionCompanies: productionCompanies, productionCountries: productionCountries, runtime: 109, revenue: 150000, spokenLanguages: spokenLanguages, status: "Released", tagline: "'Til death do they part.", video: false)
+    static let preview = MovieDetails(adult: false, backdropPath: "vq340s8DxA5Q209FT8PHA6CXYOx.jpg", budget: 120000000, genres: genres, homepage: "https://venom.movie", id: 912649, imdbId: "tt16366836", originCountry: originCountry, originalLanguage: "en", posterPath: "aosm8NMQ3UyoBVpSxyimorCQykC.jpg", productionCompanies: productionCompanies, productionCountries: productionCountries, runtime: 109, revenue: 150000, spokenLanguages: spokenLanguages, status: "Released", tagline: "'Til death do they part.", video: false, videos: videos)
     
     static let genres: [Genres] = [
         Genres(id: 878, name: "Science Fiction"),
@@ -36,6 +36,13 @@ extension MovieDetailModel {
     
     static let spokenLanguages: [SpokenLanguages] = [
         SpokenLanguages(englishName: "English", iso6391: "en", name: "English")
+    ]
+    
+    static let videos = VideoResponse(results: results)
+    
+    static let results = [
+        ResultVideoMovies(iso6391: "En", iso31661: "en", name: "movie", key: "key", site: "youtube", size: 1080, type: "video", official: true, publishedAt: "", id: "123"),
+        ResultVideoMovies(iso6391: "En", iso31661: "en", name: "movie", key: "key", site: "youtube", size: 1080, type: "video", official: true, publishedAt: "", id: "123")
     ]
 }
 
@@ -59,19 +66,25 @@ extension CastModel {
 
 extension CastResponseModel {
     static let preview = [
-        CastResponseModel(adult: false, gender: 11, id: 12, knownForDepartment: "", name: "Rafa", originalName: "Rafael", popularity: 20.00, profilePath: "/gVICVa6IypG6BMLsPhscrYICptn.jpg", castId: 10, character: "", creditId: "", order: 1),
+        // swiftlint:disable:next line_length
+        CastResponseModel(adult: false, gender: 11, id: 12, knownForDepartment: "Acting", name: "Rafa", originalName: "Rafael", popularity: 20.00, profilePath: "/gVICVa6IypG6BMLsPhscrYICptn.jpg", castId: 10, character: "Shelter Official", creditId: "", order: 1),
         CastResponseModel(adult: false, gender: 11, id: 12, knownForDepartment: "", name: "Rafa", originalName: "Rafael", popularity: 20.00, profilePath: "/fGVOikpvivopeATDy6ZzLdKYXDu.jpg", castId: 10, character: "", creditId: "", order: 1),
         CastResponseModel(adult: false, gender: 11, id: 12, knownForDepartment: "", name: "Rafa", originalName: "Rafael", popularity: 20.00, profilePath: "", castId: 10, character: "", creditId: "", order: 1),
         CastResponseModel(adult: false, gender: 11, id: 12, knownForDepartment: "", name: "Rafa", originalName: "Rafael", popularity: 20.00, profilePath: "", castId: 10, character: "", creditId: "", order: 1)
-        ]
+    ]
 }
 
 extension CrewResponseModel {
     static let preview = [
         CrewResponseModel(adult: false, gender: 0, id: 12, knownForDepartment: "Science", name: "Jose", originalName: "Joseph", popularity: 19.22, profilePath: "/j9qXEqOsZENCqni8WzGH6pXginJ.jpg", creditId: "", department: "", job: "Science Fiction"),
-        CrewResponseModel(adult: false, gender: 0, id: 12, knownForDepartment: "Science", name: "Jose", originalName: "Joseph", popularity: 19.22, profilePath: "", creditId: "", department: "", job: "Science Fiction"),
+        CrewResponseModel(adult: false, gender: 0, id: 12, knownForDepartment: "Science", name: "Jose", originalName: "Joseph", popularity: 19.22, profilePath: "", creditId: "", department: "Visual Effects", job: "VFX Artist"),
         CrewResponseModel(adult: false, gender: 0, id: 12, knownForDepartment: "Science", name: "Jose", originalName: "Joseph", popularity: 19.22, profilePath: "", creditId: "", department: "", job: "Science Fiction")
-        ]
+    ]
+}
+
+extension PersonDetailModel {
+    // swiftlint:disable:next line_length
+    static let preview = PersonDetailModel(alsoKnownAs: ["마가렛 퀄리", "マーガレット・クアリー", "Sarah Margaret Qualley", "Маргарет Кволлі"], biography: "Sarah Margaret Qualley (born October 23, 1994). Edward Thomas Hardy CBE (born 15 September 1977) is an English actor, producer, writer and former model. After studying acting at the Drama Centre London, he made his film debut in Ridley Scott\'s Black Hawk Down (2001). He has since been nominated for the Academy Award for Best Supporting Actor", birthday: "", deathday: "", gender: 1, homepage: "", id: 1, imdbId: "", knownForDepartment: "Acting", name: "Margaret", placeOfBirth: "", popularity: 1.1)
 }
 
 extension Data {

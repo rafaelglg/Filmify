@@ -34,7 +34,13 @@ struct MediaSectionView: View {
                 }
             }
             .sheet(item: $movieVM.selectedMovie) { movie in
-                MediaDetailView(movie: movie, movieReviewVM: movieReviewVM, castMembersVM: castMemberVM)
+                ZStack {
+                    if movieVM.isLoading {
+                        ProgressView()
+                    } else {
+                        MediaDetailView(movie: movie, movieReviewVM: movieReviewVM, castMembersVM: castMemberVM)
+                    }
+                }
             }
             .presentationCornerRadius(15)
             .scrollIndicators(.hidden)
