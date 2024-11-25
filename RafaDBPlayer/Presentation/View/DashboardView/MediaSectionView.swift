@@ -29,18 +29,13 @@ struct MediaSectionView: View {
                         MovieCell(movie: movie, imageURL: movie.posterURLImage)
                             .onTapGesture {
                                 movieVM.selectedMovie = movie
+                                movieVM.getMovieDetails(id: movie.id.description)
                             }
                     }
                 }
             }
             .sheet(item: $movieVM.selectedMovie) { movie in
-                ZStack {
-                    if movieVM.isLoading {
-                        ProgressView()
-                    } else {
-                        MediaDetailView(movie: movie, movieReviewVM: movieReviewVM, castMembersVM: castMemberVM)
-                    }
-                }
+                MediaDetailView(movie: movie, movieReviewVM: movieReviewVM, castMembersVM: castMemberVM)
             }
             .presentationCornerRadius(15)
             .scrollIndicators(.hidden)

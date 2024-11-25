@@ -49,7 +49,6 @@ struct MediaDetailView: View {
                 .scrollIndicators(.hidden)
             }
             .onAppear {
-                movieVM.getMovieDetails(id: movie.id.description)
                 castMembersVM.getCastMembers(id: movie.id.description)
             }
             .onDisappear {

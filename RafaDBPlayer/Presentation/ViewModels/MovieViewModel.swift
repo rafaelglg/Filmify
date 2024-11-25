@@ -135,15 +135,16 @@ final class MovieViewModel {
                 .eraseToAnyPublisher()
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] completion in
+                    guard let self else { return }
                     
                     defer {
-                        self?.isLoading = false
+                        self.isLoading = false
                     }
                     
                     switch completion {
                     case .finished: break
                     case .failure(let error):
-                        self?.alertMessage = error.localizedDescription
+                        self.alertMessage = error.localizedDescription
                     }
                 } receiveValue: { [weak self] detailMovieResponse in
                     self?.detailMovie = detailMovieResponse
