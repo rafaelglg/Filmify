@@ -65,7 +65,6 @@ final class MovieReviewViewModel {
                     }
                 } receiveValue: { [weak self] movieReview in
                     self?.movieReviews = movieReview
-                    print(movieReview)
                 }
                 .store(in: &cancellable)
 

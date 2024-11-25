@@ -11,9 +11,10 @@ import Combine
 @Observable
 final class MovieCastMembersViewModel {
     let castMemberUseCase: MovieCastMemberUsesCase
-    var castModel: CastModel = .preview
+    var castModel: CastModel?
     var personDetail: PersonDetailModel = .preview
-    var isLoading: Bool = false
+    var isLoadingCastMembers: Bool = false
+    var isLoadingPersonDetail: Bool = false
 
     var cancellable = Set<AnyCancellable>()
     
@@ -22,7 +23,7 @@ final class MovieCastMembersViewModel {
     }
     
     func getCastMembers(id: String) {
-        isLoading = true
+        isLoadingCastMembers = true
         
         do {
             try castMemberUseCase.executeCastMembers(from: .id(id))
@@ -30,16 +31,15 @@ final class MovieCastMembersViewModel {
                 .sink { [weak self] completion in
                     guard let self else { return }
                     defer {
-                        isLoading = false
+                        isLoadingCastMembers = false
                     }
                     switch completion {
                     case .finished: break
                     case .failure(let error):
-                        print(error)
                         print(error.localizedDescription)
                     }
                 } receiveValue: { [weak self] cast in
-                    self?.castModel = cast
+                    self?.castModel = cast                    
                 }.store(in: &cancellable)
 
         } catch {
@@ -48,7 +48,7 @@ final class MovieCastMembersViewModel {
     }
     
     func getPersonDetailInfo(id: String) {
-        isLoading = true
+        isLoadingPersonDetail = true
         do {
             try castMemberUseCase.executePersonDetail(from: .id(id))
                 .receive(on: DispatchQueue.main)
@@ -56,7 +56,7 @@ final class MovieCastMembersViewModel {
                     guard let self else { return }
                     
                     defer {
-                        isLoading = false
+                        isLoadingPersonDetail = false
                     }
                     
                     switch completion {
@@ -68,7 +68,6 @@ final class MovieCastMembersViewModel {
                     }
                 } receiveValue: { [weak self] person in
                     self?.personDetail = person
-                    print(person)
                 }.store(in: &cancellable)
 
         } catch {

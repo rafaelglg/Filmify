@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import WebKit
 
 struct MediaDetailView: View {
     
@@ -19,6 +18,7 @@ struct MediaDetailView: View {
     @State private var widthProgressBar: CGFloat = 140
     @State private var selectedButton: String = ""
     @State private var buttonPositions: [String: CGFloat] = [:]
+    @State private var isLoading: Bool = true
 
     @State private var sectionSelected: SectionSelected = .aboutMovie
     
@@ -77,9 +77,17 @@ extension MediaDetailView {
         
         let firstMovieKey = movieVM.detailMovie.videos.results.filter({$0.type == "Trailer"}).first?.key ?? ""
         
-        WebViewWrapper(videoID: firstMovieKey) // Replace with your video ID
-            .frame(height: 250)
-            .cornerRadius(10)
+        LazyVStack {
+            ZStack {
+                WebViewWrapper(videoID: firstMovieKey, isLoading: $isLoading)
+                    .frame(height: 300)
+                    .cornerRadius(10)
+                
+                if isLoading {
+                    ProgressView()
+                }
+            }
+        }
     }
     
     @ViewBuilder
@@ -120,56 +128,69 @@ extension MediaDetailView {
     
     @ViewBuilder
     var castInfoSection: some View {
-        LazyVStack(alignment: .leading) {
-            Text("Actors")
-                .font(.title)
-                .bold()
-                .padding(.leading, 10)
-            ForEach(castMembersVM.castModel.cast.uniqued(by: \.id), id: \.id) { cast in
-                NavigationLink(value: cast) {
-                    ZStack {
-                        CastSectionView(cast: cast, crew: nil)
-                            .foregroundStyle(.white)
+        
+        if castMembersVM.isLoadingCastMembers {
+            ProgressView()
+                .frame(width: 60, height: 100, alignment: .center)
+        } else {
+            
+            LazyVStack(alignment: .leading) {
+                Text("Actors")
+                    .font(.title)
+                    .bold()
+                    .padding(.leading, 10)
+                
+                if let castMembers = castMembersVM.castModel?.cast {
+                    ForEach(castMembers.uniqued(by: \.id), id: \.id) { cast in
+                        NavigationLink(value: cast) {
+                            CastSectionView(cast: cast, crew: nil)
+                                .foregroundStyle(.white)
+                        }
+                    }
+                }
+                
+                Text("Crew")
+                    .font(.title)
+                    .bold()
+                    .padding(.leading, 5)
+                
+                if let crewMembers = castMembersVM.castModel?.crew.uniqued(by: \.id) {
+                    
+                    ForEach(crewMembers, id: \.id) { crew in
+                        
+                        NavigationLink(value: crew) {
+                            CastSectionView(cast: nil, crew: crew)
+                                .foregroundStyle(.white)
+                        }
                     }
                 }
             }
+            .padding(.top)
             
-            Text("Crew")
-                .font(.title)
-                .bold()
-                .padding(.leading, 5)
-            ForEach(castMembersVM.castModel.crew.uniqued(by: \.id), id: \.id) { crew in
-                NavigationLink(value: crew) {
-                    CastSectionView(cast: nil, crew: crew)
-                        .foregroundStyle(.white)
+            .navigationDestination(for: CastResponseModel.self) { cast in
+                ZStack {
+                    if castMembersVM.isLoadingPersonDetail {
+                        ProgressView()
+                    } else {
+                        PersonDetailView(person: cast, personDetail: castMembersVM.personDetail)
+                    }
+                }
+                .onAppear {
+                    castMembersVM.getPersonDetailInfo(id: cast.id.description)
                 }
             }
-        }
-        .padding(.top)
-        
-        .navigationDestination(for: CastResponseModel.self) { cast in
-            ZStack {
-                if castMembersVM.isLoading {
-                    ProgressView()
-                } else {
-                    PersonDetailView(person: cast, personDetail: castMembersVM.personDetail)
+            
+            .navigationDestination(for: CrewResponseModel.self) { crew in
+                ZStack {
+                    if castMembersVM.isLoadingPersonDetail {
+                        ProgressView()
+                    } else {
+                        PersonDetailView(person: crew, personDetail: castMembersVM.personDetail)
+                    }
                 }
-            }
-            .onAppear {
-                castMembersVM.getPersonDetailInfo(id: cast.id.description)
-            }
-        }
-        
-        .navigationDestination(for: CrewResponseModel.self) { crew in
-            ZStack {
-                if castMembersVM.isLoading {
-                    ProgressView()
-                } else {
-                    PersonDetailView(person: crew, personDetail: castMembersVM.personDetail)
+                .onAppear {
+                    castMembersVM.getPersonDetailInfo(id: crew.id.description)
                 }
-            }
-            .onAppear {
-                castMembersVM.getPersonDetailInfo(id: crew.id.description)
             }
         }
     }
@@ -252,6 +273,7 @@ extension MediaDetailView {
         }
     }
     
+    // MARK: - Button Section
     var buttonSection: some View {
         VStack {
             HStack(spacing: 50) {
@@ -423,32 +445,6 @@ extension MediaDetailView {
                         }
                     }
                 )
-        }
-    }
-}
-
-struct WebViewWrapper: UIViewRepresentable {
-    let videoID: String
-
-    func makeUIView(context: Context) -> WKWebView {
-
-        let configuration = WKWebViewConfiguration()
-        configuration.defaultWebpagePreferences.allowsContentJavaScript = true
-        configuration.allowsInlineMediaPlayback = false // to maximize after clicking in video
-        configuration.mediaTypesRequiringUserActionForPlayback = [.video]
-
-        let webView = WKWebView(frame: .zero, configuration: configuration)
-        return webView
-    }
-
-    func updateUIView(_ uiView: WKWebView, context: Context) {
-        guard let youtubeURL = URL(string: "https://www.youtube.com/embed/\(videoID)") else {
-            print("URL inválida")
-            return
-        }
-
-        if uiView.url != youtubeURL {
-            uiView.load(URLRequest(url: youtubeURL))
         }
     }
 }
