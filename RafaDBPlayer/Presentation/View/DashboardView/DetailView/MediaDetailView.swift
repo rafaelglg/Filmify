@@ -50,6 +50,10 @@ struct MediaDetailView: View {
             }
             .onAppear {
                 movieVM.getMovieDetails(id: movie.id.description)
+                castMembersVM.getCastMembers(id: movie.id.description)
+            }
+            .onDisappear {
+                movieReviewVM.onDisappear()
             }
         }
     }
@@ -128,69 +132,62 @@ extension MediaDetailView {
     
     @ViewBuilder
     var castInfoSection: some View {
-        
-        if castMembersVM.isLoadingCastMembers {
-            ProgressView()
-                .frame(width: 60, height: 100, alignment: .center)
-        } else {
+        LazyVStack(alignment: .leading) {
+            Text("Actors")
+                .font(.title)
+                .bold()
+                .padding(.leading, 10)
             
-            LazyVStack(alignment: .leading) {
-                Text("Actors")
-                    .font(.title)
-                    .bold()
-                    .padding(.leading, 10)
-                
-                if let castMembers = castMembersVM.castModel?.cast {
-                    ForEach(castMembers.uniqued(by: \.id), id: \.id) { cast in
-                        NavigationLink(value: cast) {
-                            CastSectionView(cast: cast, crew: nil)
-                                .foregroundStyle(.white)
-                        }
+            if let castMembers = castMembersVM.castModel?.cast {
+                ForEach(castMembers.uniqued(by: \.id), id: \.id) { cast in
+                    NavigationLink(value: cast) {
+                        CastSectionView(cast: cast, crew: nil)
+                            .foregroundStyle(.white)
                     }
                 }
+            }
+            
+            Text("Crew")
+                .font(.title)
+                .bold()
+                .padding(.leading, 5)
+            
+            if let crewMembers = castMembersVM.castModel?.crew.uniqued(by: \.id) {
                 
-                Text("Crew")
-                    .font(.title)
-                    .bold()
-                    .padding(.leading, 5)
-                
-                if let crewMembers = castMembersVM.castModel?.crew.uniqued(by: \.id) {
+                ForEach(crewMembers, id: \.id) { crew in
                     
-                    ForEach(crewMembers, id: \.id) { crew in
-                        
-                        NavigationLink(value: crew) {
-                            CastSectionView(cast: nil, crew: crew)
-                                .foregroundStyle(.white)
-                        }
+                    NavigationLink(value: crew) {
+                        CastSectionView(cast: nil, crew: crew)
+                            .foregroundStyle(.white)
                     }
                 }
             }
-            .padding(.top)
-            
-            .navigationDestination(for: CastResponseModel.self) { cast in
-                ZStack {
-                    if castMembersVM.isLoadingPersonDetail {
-                        ProgressView()
-                    } else {
-                        PersonDetailView(person: cast, personDetail: castMembersVM.personDetail)
-                    }
-                }
-                .onAppear {
-                    castMembersVM.getPersonDetailInfo(id: cast.id.description)
+        }
+        .padding(.top)
+        
+        .navigationDestination(for: CastResponseModel.self) { cast in
+            ZStack {
+                if castMembersVM.isLoadingPersonDetail {
+                    ProgressView()
+                } else {
+                    PersonDetailView(person: cast, personDetail: castMembersVM.personDetail)
                 }
             }
-            
-            .navigationDestination(for: CrewResponseModel.self) { crew in
-                ZStack {
-                    if castMembersVM.isLoadingPersonDetail {
-                        ProgressView()
-                    } else {
-                        PersonDetailView(person: crew, personDetail: castMembersVM.personDetail)
-                    }
+            .onAppear {
+                castMembersVM.getPersonDetailInfo(id: cast.id.description)
+            }
+        }
+        
+        .navigationDestination(for: CrewResponseModel.self) { crew in
+            ZStack {
+                if castMembersVM.isLoadingPersonDetail {
+                    ProgressView()
+                } else {
+                    PersonDetailView(person: crew, personDetail: castMembersVM.personDetail)
                 }
-                .onAppear {
-                    castMembersVM.getPersonDetailInfo(id: crew.id.description)
-                }
+            }
+            .onAppear {
+                castMembersVM.getPersonDetailInfo(id: crew.id.description)
             }
         }
     }
@@ -283,12 +280,14 @@ extension MediaDetailView {
                 
                 buttonSection(title: "Review") {
                     sectionSelected = .review
-                    movieReviewVM.getReviews(id: movie.id.description)
+                    
+                    if movieReviewVM.movieReviews.isEmpty {
+                        movieReviewVM.getReviews(id: movie.id.description)
+                    }
                 }
                 
                 buttonSection(title: "Cast") {
                     sectionSelected = .cast
-                    castMembersVM.getCastMembers(id: movie.id.description)
                 }
             }
             buttonSelectedBar

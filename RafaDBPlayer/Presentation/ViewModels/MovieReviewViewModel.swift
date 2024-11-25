@@ -109,4 +109,9 @@ final class MovieReviewViewModel {
             break
         }
     }
+    
+    func onDisappear() {
+        movieReviews = []
+        htmlConvertedTexts = [:]
+    }
 }
