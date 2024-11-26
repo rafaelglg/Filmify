@@ -12,6 +12,7 @@ struct Dashboard: View {
     @Environment(MovieViewModel.self) var movieVM
     
     var body: some View {
+        @Bindable var movieVM = movieVM
         NavigationStack {
             ZStack {
                 ScrollView {
@@ -21,6 +22,9 @@ struct Dashboard: View {
                     MediaSectionView(title: "Upcoming", movie: movieVM.upcomingMovies)
                     MediaSectionView(title: "Trending by day", movie: movieVM.trendingMoviesByDay)
                     MediaSectionView(title: "Trending by week", movie: movieVM.trendingMoviesByWeek)
+                }
+                .sheet(isPresented: $movieVM.showProfile) {
+                    RafaView()
                 }
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
@@ -52,21 +56,7 @@ struct Dashboard: View {
                 }
                 .preferredColorScheme(.dark)
                 
-                if movieVM.isLoading {
-                    Color.black.opacity(0.5) // Fondo oscuro semitransparente
-                        .ignoresSafeArea()
-                    
-                    VStack {
-                        ProgressView()
-                            .frame(width: 80, height: 80)
-                            .cornerRadius(8)
-                            .padding(.bottom, 10)
-                        
-                        Text("Please wait...")
-                            .font(.callout)
-                            .foregroundColor(.white)
-                    }
-                }
+                progressView
             }
         }
     }
@@ -75,4 +65,26 @@ struct Dashboard: View {
 #Preview {
     Dashboard()
         .environment(MovieViewModel())
+}
+
+extension Dashboard {
+    
+    @ViewBuilder
+    var progressView: some View {
+        if movieVM.isLoading {
+            Color.black.opacity(0.5)
+                .ignoresSafeArea()
+            
+            VStack {
+                ProgressView()
+                    .frame(width: 80, height: 80)
+                    .cornerRadius(8)
+                    .padding(.bottom, 10)
+                
+                Text("Please wait...")
+                    .font(.callout)
+                    .foregroundColor(.white)
+            }
+        }
+    }
 }
