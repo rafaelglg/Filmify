@@ -253,7 +253,7 @@ extension MediaDetailView {
             VStack(alignment: .leading, spacing: 5) {
                 HStack(spacing: 4) {
                     Label("\(movie.releaseDate.toYear())", systemImage: "calendar")
-                    Text("|")
+                    Text(verbatim: "|")
                     Label("\(movieVM.detailMovie.runtime.description) minutes", systemImage: "clock")
                 }
                 Label {

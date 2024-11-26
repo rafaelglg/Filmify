@@ -13,7 +13,7 @@ struct MediaSectionView: View {
     @State private var movieReviewVM = MovieReviewViewModel()
     @State private var castMemberVM = MovieCastMembersViewModel()
     
-    let title: String
+    let title: LocalizedStringKey
     let movie: [MovieResultResponse]
     
     var body: some View {

@@ -1,0 +1,352 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
+    },
+    "%@ minutes" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ minutos"
+          }
+        }
+      }
+    },
+    "Actors" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Actores"
+          }
+        }
+      }
+    },
+    "age: %lld years" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld años"
+          }
+        }
+      }
+    },
+    "Apple developer" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desarrollador de iOS"
+          }
+        }
+      }
+    },
+    "Be the first one to leave a review" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Se el primero en dejar una reseña"
+          }
+        }
+      }
+    },
+    "Birthday: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cumpleaños: %@"
+          }
+        }
+      }
+    },
+    "Born in: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nacido en: %@"
+          }
+        }
+      }
+    },
+    "Close" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerrar"
+          }
+        }
+      }
+    },
+    "Crew" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Equipo"
+          }
+        }
+      }
+    },
+    "Date: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fecha: %@"
+          }
+        }
+      }
+    },
+    "Death: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muerte: %@"
+          }
+        }
+      }
+    },
+    "High to Low" : {
+
+    },
+    "Important details" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detalles importantes"
+          }
+        }
+      }
+    },
+    "Low to High" : {
+
+    },
+    "Movie trailer" : {
+
+    },
+    "Newest" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Más nuevo"
+          }
+        }
+      }
+    },
+    "no image" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin imagen"
+          }
+        }
+      }
+    },
+    "No image" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin imagen"
+          }
+        }
+      }
+    },
+    "No review for this movie" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay reseñas para esta película"
+          }
+        }
+      }
+    },
+    "Now in Cines" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ahora en cines"
+          }
+        }
+      }
+    },
+    "Oldest" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Más antiguo"
+          }
+        }
+      }
+    },
+    "Overview" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descripción general"
+          }
+        }
+      }
+    },
+    "Please wait..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Por favor espere…"
+          }
+        }
+      }
+    },
+    "Production companies" : {
+
+    },
+    "Rafa" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rafa"
+          }
+        }
+      }
+    },
+    "Rating: %@ out of 10" : {
+
+    },
+    "Rating: no rating" : {
+
+    },
+    "revenue: %@" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ganancias: %@"
+          }
+        }
+      }
+    },
+    "See less" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver menos"
+          }
+        }
+      }
+    },
+    "See more..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver mas…"
+          }
+        }
+      }
+    },
+    "Sort by Date" : {
+
+    },
+    "Sort by Rating" : {
+
+    },
+    "Spoken languages" : {
+
+    },
+    "Status film: " : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estado de la pelicula:"
+          }
+        }
+      }
+    },
+    "This app was developed by Rafael Loggiodice, using 100% **SwiftUI** and **Combine**." : {
+
+    },
+    "Top rated" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mejores valorados"
+          }
+        }
+      }
+    },
+    "Trending by day" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tendencia por día"
+          }
+        }
+      }
+    },
+    "Trending by week" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tendencia por semana"
+          }
+        }
+      }
+    },
+    "Upcoming" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Próximos estrenos"
+          }
+        }
+      }
+    },
+    "Website: " : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pagina web:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pagina web:"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

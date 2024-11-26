@@ -11,7 +11,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		539B983B2CF2049400F75C81 /* Exceptions for "RafaDBPlayer" folder in "RafaDBPlayer" target */ = {
+		53ECCF7F2CF6089D00E3B1C9 /* Exceptions for "RafaDBPlayer" folder in "RafaDBPlayer" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -21,10 +21,10 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		532C42DC2CDB99C40031E732 /* RafaDBPlayer */ = {
+		53ECCF5A2CF6089D00E3B1C9 /* RafaDBPlayer */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				539B983B2CF2049400F75C81 /* Exceptions for "RafaDBPlayer" folder in "RafaDBPlayer" target */,
+				53ECCF7F2CF6089D00E3B1C9 /* Exceptions for "RafaDBPlayer" folder in "RafaDBPlayer" target */,
 			);
 			path = RafaDBPlayer;
 			sourceTree = "<group>";
@@ -45,7 +45,7 @@
 		532C42D12CDB99C40031E732 = {
 			isa = PBXGroup;
 			children = (
-				532C42DC2CDB99C40031E732 /* RafaDBPlayer */,
+				53ECCF5A2CF6089D00E3B1C9 /* RafaDBPlayer */,
 				532C42DB2CDB99C40031E732 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -75,7 +75,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				532C42DC2CDB99C40031E732 /* RafaDBPlayer */,
+				53ECCF5A2CF6089D00E3B1C9 /* RafaDBPlayer */,
 			);
 			name = RafaDBPlayer;
 			packageProductDependencies = (
@@ -105,6 +105,7 @@
 			knownRegions = (
 				en,
 				Base,
+				es,
 			);
 			mainGroup = 532C42D12CDB99C40031E732;
 			minimizedProjectReferenceProxies = 1;
@@ -221,6 +222,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
 			};
@@ -278,6 +280,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = YES;
 			};
