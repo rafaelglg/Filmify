@@ -47,7 +47,6 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
     func fetchNowPlayingMovies(basePath: String, endingPath path: MovieEndingPath) throws -> AnyPublisher<MovieModel, Error> {
         
         let request = try handleURL(url: Utils.movieURL(basePath: basePath, endingPath: path))
-        print(request)
         
         let publisher = URLSession.shared.dataTaskPublisher(for: request)
             .tryMap(handleResponse)
@@ -67,7 +66,6 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
     func fetchDetailMovies<T: Decodable>(id: MovieEndingPath, endingPath path: [MovieEndingPath]) throws -> AnyPublisher<T, Error> {
 
         let request = try handleURL(url: Utils.movieAppendURL(id: id, endingPath: path))
-        print(request)
         
         return URLSession.shared
             .dataTaskPublisher(for: request)
@@ -80,7 +78,6 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
     func fetchMovieReviews(endingPath path: MovieEndingPath) throws -> AnyPublisher <MovieReviewModel, Error> {
         
         let request = try handleURL(url: Utils.movieURL(baseURL: Constants.movieGeneralPath, id: path, endingPath: .reviews))
-        print(request)
         
         let publisher = URLSession.shared.dataTaskPublisher(for: request)
             .tryMap(handleResponse)
@@ -93,7 +90,6 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
     func fetchCastMembers<T: Decodable>(baseURL: String, id path: MovieEndingPath, endingPath: MovieEndingPath) throws -> AnyPublisher<T, Error> {
         
         let request = try handleURL(url: Utils.movieURL(baseURL: baseURL, id: path, endingPath: endingPath))
-        print(request)
         
         return URLSession.shared
             .dataTaskPublisher(for: request)

@@ -23,6 +23,10 @@ struct Dashboard: View {
                     MediaSectionView(title: "Trending by day", movie: movieVM.trendingMoviesByDay)
                     MediaSectionView(title: "Trending by week", movie: movieVM.trendingMoviesByWeek)
                 }
+                
+                .refreshable {
+                    movieVM.getDashboard()
+                }
                 .sheet(isPresented: $movieVM.showProfile) {
                     RafaView()
                 }
