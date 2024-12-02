@@ -28,7 +28,6 @@ struct WebViewWrapper: UIViewRepresentable {
     
     func updateUIView(_ uiView: WKWebView, context: Context) {
         guard let youtubeURL = URL(string: "https://www.youtube.com/embed/\(videoID)") else {
-            print("URL inválida")
             return
         }
         

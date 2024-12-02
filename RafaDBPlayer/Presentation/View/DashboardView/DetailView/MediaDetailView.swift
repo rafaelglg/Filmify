@@ -79,7 +79,7 @@ extension MediaDetailView {
             .font(.title2)
             .bold()
         
-        let trailerKey = movieVM.detailMovie?.videos.results
+        let trailerKey = movieVM.detailMovie.videos.results
             .filter { $0.type.lowercased().contains("trailer") }
             .first?.key ?? ""
 
@@ -257,15 +257,15 @@ extension MediaDetailView {
                 HStack(spacing: 4) {
                     Label("\(movie.releaseDate.toYear())", systemImage: "calendar")
                     Text(verbatim: "|")
-                    Label("\(String(describing: movieVM.detailMovie?.runtime.description)) minutes", systemImage: "clock")
+                    Label("\(String(describing: movieVM.detailMovie.runtime.description)) minutes", systemImage: "clock")
                 }
                 Label {
-                    Text(movieVM.detailMovie?.genresFormatted ?? "")
+                    Text(movieVM.detailMovie.genresFormatted)
                         .frame(width: 180, alignment: .leading)
                 } icon: {
                     Image(systemName: "ticket")
                 }
-                Label("revenue: \(String(describing: movieVM.detailMovie?.revenueFormatted))", systemImage: "dollarsign")
+                Label("revenue: \(movieVM.detailMovie.revenueFormatted)", systemImage: "dollarsign")
             }
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -334,7 +334,7 @@ extension MediaDetailView {
                 .bold()
             VStack(alignment: .leading) {
                 let detailMovie = movieVM.detailMovie
-                ForEach(detailMovie?.spokenLanguages ?? []) { language in
+                ForEach(detailMovie.spokenLanguages) { language in
                     HStack(spacing: 5) {
                         Text(language.countryFlag(countryCode: language.countryCodeName))
                         Text(language.englishName)
@@ -347,14 +347,14 @@ extension MediaDetailView {
     
     var statusFilm: some View {
         HStack {
-            let status = movieVM.detailMovie?.status
+            let status = movieVM.detailMovie.status
             
             Image(systemName: "movieclapper")
             Text("Status film: ")
                 .font(.title2)
                 .bold()
             
-            Text(status ?? "")
+            Text(status)
                 .font(.title3)
                 .bold()
                 .foregroundStyle(status == "Released" ? .green : .primary)
