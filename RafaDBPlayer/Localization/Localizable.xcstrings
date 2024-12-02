@@ -122,10 +122,24 @@
       }
     },
     "Filtered Movies" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Películas filtradas"
+          }
+        }
+      }
     },
     "High to Low" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mayor a menor"
+          }
+        }
+      }
     },
     "Important details" : {
       "localizations" : {
@@ -138,13 +152,34 @@
       }
     },
     "Look for a movie" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar una pelicula"
+          }
+        }
+      }
     },
     "Low to High" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menor a mayor"
+          }
+        }
+      }
     },
     "Movie trailer" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trailer"
+          }
+        }
+      }
     },
     "Newest" : {
       "localizations" : {
@@ -157,7 +192,14 @@
       }
     },
     "No found for the movie ''%@''" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se encontraron películas para “%@”"
+          }
+        }
+      }
     },
     "no image" : {
       "localizations" : {
@@ -180,7 +222,14 @@
       }
     },
     "No movies found" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay películas"
+          }
+        }
+      }
     },
     "No review for this movie" : {
       "localizations" : {
@@ -233,7 +282,14 @@
       }
     },
     "Production companies" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Productoras"
+          }
+        }
+      }
     },
     "Rafa" : {
       "localizations" : {
@@ -246,10 +302,24 @@
       }
     },
     "Rating: %@ out of 10" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clasificación: %@ de 10"
+          }
+        }
+      }
     },
     "Rating: no rating" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin clasificación"
+          }
+        }
+      }
     },
     "revenue: %@" : {
       "localizations" : {
@@ -282,26 +352,54 @@
       }
     },
     "Sort by Date" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtrar por fecha"
+          }
+        }
+      }
     },
     "Sort by Rating" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Filtrar por rating"
+          }
+        }
+      }
     },
     "Spoken languages" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lenguajes hablados"
+          }
+        }
+      }
     },
     "Status film: " : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Estado de la pelicula:"
+            "value" : "Estado de pelicula:"
           }
         }
       }
     },
     "This app was developed by Rafael Loggiodice, using 100% **SwiftUI** and **Combine**." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta aplicación fue desarrollada por Rafael Loggiodice, usando 100% **SwiftUI** y **Combine**"
+          }
+        }
+      }
     },
     "Top rated" : {
       "localizations" : {
@@ -343,9 +441,6 @@
         }
       }
     },
-    "view" : {
-
-    },
     "Website: " : {
       "localizations" : {
         "en" : {
@@ -358,6 +453,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pagina web:"
+          }
+        }
+      }
+    },
+    "You can search movies, by using their names, years of creation..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Puedes buscar películas por su nombre o año de creación…"
           }
         }
       }

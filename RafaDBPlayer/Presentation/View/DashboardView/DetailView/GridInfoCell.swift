@@ -15,7 +15,7 @@ struct GridInfoCell: View {
         
         LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
             
-            ForEach(movieVM.detailMovie.productionCompanies) { companies in
+            ForEach(movieVM.detailMovie?.productionCompanies ?? []) { companies in
                 
                 HStack(spacing: companies.logoPath != nil ? 10 : 0) {
                     if companies.logoPath == nil {

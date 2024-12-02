@@ -16,10 +16,10 @@ struct SectionMovies: View {
             if isSearching {
                 // This view shows when the search bar is clicked but and text is empty
                 ZStack {
-                    Text("view")
+                    Text("You can search movies, by using their names, years of creation...")
                 }
                 .frame(height: 500)
-                .frame(maxWidth: .infinity)
+                .padding()
             } else {
                 MediaSectionView(title: "Now in Cines", movie: movieVM.nowPlayingMovies)
                 MediaSectionView(title: "Top rated", movie: movieVM.topRatedMovies)
