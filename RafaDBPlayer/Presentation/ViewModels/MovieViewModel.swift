@@ -21,6 +21,9 @@ final class MovieViewModel {
     
     var selectedMovie: MovieResultResponse?
     var cancellable = Set<AnyCancellable>()
+    var searchText = CurrentValueSubject<String, Never>("")
+    var filteredMovies: [MovieResultResponse] = []
+    var searchResult: Bool?
     
     var showProfile: Bool = false
     var isLoading: Bool = false
@@ -28,6 +31,11 @@ final class MovieViewModel {
     
     init(movieUsesCase: MovieUsesCases = MovieUsesCasesImpl()) {
         self.movieUsesCase = movieUsesCase
+        addSubscribers()
+    }
+    
+    var isSearching: Bool {
+        !searchText.value.isEmpty
     }
     
     func getNowPlayingMovies() {
@@ -45,7 +53,7 @@ final class MovieViewModel {
                 } receiveValue: { [weak self] movieResponse in
                     self?.nowPlayingMovies = movieResponse
                 }.store(in: &cancellable)
-
+            
         } catch {
             self.alertMessage = error.localizedDescription
         }
@@ -163,5 +171,55 @@ final class MovieViewModel {
         getUpcomingMovies()
         getTrendingMovies(timePeriod: .day)
         getTrendingMovies(timePeriod: .week)
+    }
+}
+
+extension MovieViewModel {
+    func addSubscribers() {
+        searchText
+            .debounce(for: 0.3, scheduler: DispatchQueue.main)
+            .sink { [weak self] searchedText in
+                self?.filteredMovies(searchText: searchedText)
+            }
+            .store(in: &cancellable)
+    }
+    
+    func filteredMovies(searchText: String) {
+        guard !searchText.isEmpty else {
+            filteredMovies = []
+            return
+        }
+        
+        let search = searchText.lowercased()
+        
+        let allMovies = [nowPlayingMovies,
+                         topRatedMovies,
+                         upcomingMovies,
+                         trendingMoviesByDay,
+                         trendingMoviesByWeek]
+        
+        filteredMovies = allMovies
+            .flatMap { $0 }
+            .removingDuplicates(by: \.id).filter({ movies in
+                
+                let movieTitles = movies.title
+                    .lowercased()
+                    .filter { $0.isLetter || $0.isNumber || $0.isWhitespace }
+                    .localizedStandardContains(search)
+                let overview = movies.overview
+                    .lowercased()
+                    .filter {$0.isLetter || $0.isNumber || $0.isWhitespace}
+                    .localizedStandardContains(search)
+                let originalTitle = movies.originalTitle
+                    .lowercased()
+                    .filter {$0.isLetter || $0.isNumber || $0.isWhitespace}
+                    .localizedStandardContains(search)
+                let releaseDate = movies.releaseDate
+                    .lowercased()
+                    .localizedStandardContains(search)
+                
+                searchResult = movieTitles || overview || originalTitle || releaseDate
+                return movieTitles || overview || originalTitle || releaseDate
+            })
     }
 }

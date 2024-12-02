@@ -16,52 +16,37 @@ struct Dashboard: View {
         NavigationStack {
             ZStack {
                 ScrollView {
+                    LazyVStack {
+                        if movieVM.isSearching {
+                            filteredMovies
+                        } else {
+                            SectionMovies()
+                        }
+                    }
                     
-                    MediaSectionView(title: "Now in Cines", movie: movieVM.nowPlayingMovies)
-                    MediaSectionView(title: "Top rated", movie: movieVM.topRatedMovies)
-                    MediaSectionView(title: "Upcoming", movie: movieVM.upcomingMovies)
-                    MediaSectionView(title: "Trending by day", movie: movieVM.trendingMoviesByDay)
-                    MediaSectionView(title: "Trending by week", movie: movieVM.trendingMoviesByWeek)
-                }
-                
-                .refreshable {
-                    movieVM.getDashboard()
-                }
-                .sheet(isPresented: $movieVM.showProfile) {
-                    RafaView()
-                }
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button {
-                            withAnimation(.spring) {
+                    .searchable(text: $movieVM.searchText.value, prompt: "Look for a movie")
+                    
+                    .sheet(isPresented: $movieVM.showProfile) {
+                        RafaView()
+                    }
+                    .toolbar {
+                        ToolbarItem(placement: .topBarLeading) {
+                            Button {
                                 movieVM.showProfile.toggle()
+                            } label: {
+                                Text("Rafa")
+                                    .font(.callout)
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(Color(.label))
                             }
-                        } label: {
-                            Text("Rafa")
-                                .font(.callout)
-                                .fontWeight(.bold)
-                                .foregroundStyle(Color(.label))
                         }
                     }
-                    
-                    ToolbarItem(placement: .topBarTrailing) {
-                        Button {
-                            
-                        } label: {
-                            Image(systemName: "magnifyingglass")
-                                .tint(.white)
-                                .fontWeight(.bold)
-                        }
-                        
-                    }
+                    .preferredColorScheme(.dark)
                 }
-                .onAppear {
-                    movieVM.getDashboard()
-                }
-                .preferredColorScheme(.dark)
-                
+                .scrollDismissesKeyboard(.immediately)
                 progressView
             }
+            .onAppear { movieVM.getDashboard() }
         }
     }
 }
@@ -74,9 +59,10 @@ struct Dashboard: View {
 extension Dashboard {
     
     @ViewBuilder
+    // This progress view appears when clicking in a movie from dashboard
     var progressView: some View {
         if movieVM.isLoading {
-            Color.black.opacity(0.5)
+            Color.black.opacity(0.7)
                 .ignoresSafeArea()
             
             VStack {
@@ -89,6 +75,15 @@ extension Dashboard {
                     .font(.callout)
                     .foregroundColor(.white)
             }
+        }
+    }
+    
+    @ViewBuilder
+    var filteredMovies: some View {
+        if movieVM.filteredMovies.isEmpty && movieVM.searchResult == false {
+            ContentUnavailableView("No movies found", systemImage: "binoculars.circle.fill", description: Text("No found for the movie ''\(movieVM.searchText.value)''"))
+        } else {
+            SearchingMovieView(title: "Filtered Movies", movie: movieVM.filteredMovies)
         }
     }
 }

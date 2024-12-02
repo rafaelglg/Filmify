@@ -8,8 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct MovieModel: Decodable, Identifiable, Hashable {
-    var id = UUID()
+struct MovieModel: Decodable, Hashable {
     let page: Int
     let results: [MovieResultResponse]
     

@@ -19,6 +19,7 @@ struct MediaDetailView: View {
     @State private var selectedButton: String = ""
     @State private var buttonPositions: [String: CGFloat] = [:]
     @State private var isLoading: Bool = true
+    @State var isExpandedBio: Bool = false
 
     @State private var sectionSelected: SectionSelected = .aboutMovie
     
@@ -138,7 +139,7 @@ extension MediaDetailView {
                 .padding(.leading, 10)
             
             if let castMembers = castMembersVM.castModel?.cast {
-                ForEach(castMembers.uniqued(by: \.id), id: \.id) { cast in
+                ForEach(castMembers.removingDuplicates(by: \.id), id: \.id) { cast in
                     NavigationLink(value: cast) {
                         CastSectionView(cast: cast, crew: nil)
                             .foregroundStyle(.white)
@@ -151,7 +152,7 @@ extension MediaDetailView {
                 .bold()
                 .padding(.leading, 5)
             
-            if let crewMembers = castMembersVM.castModel?.crew.uniqued(by: \.id) {
+            if let crewMembers = castMembersVM.castModel?.crew.removingDuplicates(by: \.id) {
                 
                 ForEach(crewMembers, id: \.id) { crew in
                     
@@ -318,7 +319,11 @@ extension MediaDetailView {
                 Text("Overview")
                     .font(.title2)
                     .bold()
+                if !movie.overview.isEmpty && movie.overview.count > 55 {
                 Text(movie.overview)
+                    .lineLimit(isExpandedBio ? nil : 3)
+                    .seeMoreButton(isExpanded: $isExpandedBio)
+                }
             }
             .padding(.vertical, 25)
             

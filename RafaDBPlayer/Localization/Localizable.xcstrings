@@ -121,6 +121,9 @@
         }
       }
     },
+    "Filtered Movies" : {
+
+    },
     "High to Low" : {
 
     },
@@ -133,6 +136,9 @@
           }
         }
       }
+    },
+    "Look for a movie" : {
+
     },
     "Low to High" : {
 
@@ -149,6 +155,9 @@
           }
         }
       }
+    },
+    "No found for the movie ''%@''" : {
+
     },
     "no image" : {
       "localizations" : {
@@ -169,6 +178,9 @@
           }
         }
       }
+    },
+    "No movies found" : {
+
     },
     "No review for this movie" : {
       "localizations" : {
@@ -330,6 +342,9 @@
           }
         }
       }
+    },
+    "view" : {
+
     },
     "Website: " : {
       "localizations" : {

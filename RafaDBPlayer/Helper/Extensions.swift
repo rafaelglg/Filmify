@@ -6,11 +6,12 @@
 //
 
 import Foundation
+import SwiftUI
 
 extension MovieResultResponse {
     
     // swiftlint:disable:next line_length
-    static let preview: MovieResultResponse = MovieResultResponse(id: 1, adult: false, backdropPath: "/9oYdz5gDoIl8h67e3ccv3OHtmm2.jpg", originalLanguage: "ES", originalTitle: "Batman The Last Dance in the year of hero", overview: "batman es un superheroe muy bueno", popularity: 8.99, posterPath: "/lqoMzCcZYEFK729d6qzt349fB4o.jpg", releaseDate: "2024-09-10", title: "Batman title", video: false, voteAverage: 8.9, voteCount: 9)
+    static let preview: MovieResultResponse = MovieResultResponse(id: 1, adult: false, backdropPath: "/9oYdz5gDoIl8h67e3ccv3OHtmm2.jpg", originalLanguage: "ES", originalTitle: "Batman The Last Dance in the year of hero", overview: "batman es un superheroe muy bueno que ha batallado muchas veces en los saltamontes del callar del bueno. Esto ha dado paso para que los minihuertos del cellar puedan irse al pasto verde del descanso", popularity: 8.99, posterPath: "/lqoMzCcZYEFK729d6qzt349fB4o.jpg", releaseDate: "2024-09-10", title: "Batman title", video: false, voteAverage: 8.9, voteCount: 9)
 }
 
 extension MovieDetails {
@@ -132,8 +133,29 @@ extension String {
 
 extension Array {
     /// This extension is because i had a error in the console saying that i have repetead ID in the models, so this help me to remove the repetitive ID in the foreach
-    func uniqued<T: Hashable>(by keyPath: KeyPath<Element, T>) -> [Element] {
+    func removingDuplicates<T: Hashable>(by keyPath: KeyPath<Element, T>) -> [Element] {
         var seen = Set<T>()
         return filter { seen.insert($0[keyPath: keyPath]).inserted }
+    }
+}
+
+extension View {
+    func seeMoreButton(isExpanded: Binding<Bool>) -> some View {
+        self.modifier(SeeMoreButton(isExpanded: isExpanded))
+    }
+}
+
+struct SeeMoreButton: ViewModifier {
+    @Binding var isExpanded: Bool
+    func body(content: Content) -> some View {
+        content
+        Button {
+            isExpanded.toggle()
+        } label: {
+            Text( isExpanded ? "See less" : "See more...")
+                .font(.callout)
+                .fontWeight(.heavy)
+        }
+        .padding(.bottom)
     }
 }
