@@ -16,11 +16,11 @@ struct Utils {
         return jsonDecoder
     }()
     
-    static var getCurrentLanguage: String {
+    static let getCurrentLanguage: String = {
         let language = Locale.preferredLanguages.first ?? ""
         let stringInterpolation = "language=\(language)"
         return stringInterpolation
-    }
+    }()
     
     static func movieURL(basePath: String, endingPath: MovieEndingPath ) -> String {
         return basePath + endingPath.pathValue + "?" + getCurrentLanguage
@@ -41,4 +41,5 @@ struct Utils {
         
         return "https://api.themoviedb.org/3/movie/\(id.pathValue)?api_key=\(ApiKey.movieApi)&append_to_response=\(appendEndingPath)&\(getCurrentLanguage)"
     }
+    
 }

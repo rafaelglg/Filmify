@@ -15,7 +15,7 @@ final class MovieCastMembersViewModel {
     var personDetail: PersonDetailModel = .preview
     var isLoadingCastMembers: Bool = false
     var isLoadingPersonDetail: Bool = false
-
+    
     var cancellable = Set<AnyCancellable>()
     
     init(castMemberUseCase: MovieCastMemberUsesCase = MoviecasMemberUsesCaseImpl()) {
@@ -25,53 +25,45 @@ final class MovieCastMembersViewModel {
     func getCastMembers(id: String) {
         isLoadingCastMembers = true
         
-        do {
-            try castMemberUseCase.executeCastMembers(from: .id(id))
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] completion in
-                    guard let self else { return }
-                    defer {
-                        isLoadingCastMembers = false
-                    }
-                    switch completion {
-                    case .finished: break
-                    case .failure(let error):
-                        print(error.localizedDescription)
-                    }
-                } receiveValue: { [weak self] cast in
-                    self?.castModel = cast                    
-                }.store(in: &cancellable)
-
-        } catch {
-            
-        }
+        castMemberUseCase.executeCastMembers(from: .id(id))
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                guard let self else { return }
+                defer {
+                    isLoadingCastMembers = false
+                }
+                switch completion {
+                case .finished: break
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            } receiveValue: { [weak self] cast in
+                self?.castModel = cast
+            }.store(in: &cancellable)
+        
     }
     
     func getPersonDetailInfo(id: String) {
         isLoadingPersonDetail = true
-        do {
-            try castMemberUseCase.executePersonDetail(from: .id(id))
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] completion in
-                    guard let self else { return }
-                    
-                    defer {
-                        isLoadingPersonDetail = false
-                    }
-                    
-                    switch completion {
-                    case .finished:
-                        break
-                    case .failure(let error):
-                        print(error)
-                        print(error.localizedDescription)
-                    }
-                } receiveValue: { [weak self] person in
-                    self?.personDetail = person
-                }.store(in: &cancellable)
-
-        } catch {
-            
-        }
+        
+        castMemberUseCase.executePersonDetail(from: .id(id))
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                guard let self else { return }
+                
+                defer {
+                    isLoadingPersonDetail = false
+                }
+                
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    print(error)
+                    print(error.localizedDescription)
+                }
+            } receiveValue: { [weak self] person in
+                self?.personDetail = person
+            }.store(in: &cancellable)
     }
 }

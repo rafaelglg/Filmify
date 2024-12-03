@@ -47,35 +47,32 @@ final class MovieReviewViewModel {
     
     func getReviews(id: String) {
         isLoading = true
-        do {
-            try movieReviewUsesCase.execute(from: .id(id))
-                .receive(on: DispatchQueue.main)
-                .map(\.results)
-                .sink { [weak self] completion in
-                    
-                    defer {
-                        self?.isLoading = false
-                    }
-                    
-                    switch completion {
-                    case .finished:
-                        break
-                    case .failure(let error):
-                        self?.alertMessage = error.localizedDescription
-                    }
-                } receiveValue: { [weak self] movieReview in
-                    self?.movieReviews = movieReview
+        
+        movieReviewUsesCase.execute(from: .id(id))
+            .receive(on: DispatchQueue.main)
+            .map(\.results)
+            .sink { [weak self] completion in
+                
+                defer {
+                    self?.isLoading = false
                 }
-                .store(in: &cancellable)
-
-        } catch {
-            self.alertMessage = error.localizedDescription
-        }
+                
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    self?.alertMessage = error.localizedDescription
+                }
+            } receiveValue: { [weak self] movieReview in
+                self?.movieReviews = movieReview
+            }
+            .store(in: &cancellable)
+        
     }
     
     func publisherHtml2Text(text: String) -> AnyPublisher<String, Never> {
         Just(text.html2String)
-        .eraseToAnyPublisher()
+            .eraseToAnyPublisher()
     }
     
     func sinkHTML2String(for reviewID: String, text: String) {

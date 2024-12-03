@@ -14,6 +14,8 @@ struct RafaDBPlayerApp: App {
         WindowGroup {
             Dashboard()
                 .environment(movieVM)
+            
+//#error("Debo añadir el composition Root y mostrar los errores si los hay con alertas")
         }
     }
 }

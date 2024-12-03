@@ -8,14 +8,18 @@
 import Foundation
 import Combine
 
-final class ReviewProductService {
+protocol ReviewProductService {
+    func fetchMovieReviews(from path: MovieEndingPath) -> AnyPublisher <MovieReviewModel, Error>
+}
+
+final class ReviewProductServiceImpl: ReviewProductService {
     private let networkService: NetworkServiceProtocol
     
     init(networkService: NetworkServiceProtocol = NetworkService.shared) {
         self.networkService = networkService
     }
     
-    func fetchMovieReviews(from path: MovieEndingPath) throws -> AnyPublisher <MovieReviewModel, Error> {
-        return try networkService.fetchMovieReviews(endingPath: path)
+    func fetchMovieReviews(from path: MovieEndingPath) -> AnyPublisher <MovieReviewModel, Error> {
+        return networkService.fetchMovieReviews(endingPath: path)
     }
 }

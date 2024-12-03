@@ -9,18 +9,18 @@ import Foundation
 import Combine
 
 protocol MovieReviewService {
-    func fetchMovieReviews(from path: MovieEndingPath) throws -> AnyPublisher <MovieReviewModel, Error>
+    func fetchMovieReviews(from path: MovieEndingPath) -> AnyPublisher <MovieReviewModel, Error>
 }
 
 final class MovieReviewServiceImpl: MovieReviewService {
     
     private let productService: ReviewProductService
     
-    init(productService: ReviewProductService = ReviewProductService()) {
+    init(productService: ReviewProductService = ReviewProductServiceImpl()) {
         self.productService = productService
     }
     
-    func fetchMovieReviews(from path: MovieEndingPath) throws -> AnyPublisher <MovieReviewModel, Error> {
-        return try productService.fetchMovieReviews(from: path)
+    func fetchMovieReviews(from path: MovieEndingPath) -> AnyPublisher <MovieReviewModel, Error> {
+        return productService.fetchMovieReviews(from: path)
     }
 }

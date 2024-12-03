@@ -8,8 +8,9 @@
 import Combine
 
 protocol MovieProductService {
-    func fetchMoviesProducts(basePath: String, endingPath: MovieEndingPath) throws -> AnyPublisher<MovieModel, Error>
-    func fetchDetailMovie(id: MovieEndingPath, endingPath: [MovieEndingPath]) throws -> AnyPublisher<MovieDetails, Error>
+    func fetchMoviesProducts(basePath: String, endingPath: MovieEndingPath) -> AnyPublisher<MovieModel, Error>
+    func fetchDetailMovie(id: MovieEndingPath, endingPath: [MovieEndingPath]) -> AnyPublisher<MovieDetails, Error>
+    func fetchSearchMovies(query: String) -> AnyPublisher<MovieModel, Error>
 }
 
 final class MovieProductServiceImpl: MovieProductService {
@@ -19,12 +20,16 @@ final class MovieProductServiceImpl: MovieProductService {
         self.networkService = productService
     }
     
-    func fetchMoviesProducts(basePath: String, endingPath: MovieEndingPath) throws -> AnyPublisher<MovieModel, Error> {
-        return try networkService.fetchNowPlayingMovies(basePath: basePath, endingPath: endingPath)
+    func fetchMoviesProducts(basePath: String, endingPath: MovieEndingPath) -> AnyPublisher<MovieModel, Error> {
+        return networkService.fetchNowPlayingMovies(basePath: basePath, endingPath: endingPath)
     }
     
-    func fetchDetailMovie(id: MovieEndingPath, endingPath: [MovieEndingPath]) throws -> AnyPublisher<MovieDetails, Error> {
-        return try networkService.fetchDetailMovies(id: id, endingPath: endingPath)
+    func fetchDetailMovie(id: MovieEndingPath, endingPath: [MovieEndingPath]) -> AnyPublisher<MovieDetails, Error> {
+        return networkService.fetchDetailMovies(id: id, endingPath: endingPath)
+    }
+    
+    func fetchSearchMovies(query: String) -> AnyPublisher<MovieModel, Error> {
+        return networkService.fetchSearchMovies(query: query)
     }
     
 }

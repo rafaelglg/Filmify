@@ -23,7 +23,7 @@ final class MovieViewModel {
     var cancellable = Set<AnyCancellable>()
     var searchText = CurrentValueSubject<String, Never>("")
     var filteredMovies: [MovieResultResponse] = []
-    var searchResult: Bool?
+    var noSearchResult: Bool = false
     
     var showProfile: Bool = false
     var isLoading: Bool = false
@@ -39,65 +39,53 @@ final class MovieViewModel {
     }
     
     func getNowPlayingMovies() {
-        do {
-            try movieUsesCase.executeNowPlayingMovies()
-                .receive(on: DispatchQueue.main)
-                .map(\.results)
-                .sink { completion in
-                    switch completion {
-                    case .finished:
-                        break
-                    case .failure(let error):
-                        self.alertMessage = error.localizedDescription
-                    }
-                } receiveValue: { [weak self] movieResponse in
-                    self?.nowPlayingMovies = movieResponse
-                }.store(in: &cancellable)
-            
-        } catch {
-            self.alertMessage = error.localizedDescription
-        }
+        
+        movieUsesCase.executeNowPlayingMovies()
+            .receive(on: DispatchQueue.main)
+            .map(\.results)
+            .sink { completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    self.alertMessage = error.localizedDescription
+                }
+            } receiveValue: { [weak self] movieResponse in
+                self?.nowPlayingMovies = movieResponse
+            }.store(in: &cancellable)
     }
     
     func getTopRatedMovies() {
-        do {
-            try movieUsesCase.executeTopRatedMovies()
-                .receive(on: DispatchQueue.main)
-                .map(\.results)
-                .sink { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        break
-                    case .failure(let error):
-                        self?.alertMessage = error.localizedDescription
-                    }
-                } receiveValue: { [weak self] ratedMovies in
-                    self?.topRatedMovies = ratedMovies
-                }.store(in: &cancellable)
-        } catch {
-            self.alertMessage = error.localizedDescription
-        }
+        
+        movieUsesCase.executeTopRatedMovies()
+            .receive(on: DispatchQueue.main)
+            .map(\.results)
+            .sink { [weak self] completion in
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    self?.alertMessage = error.localizedDescription
+                }
+            } receiveValue: { [weak self] ratedMovies in
+                self?.topRatedMovies = ratedMovies
+            }.store(in: &cancellable)
     }
     
     func getUpcomingMovies() {
-        do {
-            try movieUsesCase.executeUpcomingMovies()
-                .eraseToAnyPublisher()
-                .map(\.results)
-                .sink { [weak self] completion in
-                    switch completion {
-                    case .finished: break
-                    case .failure(let error):
-                        self?.alertMessage = error.localizedDescription
-                    }
-                } receiveValue: { [weak self] upcoming in
-                    self?.upcomingMovies = upcoming
+        
+        movieUsesCase.executeUpcomingMovies()
+            .map(\.results)
+            .sink { [weak self] completion in
+                switch completion {
+                case .finished: break
+                case .failure(let error):
+                    self?.alertMessage = error.localizedDescription
                 }
-                .store(in: &cancellable)
-            
-        } catch {
-            self.alertMessage = error.localizedDescription
-        }
+            } receiveValue: { [weak self] upcoming in
+                self?.upcomingMovies = upcoming
+            }
+            .store(in: &cancellable)
     }
     
     func getTrendingMovies(timePeriod: MovieEndingPath) {
@@ -110,59 +98,63 @@ final class MovieViewModel {
             self.alertMessage = error.localizedDescription
         }
         
-        do {
-            try movieUsesCase.executeTrendingMovies(timePeriod: timePeriod)
-                .eraseToAnyPublisher()
-                .receive(on: DispatchQueue.main)
-                .map(\.results)
-                .sink { [weak self] completion in
-                    switch completion {
-                    case .finished: break
-                    case .failure(let error):
-                        self?.alertMessage = error.localizedDescription
-                    }
-                } receiveValue: { [weak self] moviesByTimePeriod in
-                    
-                    if timePeriod == MovieEndingPath.day {
-                        self?.trendingMoviesByDay = moviesByTimePeriod
-                    } else if timePeriod == MovieEndingPath.week {
-                        self?.trendingMoviesByWeek = moviesByTimePeriod
-                    }
+        movieUsesCase.executeTrendingMovies(timePeriod: timePeriod)
+            .receive(on: DispatchQueue.main)
+            .map(\.results)
+            .sink { [weak self] completion in
+                switch completion {
+                case .finished: break
+                case .failure(let error):
+                    self?.alertMessage = error.localizedDescription
                 }
-                .store(in: &cancellable)
-            
-        } catch {
-            self.alertMessage = error.localizedDescription
-        }
+            } receiveValue: { [weak self] moviesByTimePeriod in
+                
+                if timePeriod == MovieEndingPath.day {
+                    self?.trendingMoviesByDay = moviesByTimePeriod
+                } else if timePeriod == MovieEndingPath.week {
+                    self?.trendingMoviesByWeek = moviesByTimePeriod
+                }
+            }
+            .store(in: &cancellable)
     }
     
     func getMovieDetails(id: String?) {
         isLoading = true
-        do {
-            try movieUsesCase.executeDetailMovies(id: id ?? "0")
-                .eraseToAnyPublisher()
-                .receive(on: DispatchQueue.main)
-                .sink { [weak self] completion in
-                    guard let self else { return }
-                    
-                    defer {
-                        self.isLoading = false
-                    }
-                    
-                    switch completion {
-                    case .finished: break
-                    case .failure(let error):
-                        self.alertMessage = error.localizedDescription
-                    }
-                } receiveValue: { [weak self] detailMovieResponse in
-                    self?.detailMovie = detailMovieResponse
+        
+        movieUsesCase.executeDetailMovies(id: id ?? "0")
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                guard let self else { return }
+                
+                defer {
+                    self.isLoading = false
                 }
-                .store(in: &cancellable)
-            
-        } catch {
-            isLoading = false
-            self.alertMessage = error.localizedDescription
-        }
+                
+                switch completion {
+                case .finished: break
+                case .failure(let error):
+                    self.alertMessage = error.localizedDescription
+                }
+            } receiveValue: { [weak self] detailMovieResponse in
+                self?.detailMovie = detailMovieResponse
+            }
+            .store(in: &cancellable)
+    }
+    
+    func getSearch(query: String) {
+        movieUsesCase.executeSearch(query: query)
+            .receive(on: DispatchQueue.main)
+            .map(\.results)
+            .sink { completion in
+                switch completion {
+                case .finished: break
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            } receiveValue: { [weak self] searchedMovies in
+                self?.filteredMovies = searchedMovies
+                self?.noSearchResult = searchedMovies.isEmpty
+            }.store(in: &cancellable)
     }
     
     func getDashboard() {
@@ -179,47 +171,10 @@ extension MovieViewModel {
         searchText
             .debounce(for: 0.3, scheduler: DispatchQueue.main)
             .sink { [weak self] searchedText in
-                self?.filteredMovies(searchText: searchedText)
+                if !searchedText.isEmpty {
+                    self?.getSearch(query: searchedText)
+                }
             }
             .store(in: &cancellable)
-    }
-    
-    func filteredMovies(searchText: String) {
-        guard !searchText.isEmpty else {
-            filteredMovies = []
-            return
-        }
-        
-        let search = searchText.lowercased()
-        
-        let allMovies = [nowPlayingMovies,
-                         topRatedMovies,
-                         upcomingMovies,
-                         trendingMoviesByDay,
-                         trendingMoviesByWeek]
-        
-        filteredMovies = allMovies
-            .flatMap { $0 }
-            .removingDuplicates(by: \.id).filter({ movies in
-                
-                let movieTitles = movies.title
-                    .lowercased()
-                    .filter { $0.isLetter || $0.isNumber || $0.isWhitespace }
-                    .localizedStandardContains(search)
-                let overview = movies.overview
-                    .lowercased()
-                    .filter {$0.isLetter || $0.isNumber || $0.isWhitespace}
-                    .localizedStandardContains(search)
-                let originalTitle = movies.originalTitle
-                    .lowercased()
-                    .filter {$0.isLetter || $0.isNumber || $0.isWhitespace}
-                    .localizedStandardContains(search)
-                let releaseDate = movies.releaseDate
-                    .lowercased()
-                    .localizedStandardContains(search)
-                
-                searchResult = movieTitles || overview || originalTitle || releaseDate
-                return movieTitles || overview || originalTitle || releaseDate
-            })
     }
 }

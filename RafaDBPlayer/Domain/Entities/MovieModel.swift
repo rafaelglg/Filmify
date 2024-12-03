@@ -21,12 +21,12 @@ struct MovieModel: Decodable, Hashable {
 struct MovieResultResponse: Decodable, Identifiable, Hashable {
     let id: Int
     let adult: Bool
-    let backdropPath: String
+    let backdropPath: String?
     let originalLanguage: String
     let originalTitle: String
     let overview: String
     let popularity: Double
-    let posterPath: String
+    let posterPath: String?
     let releaseDate: String
     let title: String
     let video: Bool
@@ -35,11 +35,11 @@ struct MovieResultResponse: Decodable, Identifiable, Hashable {
     
     var backdropURLImage: URL {
         guard let url = URL(string: Constants.imageURL) else {return URL(filePath: "URL ERROR")}
-        return url.appending(path: backdropPath)
+        return url.appending(path: backdropPath ?? "no image")
     }
     
     var posterURLImage: URL {
         guard let url = URL(string: Constants.imageURL) else {return URL(filePath: "URL ERROR")}
-        return url.appending(path: posterPath)
+        return url.appending(path: posterPath ?? "no image")
     }
 }

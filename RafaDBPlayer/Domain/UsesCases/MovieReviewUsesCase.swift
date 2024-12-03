@@ -8,7 +8,7 @@
 import Combine
 
 protocol MovieReviewUsesCase {
-    func execute(from path: MovieEndingPath) throws -> AnyPublisher<MovieReviewModel, Error>
+    func execute(from path: MovieEndingPath) -> AnyPublisher<MovieReviewModel, Error>
 }
 
 final class MovieReviewUsesCaseImpl: MovieReviewUsesCase {
@@ -19,7 +19,7 @@ final class MovieReviewUsesCaseImpl: MovieReviewUsesCase {
         self.repository = repository
     }
     
-    func execute(from path: MovieEndingPath) throws -> AnyPublisher<MovieReviewModel, Error> {
-        return try repository.fetchMovieReviews(from: path)
+    func execute(from path: MovieEndingPath) -> AnyPublisher<MovieReviewModel, Error> {
+        return repository.fetchMovieReviews(from: path)
     }
 }

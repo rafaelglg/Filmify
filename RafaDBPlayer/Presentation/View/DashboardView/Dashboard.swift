@@ -80,7 +80,7 @@ extension Dashboard {
     
     @ViewBuilder
     var filteredMovies: some View {
-        if movieVM.filteredMovies.isEmpty && movieVM.searchResult == false {
+        if movieVM.filteredMovies.isEmpty && movieVM.noSearchResult {
             ContentUnavailableView("No movies found", systemImage: "binoculars.circle.fill", description: Text("No found for the movie ''\(movieVM.searchText.value)''"))
         } else {
             SearchingMovieView(title: "Filtered Movies", movie: movieVM.filteredMovies)

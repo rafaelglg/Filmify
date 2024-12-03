@@ -8,11 +8,12 @@
 import Combine
 
 protocol MovieUsesCases {
-    func executeNowPlayingMovies() throws -> AnyPublisher<MovieModel, Error>
-    func executeTopRatedMovies() throws -> AnyPublisher<MovieModel, Error>
-    func executeUpcomingMovies() throws -> AnyPublisher<MovieModel, Error>
-    func executeTrendingMovies(timePeriod: MovieEndingPath) throws -> AnyPublisher<MovieModel, Error>
-    func executeDetailMovies(id: String) throws -> AnyPublisher<MovieDetails, any Error>
+    func executeNowPlayingMovies() -> AnyPublisher<MovieModel, Error>
+    func executeTopRatedMovies() -> AnyPublisher<MovieModel, Error>
+    func executeUpcomingMovies() -> AnyPublisher<MovieModel, Error>
+    func executeTrendingMovies(timePeriod: MovieEndingPath) -> AnyPublisher<MovieModel, Error>
+    func executeDetailMovies(id: String) -> AnyPublisher<MovieDetails, Error>
+    func executeSearch(query: String) -> AnyPublisher<MovieModel, Error>
 }
 
 final class MovieUsesCasesImpl: MovieUsesCases {
@@ -24,24 +25,27 @@ final class MovieUsesCasesImpl: MovieUsesCases {
         self.repository = repository
     }
     
-    func executeNowPlayingMovies() throws -> PublisherResult {
-        return try repository.fetchMoviesProducts(basePath: Constants.movieGeneralPath, endingPath: .nowPlaying)
+    func executeNowPlayingMovies() -> PublisherResult {
+        return repository.fetchMoviesProducts(basePath: Constants.movieGeneralPath, endingPath: .nowPlaying)
     }
     
-    func executeTopRatedMovies() throws -> PublisherResult {
-        return try repository.fetchMoviesProducts(basePath: Constants.movieGeneralPath, endingPath: .topRated)
+    func executeTopRatedMovies() -> PublisherResult {
+        return repository.fetchMoviesProducts(basePath: Constants.movieGeneralPath, endingPath: .topRated)
     }
     
-    func executeUpcomingMovies() throws -> PublisherResult {
-        return try repository.fetchMoviesProducts(basePath: Constants.movieGeneralPath, endingPath: .upcoming)
+    func executeUpcomingMovies() -> PublisherResult {
+        return repository.fetchMoviesProducts(basePath: Constants.movieGeneralPath, endingPath: .upcoming)
     }
     
-    func executeTrendingMovies(timePeriod: MovieEndingPath) throws -> PublisherResult {
-        return try repository.fetchMoviesProducts(basePath: Constants.trendingMovies, endingPath: timePeriod)
+    func executeTrendingMovies(timePeriod: MovieEndingPath) -> PublisherResult {
+        return repository.fetchMoviesProducts(basePath: Constants.trendingMovies, endingPath: timePeriod)
     }
     
-    func executeDetailMovies(id: String) throws -> AnyPublisher<MovieDetails, Error> {
-        return try repository.fetchDetailMovie(id: .id(id), endingPath: [.videos])
+    func executeDetailMovies(id: String) -> AnyPublisher<MovieDetails, Error> {
+        return repository.fetchDetailMovie(id: .id(id), endingPath: [.videos])
     }
     
+    func executeSearch(query: String) -> AnyPublisher<MovieModel, Error> {
+        return repository.fetchSearchMovies(query: query)
+    }
 }
