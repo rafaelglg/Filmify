@@ -59,7 +59,7 @@ struct PersonDetailView<T>: View {
                             buttonSeeMore
                         }
                         
-                        personDetailInfo()
+                        personDetailInfo
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(30)
@@ -124,7 +124,7 @@ extension PersonDetailView {
             buttonSeeMore
         }
         
-        personDetailInfo()
+        personDetailInfo
     }
     
     var buttonSeeMore: some View {
@@ -139,7 +139,7 @@ extension PersonDetailView {
     }
     
     @ViewBuilder
-    func personDetailInfo() -> some View {
+    var personDetailInfo: some View {
         if personDetail.placeOfBirth != nil || personDetail.birthday != nil {
             Label("Important details", systemImage: "lightbulb.fill")
                 .font(.title2)

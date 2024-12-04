@@ -17,6 +17,8 @@ final class MovieCastMembersViewModel {
     var isLoadingPersonDetail: Bool = false
     
     var cancellable = Set<AnyCancellable>()
+    var alertMessage: String = ""
+    var showAlert: Bool = false
     
     init(castMemberUseCase: MovieCastMemberUsesCase = MoviecasMemberUsesCaseImpl()) {
         self.castMemberUseCase = castMemberUseCase
@@ -35,7 +37,8 @@ final class MovieCastMembersViewModel {
                 switch completion {
                 case .finished: break
                 case .failure(let error):
-                    print(error.localizedDescription)
+                    alertMessage = error.localizedDescription
+                    showAlert = true
                 }
             } receiveValue: { [weak self] cast in
                 self?.castModel = cast
@@ -59,8 +62,8 @@ final class MovieCastMembersViewModel {
                 case .finished:
                     break
                 case .failure(let error):
-                    print(error)
-                    print(error.localizedDescription)
+                    alertMessage = error.localizedDescription
+                    showAlert = true
                 }
             } receiveValue: { [weak self] person in
                 self?.personDetail = person

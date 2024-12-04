@@ -12,7 +12,7 @@ struct MediaDetailView: View {
     @Environment(MovieViewModel.self) private var movieVM
     let movie: MovieResultResponse
     let movieReviewVM: MovieReviewViewModel
-    let castMembersVM: MovieCastMembersViewModel
+    @Binding var castMembersVM: MovieCastMembersViewModel
     
     @State private var progressButtonSelected: CGFloat = 37
     @State private var widthProgressBar: CGFloat = 140
@@ -20,10 +20,11 @@ struct MediaDetailView: View {
     @State private var buttonPositions: [String: CGFloat] = [:]
     @State private var isLoading: Bool = true
     @State var isExpandedBio: Bool = false
-
+    
     @State private var sectionSelected: SectionSelected = .aboutMovie
     
     var body: some View {
+        @Bindable var movieVM = movieVM
         NavigationStack {
             ZStack(alignment: .bottom) {
                 backgroundImage
@@ -49,6 +50,10 @@ struct MediaDetailView: View {
                 }
                 .scrollIndicators(.hidden)
             }
+            .alert("App error getting detail", isPresented: $castMembersVM.showAlert) {
+                Button("Cancel") {}
+            }  message: { Text(castMembersVM.alertMessage) }
+            
             .onAppear {
                 castMembersVM.getCastMembers(id: movie.id.description)
             }
@@ -60,7 +65,7 @@ struct MediaDetailView: View {
 }
 
 #Preview {
-    MediaDetailView(movie: .preview, movieReviewVM: .preview, castMembersVM: MovieCastMembersViewModel())
+    MediaDetailView(movie: .preview, movieReviewVM: .preview, castMembersVM: .constant(MovieCastMembersViewModel()))
         .environment(MovieViewModel())
         .preferredColorScheme(.dark)
 }
@@ -82,7 +87,7 @@ extension MediaDetailView {
         let trailerKey = movieVM.detailMovie.videos.results
             .filter { $0.type.lowercased().contains("trailer") }
             .first?.key ?? ""
-
+        
         LazyVStack {
             ZStack {
                 WebViewWrapper(videoID: trailerKey, isLoading: $isLoading)
@@ -321,13 +326,16 @@ extension MediaDetailView {
                 Text("Overview")
                     .font(.title2)
                     .bold()
-                if !movie.overview.isEmpty && movie.overview.count > 55 {
+                
                 Text(movie.overview)
                     .lineLimit(isExpandedBio ? nil : 3)
-                    .seeMoreButton(isExpanded: $isExpandedBio)
+
+                if !movie.overview.isEmpty && movie.overview.count > 140 {
+                    buttonSeeMore
                 }
             }
-            .padding(.vertical, 25)
+            .padding(.top, 25)
+            .padding(.bottom, 10)
             
             Text("Spoken languages")
                 .font(.title2)
@@ -343,6 +351,17 @@ extension MediaDetailView {
                 .font(.headline)
             }
         }
+    }
+    
+    var buttonSeeMore: some View {
+        Button {
+            isExpandedBio.toggle()
+        } label: {
+            Text( isExpandedBio ? "See less" : "See more...")
+                .font(.callout)
+                .fontWeight(.heavy)
+        }
+        .padding(.bottom)
     }
     
     var statusFilm: some View {
@@ -415,7 +434,7 @@ extension MediaDetailView {
             }
         }
     }
-
+    
     func updateProgressBarPosition() {
         if let midX = buttonPositions[selectedButton] {
             withAnimation {

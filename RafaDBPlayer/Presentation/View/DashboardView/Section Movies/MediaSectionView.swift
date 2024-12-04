@@ -23,24 +23,14 @@ struct MediaSectionView: View {
         @Bindable var movieVM = movieVM
         
         VStack(alignment: .leading) {
-            Text(title)
-                .font(.title3)
-                .fontWeight(.bold)
+            movieTitle
             
-            ScrollView(.horizontal) {
-                LazyHStack(spacing: 3) {
-                    
-                    ForEach(cachedMovies, id: \.id) { movie in
-                        MovieCell(movie: movie, imageURL: movie.posterURLImage)
-                            .onTapGesture {
-                                movieVM.selectedMovie = movie
-                                movieVM.getMovieDetails(id: movie.id.description)
-                            }
-                    }
-                }
+            MovieListView(movies: cachedMovies) { selectedMovie in
+                movieVM.selectedMovie = selectedMovie
+                movieVM.getMovieDetails(id: selectedMovie.id.description)
             }
             .sheet(item: $movieVM.selectedMovie) { movie in
-                MediaDetailView(movie: movie, movieReviewVM: movieReviewVM, castMembersVM: castMemberVM)
+                MediaDetailView(movie: movie, movieReviewVM: movieReviewVM, castMembersVM: $castMemberVM)
             }
             .presentationCornerRadius(15)
             .scrollIndicators(.hidden)
@@ -62,9 +52,17 @@ struct MediaSectionView: View {
     MediaSectionView(title: "Movies", movie: [.preview])
         .environment(MovieViewModel())
 }
+extension MediaSectionView {
+    var movieTitle: some View {
+        Text(title)
+            .font(.title3)
+            .fontWeight(.bold)
+    }
+}
 
 struct SearchingMovieView: View {
     @Environment(MovieViewModel.self) private var movieVM
+    @Environment(\.dismissSearch) private var dismissSearch
     @State private var movieReviewVM = MovieReviewViewModel()
     @State private var castMemberVM = MovieCastMembersViewModel()
     let columns = Array(repeating: GridItem(.flexible()), count: 3)
@@ -90,10 +88,17 @@ struct SearchingMovieView: View {
             }
             
             .sheet(item: $movieVM.selectedMovie) { movie in
-                MediaDetailView(movie: movie, movieReviewVM: movieReviewVM, castMembersVM: castMemberVM)
+                MediaDetailView(movie: movie, movieReviewVM: movieReviewVM, castMembersVM: $castMemberVM)
             }
             .presentationCornerRadius(15)
             .scrollIndicators(.hidden)
+        }
+        .alert("App error", isPresented: $movieVM.showingAlert) {
+            Button("Try again") {
+                dismissSearch()
+            }
+        } message: {
+            Text(movieVM.alertMessage)
         }
         .padding(.leading)
         .padding(.top)

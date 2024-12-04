@@ -28,6 +28,7 @@ final class MovieViewModel {
     var showProfile: Bool = false
     var isLoading: Bool = false
     var alertMessage: String = ""
+    var showingAlert: Bool = false
     
     init(movieUsesCase: MovieUsesCases = MovieUsesCasesImpl()) {
         self.movieUsesCase = movieUsesCase
@@ -43,12 +44,13 @@ final class MovieViewModel {
         movieUsesCase.executeNowPlayingMovies()
             .receive(on: DispatchQueue.main)
             .map(\.results)
-            .sink { completion in
+            .sink { [weak self] completion in
                 switch completion {
                 case .finished:
                     break
                 case .failure(let error):
-                    self.alertMessage = error.localizedDescription
+                    self?.alertMessage = error.localizedDescription
+                    self?.showingAlert = true
                 }
             } receiveValue: { [weak self] movieResponse in
                 self?.nowPlayingMovies = movieResponse
@@ -66,6 +68,7 @@ final class MovieViewModel {
                     break
                 case .failure(let error):
                     self?.alertMessage = error.localizedDescription
+                    self?.showingAlert = true
                 }
             } receiveValue: { [weak self] ratedMovies in
                 self?.topRatedMovies = ratedMovies
@@ -81,6 +84,7 @@ final class MovieViewModel {
                 case .finished: break
                 case .failure(let error):
                     self?.alertMessage = error.localizedDescription
+                    self?.showingAlert = true
                 }
             } receiveValue: { [weak self] upcoming in
                 self?.upcomingMovies = upcoming
@@ -96,6 +100,7 @@ final class MovieViewModel {
             }
         } catch {
             self.alertMessage = error.localizedDescription
+            self.showingAlert = true
         }
         
         movieUsesCase.executeTrendingMovies(timePeriod: timePeriod)
@@ -106,6 +111,7 @@ final class MovieViewModel {
                 case .finished: break
                 case .failure(let error):
                     self?.alertMessage = error.localizedDescription
+                    self?.showingAlert = true
                 }
             } receiveValue: { [weak self] moviesByTimePeriod in
                 
@@ -134,6 +140,7 @@ final class MovieViewModel {
                 case .finished: break
                 case .failure(let error):
                     self.alertMessage = error.localizedDescription
+                    self.showingAlert = true
                 }
             } receiveValue: { [weak self] detailMovieResponse in
                 self?.detailMovie = detailMovieResponse
@@ -145,11 +152,12 @@ final class MovieViewModel {
         movieUsesCase.executeSearch(query: query)
             .receive(on: DispatchQueue.main)
             .map(\.results)
-            .sink { completion in
+            .sink { [weak self] completion in
                 switch completion {
                 case .finished: break
                 case .failure(let error):
-                    print(error.localizedDescription)
+                    self?.alertMessage = error.localizedDescription
+                    self?.showingAlert = true
                 }
             } receiveValue: { [weak self] searchedMovies in
                 self?.filteredMovies = searchedMovies

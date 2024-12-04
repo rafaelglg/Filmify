@@ -32,8 +32,10 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
         return output.data
     }
     
-    func handleURL(url: String) -> URLRequest {
-        let url = URL(string: url)!
+    func handleRequest(url: String) -> URLRequest {
+        guard let url = URL(string: url) else {
+            return URLRequest(url: URL(filePath: "empty url"))
+        }
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -45,7 +47,7 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
     
     func fetchNowPlayingMovies(basePath: String, endingPath path: MovieEndingPath) -> AnyPublisher<MovieModel, Error> {
         
-        let request = handleURL(url: Utils.movieURL(basePath: basePath, endingPath: path))
+        let request = handleRequest(url: Utils.movieURL(basePath: basePath, endingPath: path))
         
         let publisher = URLSession.shared.dataTaskPublisher(for: request)
             .tryMap(handleResponse)
@@ -63,20 +65,20 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
     }
     
     func fetchDetailMovies<T: Decodable>(id: MovieEndingPath, endingPath path: [MovieEndingPath]) -> AnyPublisher<T, Error> {
-
-        let request = handleURL(url: Utils.movieAppendURL(id: id, endingPath: path))
+        
+        let request = handleRequest(url: Utils.movieAppendURL(id: id, endingPath: path))
         
         return URLSession.shared
             .dataTaskPublisher(for: request)
             .tryMap(handleResponse)
             .decode(type: T.self, decoder: Utils.jsonDecoder)
             .eraseToAnyPublisher()
-            
+        
     }
     
     func fetchMovieReviews(endingPath path: MovieEndingPath) -> AnyPublisher <MovieReviewModel, Error> {
         
-        let request = handleURL(url: Utils.movieURL(baseURL: Constants.movieGeneralPath, id: path, endingPath: .reviews))
+        let request = handleRequest(url: Utils.movieURL(baseURL: Constants.movieGeneralPath, id: path, endingPath: .reviews))
         
         let publisher = URLSession.shared.dataTaskPublisher(for: request)
             .tryMap(handleResponse)
@@ -88,7 +90,7 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
     
     func fetchCastMembers<T: Decodable>(baseURL: String, id path: MovieEndingPath, endingPath: MovieEndingPath) -> AnyPublisher<T, Error> {
         
-        let request = handleURL(url: Utils.movieURL(baseURL: baseURL, id: path, endingPath: endingPath))
+        let request = handleRequest(url: Utils.movieURL(baseURL: baseURL, id: path, endingPath: endingPath))
         
         return URLSession.shared
             .dataTaskPublisher(for: request)
@@ -97,24 +99,9 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
             .eraseToAnyPublisher()
     }
     
-    func handleURLCombine(url: String) -> AnyPublisher<URLRequest, Error> {
-        Future<URLRequest, Error> { promise in
-            guard let url = URL(string: url) else {
-                promise(.failure(ErrorManager.badURL))
-                return
-            }
-            
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            request.setValue("Bearer \(ApiKey.movieToken)", forHTTPHeaderField: "Authorization")
-            promise(.success(request))
-        }
-        .eraseToAnyPublisher()
-    }
-    
     func fetchSearchMovies<T: Decodable>(query: String) -> AnyPublisher<T, Error> {
         
-        let request = handleURL(url: "https://api.themoviedb.org/3/search/movie?query=\(query)&\(Utils.getCurrentLanguage)")
+        let request = handleRequest(url: "https://api.themoviedb.org/3/search/movie?query=\(query)&\(Utils.getCurrentLanguage)")
         
         return URLSession.shared
             .dataTaskPublisher(for: request)
@@ -123,7 +110,6 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
                 if (error as? URLError)?.code == .unsupportedURL {
                     return ErrorManager.badURL
                 }
-                
                 return error
             }
             .decode(type: T.self, decoder: Utils.jsonDecoder)

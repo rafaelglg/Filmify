@@ -22,13 +22,18 @@ struct MovieCell: View {
     }
     
     var body: some View {
-        AsyncImage(url: imageURL) { image in
-            image.resizable()
-                .scaledToFit()
-                .clipShape(.rect(cornerRadius: 5))
-                .frame(width: width, height: height)
-        } placeholder: {
-            ProgressView()
+        if movie.posterPath?.isEmpty == false {
+            AsyncImage(url: imageURL) { image in
+                image.resizable()
+                    .scaledToFit()
+                    .clipShape(.rect(cornerRadius: 5))
+                    .frame(width: width, height: height)
+            } placeholder: {
+                ProgressView()
+                    .frame(width: width, height: height)
+            }
+        } else {
+            noImage
                 .frame(width: width, height: height)
         }
     }
@@ -38,4 +43,17 @@ struct MovieCell: View {
     @Previewable @State var movie = MovieResultResponse.preview
     MovieCell(movie: .preview, imageURL: movie.posterURLImage)
         .padding()
+}
+
+extension MovieCell {
+    var noImage: some View {
+        RoundedRectangle(cornerRadius: 5)
+            .overlay {
+                Text("no image")
+                    .font(.caption)
+                    .foregroundStyle(.black)
+            }
+            .offset(x: -5)
+            .frame(width: 60, height: 60, alignment: .leading)
+    }
 }

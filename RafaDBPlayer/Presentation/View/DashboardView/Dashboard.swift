@@ -23,12 +23,13 @@ struct Dashboard: View {
                             SectionMovies()
                         }
                     }
+                    .alert("App error", isPresented: $movieVM.showingAlert) {
+                        Button("Ok") {}
+                    } message: { Text(movieVM.alertMessage) }
                     
                     .searchable(text: $movieVM.searchText.value, prompt: "Look for a movie")
+                    .sheet(isPresented: $movieVM.showProfile) { RafaView() }
                     
-                    .sheet(isPresented: $movieVM.showProfile) {
-                        RafaView()
-                    }
                     .toolbar {
                         ToolbarItem(placement: .topBarLeading) {
                             Button {

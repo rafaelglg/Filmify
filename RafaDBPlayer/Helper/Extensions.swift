@@ -138,24 +138,3 @@ extension Array {
         return filter { seen.insert($0[keyPath: keyPath]).inserted }
     }
 }
-
-extension View {
-    func seeMoreButton(isExpanded: Binding<Bool>) -> some View {
-        self.modifier(SeeMoreButton(isExpanded: isExpanded))
-    }
-}
-
-struct SeeMoreButton: ViewModifier {
-    @Binding var isExpanded: Bool
-    func body(content: Content) -> some View {
-        content
-        Button {
-            isExpanded.toggle()
-        } label: {
-            Text( isExpanded ? "See less" : "See more...")
-                .font(.callout)
-                .fontWeight(.heavy)
-        }
-        .padding(.bottom)
-    }
-}

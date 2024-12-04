@@ -29,6 +29,7 @@ final class MovieReviewViewModel {
     
     var alertMessage: String = ""
     var isLoading: Bool = false
+    var showAlert: Bool = false
     
     var currentSortOptions: RatingSortOption = .none {
         didSet {
@@ -62,6 +63,7 @@ final class MovieReviewViewModel {
                     break
                 case .failure(let error):
                     self?.alertMessage = error.localizedDescription
+                    self?.showAlert = true
                 }
             } receiveValue: { [weak self] movieReview in
                 self?.movieReviews = movieReview
