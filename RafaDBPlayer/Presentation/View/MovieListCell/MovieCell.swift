@@ -51,9 +51,9 @@ extension MovieCell {
             .overlay {
                 Text("no image")
                     .font(.caption)
+                    .bold()
                     .foregroundStyle(.black)
             }
             .offset(x: -5)
-            .frame(width: 60, height: 60, alignment: .leading)
     }
 }

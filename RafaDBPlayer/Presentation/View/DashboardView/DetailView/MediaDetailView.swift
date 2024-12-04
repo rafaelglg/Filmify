@@ -388,6 +388,7 @@ extension MediaDetailView {
     
     // MARK: - Functions
     
+    @ViewBuilder
     func createImage <ShapeType: Shape>(
         urlImage: URL,
         imageWidth: CGFloat,
@@ -396,25 +397,40 @@ extension MediaDetailView {
         bgColor: Bool = false,
         aspectRatio: ContentMode = .fit) -> some View {
             
-            AsyncImage(url: urlImage) { image in
-                image.resizable()
-                    .aspectRatio(contentMode: aspectRatio)
-                    .frame(width: imageWidth)
-                    .clipShape(clipShape)
-                    .background(
-                        Group {
-                            if bgColor {
-                                clipShape
-                                    .fill(.white)
-                                    .frame(width: 130, height: 190)
+            if movie.posterPath == nil {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 5)
+                    Text("No image")
+                        .foregroundStyle(.black)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+                        .bold()
+                        .padding()
+                }
+                .frame(width: imageWidth, height: imageHeight)
+                .ignoresSafeArea()
+            } else {
+                
+                AsyncImage(url: urlImage) { image in
+                    image.resizable()
+                        .aspectRatio(contentMode: aspectRatio)
+                        .frame(width: imageWidth)
+                        .clipShape(clipShape)
+                        .background(
+                            Group {
+                                if bgColor {
+                                    clipShape
+                                        .fill(.white)
+                                        .frame(width: 130, height: 190)
+                                }
                             }
-                        }
-                    )
-            } placeholder: {
-                ProgressView()
-                    .aspectRatio(contentMode: aspectRatio)
-                    .clipShape(clipShape)
-                    .frame(width: imageWidth, height: imageHeight)
+                        )
+                } placeholder: {
+                    ProgressView()
+                        .aspectRatio(contentMode: aspectRatio)
+                        .clipShape(clipShape)
+                        .frame(width: imageWidth, height: imageHeight)
+                }
             }
         }
     
