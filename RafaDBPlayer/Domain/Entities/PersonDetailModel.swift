@@ -15,7 +15,7 @@ struct PersonDetailModel: Decodable, Identifiable {
     let gender: Int
     let homepage: String?
     let id: Int
-    let imdbId: String
+    let imdbId: String?
     let knownForDepartment: String
     let name: String
     let placeOfBirth: String?

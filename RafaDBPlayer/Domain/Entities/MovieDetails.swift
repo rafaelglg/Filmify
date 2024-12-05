@@ -9,15 +9,15 @@ import Foundation
 
 struct MovieDetails: Decodable, Identifiable {
     let adult: Bool
-    let backdropPath: String
+    let backdropPath: String?
     let budget: Int
     let genres: [Genres]
     let homepage: String
     let id: Int
-    let imdbId: String
+    let imdbId: String?
     let originCountry: [String]
     let originalLanguage: String
-    let posterPath: String
+    let posterPath: String?
     let productionCompanies: [ProductionCompanies]
     let productionCountries: [ProductionCountries]
     let runtime: Int

@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "%@" : {
       "localizations" : {
         "es" : {
@@ -220,6 +223,18 @@
           }
         }
       }
+    },
+    "No actor" : {
+
+    },
+    "No actors available at the moment." : {
+
+    },
+    "No crew" : {
+
+    },
+    "No crews available at the moment." : {
+
     },
     "No found for the movie ''%@''" : {
       "localizations" : {

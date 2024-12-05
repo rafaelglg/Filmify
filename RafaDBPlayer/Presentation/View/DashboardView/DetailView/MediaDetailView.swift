@@ -50,9 +50,6 @@ struct MediaDetailView: View {
                 }
                 .scrollIndicators(.hidden)
             }
-            .alert("App error getting detail", isPresented: $castMembersVM.showAlert) {
-                Button("Cancel") {}
-            }  message: { Text(castMembersVM.alertMessage) }
             
             .onAppear {
                 castMembersVM.getCastMembers(id: movie.id.description)
@@ -80,22 +77,24 @@ extension MediaDetailView {
         productionCompaniesTitle
         GridInfoCell()
         
-        Text("Movie trailer")
-            .font(.title2)
-            .bold()
-        
         let trailerKey = movieVM.detailMovie.videos.results
             .filter { $0.type.lowercased().contains("trailer") }
             .first?.key ?? ""
         
-        LazyVStack {
-            ZStack {
-                WebViewWrapper(videoID: trailerKey, isLoading: $isLoading)
-                    .frame(height: 300)
-                    .cornerRadius(10)
-                
-                if isLoading {
-                    ProgressView()
+        if !trailerKey.isEmpty {
+            Text("Movie trailer")
+                .font(.title2)
+                .bold()
+            
+            LazyVStack {
+                ZStack {
+                    WebViewWrapper(videoID: trailerKey, isLoading: $isLoading)
+                        .frame(height: 300)
+                        .cornerRadius(10)
+                    
+                    if isLoading {
+                        ProgressView()
+                    }
                 }
             }
         }
@@ -145,13 +144,15 @@ extension MediaDetailView {
                 .bold()
                 .padding(.leading, 10)
             
-            if let castMembers = castMembersVM.castModel?.cast {
+            if let castMembers = castMembersVM.castModel?.cast, !castMembers.isEmpty {
                 ForEach(castMembers.removingDuplicates(by: \.id), id: \.id) { cast in
                     NavigationLink(value: cast) {
                         CastSectionView(cast: cast, crew: nil)
                             .foregroundStyle(.white)
                     }
                 }
+            } else {
+                ContentUnavailableView("No actor", systemImage: "figure.mixed.cardio", description: Text("No actors available at the moment."))
             }
             
             Text("Crew")
@@ -159,7 +160,7 @@ extension MediaDetailView {
                 .bold()
                 .padding(.leading, 5)
             
-            if let crewMembers = castMembersVM.castModel?.crew.removingDuplicates(by: \.id) {
+            if let crewMembers = castMembersVM.castModel?.crew.removingDuplicates(by: \.id), !crewMembers.isEmpty {
                 
                 ForEach(crewMembers, id: \.id) { crew in
                     
@@ -168,8 +169,11 @@ extension MediaDetailView {
                             .foregroundStyle(.white)
                     }
                 }
+            } else {
+                ContentUnavailableView("No crew", systemImage: "figure.mixed.cardio", description: Text("No crews available at the moment."))
             }
         }
+        
         .padding(.top)
         
         .navigationDestination(for: CastResponseModel.self) { cast in
@@ -381,7 +385,7 @@ extension MediaDetailView {
     }
     
     var productionCompaniesTitle: some View {
-        Text("Production companies")
+        Text(movieVM.detailMovie.productionCompanies.isEmpty ? "" : "Production companies")
             .font(.title2)
             .bold()
     }

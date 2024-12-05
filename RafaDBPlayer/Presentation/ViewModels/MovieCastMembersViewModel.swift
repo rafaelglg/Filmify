@@ -62,6 +62,7 @@ final class MovieCastMembersViewModel {
                 case .finished:
                     break
                 case .failure(let error):
+                    print(error)
                     alertMessage = error.localizedDescription
                     showAlert = true
                 }
