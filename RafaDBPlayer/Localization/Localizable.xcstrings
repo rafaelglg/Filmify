@@ -55,6 +55,7 @@
       }
     },
     "App error getting detail" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -105,6 +106,7 @@
       }
     },
     "Cancel" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -225,13 +227,34 @@
       }
     },
     "No actor" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin actor"
+          }
+        }
+      }
     },
     "No actors available at the moment." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No hay actores disponibles en el momento"
+          }
+        }
+      }
     },
     "No crew" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin equipo"
+          }
+        }
+      }
     },
     "No crews available at the moment." : {
 
