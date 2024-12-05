@@ -21,7 +21,7 @@ final class MovieViewModel {
     
     var selectedMovie: MovieResultResponse?
     @ObservationIgnored var cancellable = Set<AnyCancellable>()
-    @ObservationIgnored var searchText = CurrentValueSubject<String, Never>("")
+    var searchText = CurrentValueSubject<String, Never>("")
     var filteredMovies: [MovieResultResponse] = []
     var noSearchResult: Bool = false
     
