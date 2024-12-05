@@ -10,42 +10,29 @@ import SwiftUI
 struct Dashboard: View {
     
     @Environment(MovieViewModel.self) var movieVM
+    @Environment(NetworkMonitor.self) var network
+    @State private var screenSize: CGSize = .zero
     
     var body: some View {
-        @Bindable var movieVM = movieVM
         NavigationStack {
             ZStack {
-                ScrollView {
-                    LazyVStack {
-                        if movieVM.isSearching {
-                            filteredMovies
-                        } else {
-                            SectionMovies()
+                GeometryReader { proxy in
+                    let size = proxy.size
+                    EmptyView()
+                        .onChange(of: size) {_, newSize in
+                            screenSize = newSize
                         }
+                    if !network.isConnected {
+                        NoInternetConnectionView()
+                    } else {
+                        scrollViewContent
                     }
-                    .alert("App error", isPresented: $movieVM.showingAlert) {
-                        Button("Ok") {}
-                    } message: { Text(movieVM.alertMessage) }
-                    
-                    .searchable(text: $movieVM.searchText.value, prompt: "Look for a movie")
-                    .sheet(isPresented: $movieVM.showProfile) { RafaView() }
-                    
-                    .toolbar {
-                        ToolbarItem(placement: .topBarLeading) {
-                            Button {
-                                movieVM.showProfile.toggle()
-                            } label: {
-                                Text("Rafa")
-                                    .font(.callout)
-                                    .fontWeight(.bold)
-                                    .foregroundStyle(Color(.label))
-                            }
-                        }
-                    }
-                    .preferredColorScheme(.dark)
                 }
+                .preferredColorScheme(.dark)
                 .scrollDismissesKeyboard(.immediately)
-                progressView
+                if movieVM.isLoadingDetailView {
+                    customProgressView
+                }
             }
             .onAppear { movieVM.getDashboard() }
         }
@@ -55,26 +42,69 @@ struct Dashboard: View {
 #Preview {
     Dashboard()
         .environment(MovieViewModel())
+        .environment(NetworkMonitor())
 }
 
 extension Dashboard {
     
     @ViewBuilder
     // This progress view appears when clicking in a movie from dashboard
-    var progressView: some View {
-        if movieVM.isLoading {
-            Color.black.opacity(0.7)
-                .ignoresSafeArea()
+    var customProgressView: some View {
+        Color.black.opacity(0.7)
+            .ignoresSafeArea()
+        
+        VStack {
+            ProgressView()
+                .frame(width: 80, height: 50)
+                .cornerRadius(8)
             
-            VStack {
-                ProgressView()
-                    .frame(width: 80, height: 80)
-                    .cornerRadius(8)
-                    .padding(.bottom, 10)
-                
-                Text("Please wait...")
-                    .font(.callout)
-                    .foregroundColor(.white)
+            Text("Please wait...")
+                .font(.callout)
+                .foregroundColor(.white)
+        }
+    }
+    
+    @ViewBuilder
+    var scrollViewContent: some View {
+        @Bindable var movieVM = movieVM
+        ScrollView {
+            showDashboard
+                .alert("App error", isPresented: $movieVM.showingAlert) {
+                    Button("Ok") {}
+                } message: { Text(movieVM.alertMessage) }
+            
+                .searchable(text: $movieVM.searchText.value, prompt: "Look for a movie")
+                .sheet(isPresented: $movieVM.showProfile) { RafaView() }
+            
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            movieVM.showProfile.toggle()
+                        } label: {
+                            Text("Rafa")
+                                .font(.callout)
+                                .fontWeight(.bold)
+                                .foregroundStyle(Color(.label))
+                        }
+                    }
+                }
+        }
+    }
+    
+    var showDashboard: some View {
+        LazyVStack {
+            if movieVM.isSearching {
+                filteredMovies
+            } else {
+                ZStack {
+                    if movieVM.isLoading {
+                        customProgressView
+                            .frame(height: 100, alignment: .center)
+                            .position(x: screenSize.width / 2, y: screenSize.height / 2)
+                    } else {
+                        SectionMovies()
+                    }
+                }
             }
         }
     }

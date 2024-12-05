@@ -20,13 +20,14 @@ final class MovieViewModel {
     var detailMovie: MovieDetails = .preview
     
     var selectedMovie: MovieResultResponse?
-    var cancellable = Set<AnyCancellable>()
-    var searchText = CurrentValueSubject<String, Never>("")
+    @ObservationIgnored var cancellable = Set<AnyCancellable>()
+    @ObservationIgnored var searchText = CurrentValueSubject<String, Never>("")
     var filteredMovies: [MovieResultResponse] = []
     var noSearchResult: Bool = false
     
     var showProfile: Bool = false
     var isLoading: Bool = false
+    var isLoadingDetailView: Bool = false
     var alertMessage: String = ""
     var showingAlert: Bool = false
     
@@ -40,11 +41,16 @@ final class MovieViewModel {
     }
     
     func getNowPlayingMovies() {
-        
+        isLoading = true
         movieUsesCase.executeNowPlayingMovies()
             .receive(on: DispatchQueue.main)
             .map(\.results)
             .sink { [weak self] completion in
+                
+                defer {
+                    self?.isLoading = false
+                }
+                
                 switch completion {
                 case .finished:
                     break
@@ -58,11 +64,16 @@ final class MovieViewModel {
     }
     
     func getTopRatedMovies() {
-        
+        isLoading = true
         movieUsesCase.executeTopRatedMovies()
             .receive(on: DispatchQueue.main)
             .map(\.results)
             .sink { [weak self] completion in
+                
+                defer {
+                    self?.isLoading = false
+                }
+                
                 switch completion {
                 case .finished:
                     break
@@ -76,10 +87,15 @@ final class MovieViewModel {
     }
     
     func getUpcomingMovies() {
-        
+        isLoading = true
         movieUsesCase.executeUpcomingMovies()
             .map(\.results)
             .sink { [weak self] completion in
+                
+                defer {
+                    self?.isLoading = false
+                }
+                
                 switch completion {
                 case .finished: break
                 case .failure(let error):
@@ -93,7 +109,7 @@ final class MovieViewModel {
     }
     
     func getTrendingMovies(timePeriod: MovieEndingPath) {
-        
+        isLoading = true
         do {
             guard timePeriod.isTrendingAllow else {
                 throw ErrorManager.badChosenTimePeriod
@@ -101,12 +117,18 @@ final class MovieViewModel {
         } catch {
             self.alertMessage = error.localizedDescription
             self.showingAlert = true
+            return
         }
         
         movieUsesCase.executeTrendingMovies(timePeriod: timePeriod)
             .receive(on: DispatchQueue.main)
             .map(\.results)
             .sink { [weak self] completion in
+                
+                defer {
+                    self?.isLoading = false
+                }
+                
                 switch completion {
                 case .finished: break
                 case .failure(let error):
@@ -125,7 +147,7 @@ final class MovieViewModel {
     }
     
     func getMovieDetails(id: String?) {
-        isLoading = true
+        isLoadingDetailView = true
         
         movieUsesCase.executeDetailMovies(id: id ?? "0")
             .receive(on: DispatchQueue.main)
@@ -133,7 +155,7 @@ final class MovieViewModel {
                 guard let self else { return }
                 
                 defer {
-                    self.isLoading = false
+                    self.isLoadingDetailView = false
                 }
                 
                 switch completion {

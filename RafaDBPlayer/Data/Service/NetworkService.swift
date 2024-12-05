@@ -55,7 +55,6 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
                 if (error as? URLError)?.code == .unsupportedURL {
                     return ErrorManager.badURL
                 }
-                
                 return error
             }
             .decode(type: MovieModel.self, decoder: Utils.jsonDecoder)
