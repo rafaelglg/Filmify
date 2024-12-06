@@ -27,6 +27,8 @@ final class NetworkMonitorImpl: NetworkMonitor {
     }
     
     func getNetwork() {
+        networkMonitor.start(queue: workerQueue)
+        
         networkMonitor.pathUpdateHandler = { [weak self] path in
             let isConnected = path.status == .satisfied
             
@@ -34,6 +36,5 @@ final class NetworkMonitorImpl: NetworkMonitor {
                 self?.isConnected = isConnected
             }
         }
-        networkMonitor.start(queue: workerQueue)
     }
 }
