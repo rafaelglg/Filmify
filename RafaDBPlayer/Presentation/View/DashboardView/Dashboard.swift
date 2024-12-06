@@ -22,11 +22,15 @@ struct Dashboard: View {
                         .onChange(of: size) {_, newSize in
                             screenSize = newSize
                         }
-                    
-                    if !network.isConnected {
-                        NoInternetConnectionView()
+
+                    if let network = network.isConnected {
+                        if !network {
+                            NoInternetConnectionView()
+                        } else {
+                            scrollViewContent
+                        }
                     } else {
-                        scrollViewContent
+                        customProgressView
                     }
                 }
                 .preferredColorScheme(.dark)
@@ -63,6 +67,7 @@ extension Dashboard {
                 .font(.callout)
                 .foregroundColor(.white)
         }
+        .position(x: screenSize.width / 2, y: screenSize.height / 2)
     }
     
     @ViewBuilder
@@ -101,7 +106,6 @@ extension Dashboard {
                     if movieVM.isLoading {
                         customProgressView
                             .frame(height: 100, alignment: .center)
-                            .position(x: screenSize.width / 2, y: screenSize.height / 2)
                     } else {
                         SectionMovies()
                     }

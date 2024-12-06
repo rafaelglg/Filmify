@@ -12,7 +12,7 @@ import Network
 final class NetworkMonitor {
     private let networkMonitor = NWPathMonitor()
     private let workerQueue = DispatchQueue(label: "Monitor")
-    var isConnected: Bool = false
+    var isConnected: Bool?
     
     init() {
         networkMonitor.pathUpdateHandler = { [weak self] path in
