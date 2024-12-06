@@ -10,7 +10,7 @@ import SwiftUI
 struct Dashboard: View {
     
     @Environment(MovieViewModel.self) var movieVM
-    @Environment(NetworkMonitor.self) var network
+    @Environment(NetworkMonitorImpl.self) var network
     @State private var screenSize: CGSize = .zero
     
     var body: some View {
@@ -47,7 +47,7 @@ struct Dashboard: View {
 #Preview {
     Dashboard()
         .environment(MovieViewModel())
-        .environment(NetworkMonitor())
+        .environment(NetworkMonitorImpl())
 }
 
 extension Dashboard {

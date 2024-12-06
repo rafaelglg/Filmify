@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct RafaDBPlayerApp: App {
     let movieVM = MovieViewModel()
-    let networkMonitor = NetworkMonitor()
+    let networkMonitor = NetworkMonitorImpl()
     var body: some Scene {
         WindowGroup {
             Dashboard()
