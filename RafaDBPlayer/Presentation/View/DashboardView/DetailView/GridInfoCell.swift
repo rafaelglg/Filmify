@@ -14,21 +14,7 @@ struct GridInfoCell: View {
     var body: some View {
         
         LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
-            
-            ForEach(movieVM.detailMovie.productionCompanies) { companies in
-                
-                HStack(spacing: companies.logoPath != nil ? 10 : 0) {
-                    if companies.logoPath == nil {
-                        noImageLogo
-                    }
-                    
-                    imageLogo(url: companies.logoURL, logoPath: companies.logoPath)
-                    
-                    VStack(alignment: .leading) {
-                        companiesInfo(name: companies.name, originCountry: companies.originCountry)
-                    }
-                }
-            }
+            productionCompany
         }
     }
     
@@ -81,5 +67,25 @@ extension GridInfoCell {
             }
             .offset(x: -5)
             .frame(width: 60, height: 60, alignment: .leading)
+    }
+    
+    @ViewBuilder
+    var productionCompany: some View {
+        if let proCompanies = movieVM.detailMovie?.productionCompanies {
+            ForEach(proCompanies, id: \.id) { companies in
+                
+                HStack(spacing: companies.logoPath != nil ? 10 : 0) {
+                    if companies.logoPath == nil {
+                        noImageLogo
+                    }
+                    
+                    imageLogo(url: companies.logoURL, logoPath: companies.logoPath)
+                    
+                    VStack(alignment: .leading) {
+                        companiesInfo(name: companies.name, originCountry: companies.originCountry)
+                    }
+                }
+            }
+        }
     }
 }

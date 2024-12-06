@@ -22,6 +22,7 @@ struct Dashboard: View {
                         .onChange(of: size) {_, newSize in
                             screenSize = newSize
                         }
+                    
                     if !network.isConnected {
                         NoInternetConnectionView()
                     } else {

@@ -11,7 +11,7 @@ struct MovieDetails: Decodable, Identifiable {
     let adult: Bool
     let backdropPath: String?
     let budget: Int
-    let genres: [Genres]
+    let genres: [Genres]?
     let homepage: String
     let id: Int
     let imdbId: String?
@@ -36,9 +36,14 @@ struct MovieDetails: Decodable, Identifiable {
     }
     
     var genresFormatted: String {
-        return genres
-            .map { $0.name }
-            .joined(separator: ", ") // to have the names outside of the array and separated by ", "
+        
+        if let genres = genres, genres.isEmpty {
+            return "No genre info available"
+        } else {
+            return genres?
+                .map { $0.name }
+                .joined(separator: ", ") ?? "" // to have the names outside of the array and separated by ", "
+        }
     }
 }
 

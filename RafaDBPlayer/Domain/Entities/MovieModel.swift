@@ -24,7 +24,7 @@ struct MovieResultResponse: Decodable, Identifiable, Hashable {
     let backdropPath: String?
     let originalLanguage: String
     let originalTitle: String
-    let overview: String
+    let overview: String?
     let popularity: Double
     let posterPath: String?
     let releaseDate: String

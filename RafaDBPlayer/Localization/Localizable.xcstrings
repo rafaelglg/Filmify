@@ -1,9 +1,6 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {
-
-    },
     "%@" : {
       "localizations" : {
         "es" : {
@@ -54,17 +51,6 @@
         }
       }
     },
-    "App error getting detail" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "App error obteniendo detalles"
-          }
-        }
-      }
-    },
     "Apple developer" : {
       "localizations" : {
         "es" : {
@@ -101,17 +87,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nacido en: %@"
-          }
-        }
-      }
-    },
-    "Cancel" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cancelar"
           }
         }
       }
@@ -226,16 +201,6 @@
         }
       }
     },
-    "No actor" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sin actor"
-          }
-        }
-      }
-    },
     "No actors available at the moment." : {
       "localizations" : {
         "es" : {
@@ -246,18 +211,15 @@
         }
       }
     },
-    "No crew" : {
+    "No crews available at the moment." : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sin equipo"
+            "value" : "No hay equipos por el momento"
           }
         }
       }
-    },
-    "No crews available at the moment." : {
-
     },
     "No found for the movie ''%@''" : {
       "localizations" : {
@@ -285,6 +247,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sin imagen"
+          }
+        }
+      }
+    },
+    "No info" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sin información"
           }
         }
       }

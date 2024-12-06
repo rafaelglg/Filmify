@@ -77,7 +77,7 @@ extension MediaDetailView {
         productionCompaniesTitle
         GridInfoCell()
         
-        let trailerKey = movieVM.detailMovie.videos.results
+        let trailerKey = movieVM.detailMovie?.videos.results
             .filter { $0.type.lowercased().contains("trailer") }
             .first?.key ?? ""
         
@@ -152,7 +152,7 @@ extension MediaDetailView {
                     }
                 }
             } else {
-                ContentUnavailableView("No actor", systemImage: "figure.mixed.cardio", description: Text("No actors available at the moment."))
+                ContentUnavailableView("No info", systemImage: "figure.mixed.cardio", description: Text("No actors available at the moment."))
             }
             
             Text("Crew")
@@ -170,7 +170,7 @@ extension MediaDetailView {
                     }
                 }
             } else {
-                ContentUnavailableView("No crew", systemImage: "figure.mixed.cardio", description: Text("No crews available at the moment."))
+                ContentUnavailableView("No info", systemImage: "figure.mixed.cardio", description: Text("No crews available at the moment."))
             }
         }
         
@@ -266,15 +266,21 @@ extension MediaDetailView {
                 HStack(spacing: 4) {
                     Label("\(movie.releaseDate.toYear())", systemImage: "calendar")
                     Text(verbatim: "|")
-                    Label("\(String(describing: movieVM.detailMovie.runtime.description)) minutes", systemImage: "clock")
+                    
+                    if let runtime = movieVM.detailMovie?.runtime.description {
+                        Label("\(runtime) minutes", systemImage: "clock")
+                    }
                 }
+                
                 Label {
-                    Text(movieVM.detailMovie.genresFormatted)
+                    Text(movieVM.detailMovie?.genresFormatted ?? "")
                         .frame(width: 180, alignment: .leading)
                 } icon: {
                     Image(systemName: "ticket")
                 }
-                Label("revenue: \(movieVM.detailMovie.revenueFormatted)", systemImage: "dollarsign")
+                if let revenue = movieVM.detailMovie?.revenueFormatted {
+                    Label("revenue: \(revenue)", systemImage: "dollarsign")
+                }
             }
             .font(.caption)
             .foregroundStyle(.secondary)
@@ -326,33 +332,36 @@ extension MediaDetailView {
     
     var infoMovie: some View {
         VStack(alignment: .leading) {
-            VStack(alignment: .leading) {
-                Text("Overview")
-                    .font(.title2)
-                    .bold()
-                
-                Text(movie.overview)
-                    .lineLimit(isExpandedBio ? nil : 3)
-
-                if !movie.overview.isEmpty && movie.overview.count > 140 {
-                    buttonSeeMore
-                }
-            }
-            .padding(.top, 25)
-            .padding(.bottom, 10)
-            
-            Text("Spoken languages")
-                .font(.title2)
-                .bold()
-            VStack(alignment: .leading) {
-                let detailMovie = movieVM.detailMovie
-                ForEach(detailMovie.spokenLanguages) { language in
-                    HStack(spacing: 5) {
-                        Text(language.countryFlag(countryCode: language.countryCodeName))
-                        Text(language.englishName)
+            if let movieOverview = movie.overview, !movieOverview.isEmpty {
+                VStack(alignment: .leading) {
+                    Text("Overview")
+                        .font(.title2)
+                        .bold()
+                    
+                    Text(movieOverview)
+                        .lineLimit(isExpandedBio ? nil : 3)
+                    
+                    if movieOverview.count > 140 {
+                        buttonSeeMore
                     }
                 }
-                .font(.headline)
+                .padding(.top, 25)
+                .padding(.bottom, 10)
+            }
+            
+            if let spokenLanguages = movieVM.detailMovie?.spokenLanguages, !spokenLanguages.isEmpty {
+                Text("Spoken languages")
+                    .font(.title2)
+                    .bold()
+                VStack(alignment: .leading) {
+                    ForEach(spokenLanguages) { language in
+                        HStack(spacing: 5) {
+                            Text(language.countryFlag(countryCode: language.countryCodeName))
+                            Text(language.englishName)
+                        }
+                    }
+                    .font(.headline)
+                }
             }
         }
     }
@@ -370,24 +379,28 @@ extension MediaDetailView {
     
     var statusFilm: some View {
         HStack {
-            let status = movieVM.detailMovie.status
-            
-            Image(systemName: "movieclapper")
-            Text("Status film: ")
-                .font(.title2)
-                .bold()
-            
-            Text(status)
-                .font(.title3)
-                .bold()
-                .foregroundStyle(status == "Released" ? .green : .primary)
+            if let status = movieVM.detailMovie?.status {
+                
+                Image(systemName: "movieclapper")
+                Text("Status film: ")
+                    .font(.title2)
+                    .bold()
+                
+                Text(status)
+                    .font(.title3)
+                    .bold()
+                    .foregroundStyle(status == "Released" ? .green : .primary)
+            }
         }
     }
     
+    @ViewBuilder
     var productionCompaniesTitle: some View {
-        Text(movieVM.detailMovie.productionCompanies.isEmpty ? "" : "Production companies")
-            .font(.title2)
-            .bold()
+        if let title = movieVM.detailMovie?.productionCompanies, !title.isEmpty {
+            Text("Production companies")
+                .font(.title2)
+                .bold()
+        }
     }
     
     // MARK: - Functions
@@ -401,7 +414,7 @@ extension MediaDetailView {
         bgColor: Bool = false,
         aspectRatio: ContentMode = .fit) -> some View {
             
-            if movie.posterPath == nil {
+            if movie.posterPath == nil || movie.backdropPath == nil {
                 ZStack {
                     RoundedRectangle(cornerRadius: 5)
                     Text("No image")

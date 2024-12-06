@@ -53,9 +53,8 @@ struct PersonDetailView<T>: View {
                         Text(personDetail.biography)
                             .lineLimit(isExpandedBio ? nil : 3)
                             .font(.body)
-                            .padding(.top)
-                        
-                        if !personDetail.biography.isEmpty && personDetail.biography.count > 55 {
+
+                        if !personDetail.biography.isEmpty && personDetail.biography.count > 60 {
                             buttonSeeMore
                         }
                         
@@ -120,7 +119,7 @@ extension PersonDetailView {
             .font(.body)
             .padding(.top)
         
-        if !personDetail.biography.isEmpty && personDetail.biography.count > 55 {
+        if !personDetail.biography.isEmpty && personDetail.biography.count > 60 {
             buttonSeeMore
         }
         
@@ -144,6 +143,7 @@ extension PersonDetailView {
             Label("Important details", systemImage: "lightbulb.fill")
                 .font(.title2)
                 .bold()
+                .padding(.top)
             Text("Birthday: \(personDetail.dateOfBirthFormatted)")
             Text("Born in: \(personDetail.placeOfBirth ?? "")")
             if personDetail.isDead() {
