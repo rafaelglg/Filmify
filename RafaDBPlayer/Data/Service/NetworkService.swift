@@ -11,11 +11,8 @@ import Combine
 protocol NetworkServiceProtocol: AnyObject {
     
     func fetchNowPlayingMovies(basePath: String, endingPath path: MovieEndingPath) -> AnyPublisher<MovieModel, Error>
-    
     func fetchMovieReviews(endingPath path: MovieEndingPath) -> AnyPublisher<MovieReviewModel, Error>
-    
     func fetchCastMembers<T: Decodable>(baseURL: String, id path: MovieEndingPath, endingPath: MovieEndingPath) -> AnyPublisher<T, Error>
-    
     func fetchDetailMovies<T: Decodable>(id: MovieEndingPath, endingPath path: [MovieEndingPath]) -> AnyPublisher<T, Error>
     func fetchSearchMovies<T: Decodable>(query: String) -> AnyPublisher<T, Error>
 }

@@ -10,9 +10,20 @@
 		534E83702CFE0055006ECDED /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 534E836F2CFE0055006ECDED /* Launch Screen.storyboard */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		5390627A2D03172500478604 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 532C42D22CDB99C40031E732 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 532C42D92CDB99C40031E732;
+			remoteInfo = RafaDBPlayer;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		532C42DA2CDB99C40031E732 /* RafaDBPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RafaDBPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		534E836F2CFE0055006ECDED /* Launch Screen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		539062762D03172500478604 /* RafaDBPlayerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RafaDBPlayerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -26,6 +37,11 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		539062772D03172500478604 /* RafaDBPlayerTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = RafaDBPlayerTests;
+			sourceTree = "<group>";
+		};
 		53ECCF5A2CF6089D00E3B1C9 /* RafaDBPlayer */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -44,6 +60,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		539062732D03172500478604 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -52,6 +75,7 @@
 			children = (
 				534E836F2CFE0055006ECDED /* Launch Screen.storyboard */,
 				53ECCF5A2CF6089D00E3B1C9 /* RafaDBPlayer */,
+				539062772D03172500478604 /* RafaDBPlayerTests */,
 				532C42DB2CDB99C40031E732 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -60,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				532C42DA2CDB99C40031E732 /* RafaDBPlayer.app */,
+				539062762D03172500478604 /* RafaDBPlayerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -90,6 +115,29 @@
 			productReference = 532C42DA2CDB99C40031E732 /* RafaDBPlayer.app */;
 			productType = "com.apple.product-type.application";
 		};
+		539062752D03172500478604 /* RafaDBPlayerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5390627C2D03172500478604 /* Build configuration list for PBXNativeTarget "RafaDBPlayerTests" */;
+			buildPhases = (
+				539062722D03172500478604 /* Sources */,
+				539062732D03172500478604 /* Frameworks */,
+				539062742D03172500478604 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5390627B2D03172500478604 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				539062772D03172500478604 /* RafaDBPlayerTests */,
+			);
+			name = RafaDBPlayerTests;
+			packageProductDependencies = (
+			);
+			productName = RafaDBPlayerTests;
+			productReference = 539062762D03172500478604 /* RafaDBPlayerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -102,6 +150,10 @@
 				TargetAttributes = {
 					532C42D92CDB99C40031E732 = {
 						CreatedOnToolsVersion = 16.1;
+					};
+					539062752D03172500478604 = {
+						CreatedOnToolsVersion = 16.1;
+						TestTargetID = 532C42D92CDB99C40031E732;
 					};
 				};
 			};
@@ -121,6 +173,7 @@
 			projectRoot = "";
 			targets = (
 				532C42D92CDB99C40031E732 /* RafaDBPlayer */,
+				539062752D03172500478604 /* RafaDBPlayerTests */,
 			);
 		};
 /* End PBXProject section */
@@ -131,6 +184,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				534E83702CFE0055006ECDED /* Launch Screen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		539062742D03172500478604 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,7 +227,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		539062722D03172500478604 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5390627B2D03172500478604 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 532C42D92CDB99C40031E732 /* RafaDBPlayer */;
+			targetProxy = 5390627A2D03172500478604 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		532C42E62CDB99C50031E732 /* Debug */ = {
@@ -363,6 +438,46 @@
 			};
 			name = Release;
 		};
+		5390627D2D03172500478604 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F52TXSWCFU;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rafael.RafaDBPlayerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RafaDBPlayer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RafaDBPlayer";
+			};
+			name = Debug;
+		};
+		5390627E2D03172500478604 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F52TXSWCFU;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rafael.RafaDBPlayerTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RafaDBPlayer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/RafaDBPlayer";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -380,6 +495,15 @@
 			buildConfigurations = (
 				532C42E92CDB99C50031E732 /* Debug */,
 				532C42EA2CDB99C50031E732 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5390627C2D03172500478604 /* Build configuration list for PBXNativeTarget "RafaDBPlayerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5390627D2D03172500478604 /* Debug */,
+				5390627E2D03172500478604 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
