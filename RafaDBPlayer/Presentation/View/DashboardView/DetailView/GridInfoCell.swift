@@ -37,17 +37,6 @@ struct GridInfoCell: View {
             }
         }
     }
-    
-    @ViewBuilder
-    func companiesInfo(name: String, originCountry: String) -> some View {
-        Text(name)
-            .font(.caption)
-            .bold()
-        
-        Text(originCountry)
-            .font(.caption2)
-            .fontWeight(.light)
-    }
 }
 
 #Preview {
@@ -65,8 +54,22 @@ extension GridInfoCell {
                     .font(.caption)
                     .foregroundStyle(.black)
             }
-            .offset(x: -5)
-            .frame(width: 60, height: 60, alignment: .leading)
+            .frame(width: 60, height: 60, alignment: .center)
+    }
+    
+    func companiesInfo(name: String, originCountry: String) -> some View {
+        VStack(alignment: .leading) {
+            
+            Text(name)
+                .font(.caption)
+                .bold()
+            
+            if !originCountry.isEmpty {
+                Text(originCountry)
+                    .font(.caption2)
+                    .fontWeight(.light)
+            }
+        }
     }
     
     @ViewBuilder
@@ -74,16 +77,15 @@ extension GridInfoCell {
         if let proCompanies = movieVM.detailMovie?.productionCompanies {
             ForEach(proCompanies, id: \.id) { companies in
                 
-                HStack(spacing: companies.logoPath != nil ? 10 : 0) {
+                HStack(alignment: .center, spacing: companies.logoPath != nil ? 10 : 2) {
                     if companies.logoPath == nil {
                         noImageLogo
                     }
                     
                     imageLogo(url: companies.logoURL, logoPath: companies.logoPath)
                     
-                    VStack(alignment: .leading) {
-                        companiesInfo(name: companies.name, originCountry: companies.originCountry)
-                    }
+                    companiesInfo(name: companies.name, originCountry: companies.originCountry)
+                    
                 }
             }
         }

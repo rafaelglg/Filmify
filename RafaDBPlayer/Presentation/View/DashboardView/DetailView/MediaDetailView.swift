@@ -350,10 +350,12 @@ extension MediaDetailView {
             }
             
             if let spokenLanguages = movieVM.detailMovie?.spokenLanguages, !spokenLanguages.isEmpty {
-                Text("Spoken languages")
-                    .font(.title2)
-                    .bold()
                 VStack(alignment: .leading) {
+                    
+                    Text("Spoken languages")
+                        .font(.title2)
+                        .bold()
+                    
                     ForEach(spokenLanguages) { language in
                         HStack(spacing: 5) {
                             Text(language.countryFlag(countryCode: language.countryCodeName))
@@ -362,8 +364,10 @@ extension MediaDetailView {
                     }
                     .font(.headline)
                 }
+                .padding(.top, movie.overview?.isEmpty == true ? 25 : 0)
             }
         }
+        
     }
     
     var buttonSeeMore: some View {
