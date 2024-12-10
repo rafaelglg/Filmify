@@ -13,7 +13,7 @@ struct RafaDBPlayerApp: App {
     let networkMonitor = NetworkMonitorImpl()
     var body: some Scene {
         WindowGroup {
-            Dashboard()
+            OnBoarding()
                 .environment(movieVM)
                 .environment(networkMonitor)
         }
