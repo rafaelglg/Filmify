@@ -11,6 +11,7 @@ protocol OnboardingViewModel {
     var welcoming: [String] { get }
     var showButton: Bool { get set }
     var goToDashboard: Bool { get set }
+    var goToSignIn: Bool { get set }
     func isBoldCharacter(line: String, charIndex: Int) -> Bool
 }
 
@@ -18,6 +19,7 @@ protocol OnboardingViewModel {
 final class OnboardingViewModelImpl: OnboardingViewModel {
     
     var showButton: Bool = false
+    var goToSignIn: Bool = false
     var goToDashboard: Bool = false
     let welcoming = [
         "Welcome to",

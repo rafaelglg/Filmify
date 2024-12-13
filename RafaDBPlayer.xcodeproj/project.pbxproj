@@ -28,16 +28,6 @@
 		5390627F2D0452D000478604 /* RafaDBPlayer.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = RafaDBPlayer.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		53ECCF7F2CF6089D00E3B1C9 /* Exceptions for "RafaDBPlayer" folder in "RafaDBPlayer" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Info.plist,
-			);
-			target = 532C42D92CDB99C40031E732 /* RafaDBPlayer */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		539062772D03172500478604 /* RafaDBPlayerTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -46,9 +36,6 @@
 		};
 		53ECCF5A2CF6089D00E3B1C9 /* RafaDBPlayer */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				53ECCF7F2CF6089D00E3B1C9 /* Exceptions for "RafaDBPlayer" folder in "RafaDBPlayer" target */,
-			);
 			path = RafaDBPlayer;
 			sourceTree = "<group>";
 		};
@@ -305,6 +292,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -314,6 +302,7 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
@@ -364,6 +353,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -371,6 +361,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = complete;
 				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -388,9 +379,10 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RafaDBPlayer/Info.plist;
+				INFOPLIST_FILE = "";
 				INFOPLIST_KEY_CFBundleDisplayName = RafaDBPlayer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "We need to verify your identity data";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -423,9 +415,10 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = RafaDBPlayer/Info.plist;
+				INFOPLIST_FILE = "";
 				INFOPLIST_KEY_CFBundleDisplayName = RafaDBPlayer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
+				INFOPLIST_KEY_NSFaceIDUsageDescription = "We need to verify your identity data";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -455,6 +448,8 @@
 				DEVELOPMENT_TEAM = F52TXSWCFU;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RafaDBPlayerTests/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rafael.RafaDBPlayerTests;
@@ -475,6 +470,8 @@
 				DEVELOPMENT_TEAM = F52TXSWCFU;
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = RafaDBPlayerTests/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 18.1;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.rafael.RafaDBPlayerTests;

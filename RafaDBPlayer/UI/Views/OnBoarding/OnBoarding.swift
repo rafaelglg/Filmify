@@ -9,8 +9,6 @@ import SwiftUI
 import Vortex
 
 struct OnBoarding: View {
-    @Environment(MovieViewModel.self) var movieVM
-    @Environment(NetworkMonitorImpl.self) var network
     
     @State private var onboardingVM: OnboardingViewModel = OnboardingViewModelImpl()
     @State private var startAnimating: Bool = false
@@ -19,10 +17,8 @@ struct OnBoarding: View {
     var body: some View {
         
         VStack(alignment: .center, spacing: 5) {
-            if onboardingVM.goToDashboard {
-                Dashboard()
-                    .environment(movieVM)
-                    .environment(network)
+            if onboardingVM.goToSignIn {
+                SignInView()
             } else {
                 ZStack {
                     VortexViewReader { proxy in
@@ -105,10 +101,10 @@ extension OnBoarding {
     
     var startButton: some View {
         Button {
-            onboardingVM.goToDashboard.toggle()
+            onboardingVM.goToSignIn.toggle()
         } label: {
             HStack {
-                Text("Go to dashboard")
+                Text("Get started")
                 Image(systemName: "chevron.right")
             }
         }
@@ -116,7 +112,7 @@ extension OnBoarding {
         .buttonBorderShape(.capsule)
         .buttonStyle(.borderedProminent)
         .opacity(onboardingVM.showButton ? 1 : 0)
-        .padding(.top, 50)
+        .padding(.top, 30)
         .preferredColorScheme(.dark)
     }
 }

@@ -138,3 +138,18 @@ extension Array {
         return filter { seen.insert($0[keyPath: keyPath]).inserted }
     }
 }
+
+extension PreviewTrait where T == Preview.ViewTraits {
+    static let environments: Self = .modifier(EnvironmentTraits())
+}
+
+struct EnvironmentTraits: PreviewModifier {
+    
+    func body(content: Content, context: Void) -> some View {
+        @Previewable @State var network = NetworkMonitorImpl()
+        @Previewable @State var movieVM = MovieViewModel()
+        content
+            .environment(movieVM)
+            .environment(network)
+    }
+}

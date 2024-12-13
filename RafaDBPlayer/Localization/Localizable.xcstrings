@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "%@" : {
       "localizations" : {
         "es" : {
@@ -60,6 +63,9 @@
           }
         }
       }
+    },
+    "Authentication failed" : {
+
     },
     "Be the first one to leave a review" : {
       "localizations" : {
@@ -141,7 +147,11 @@
         }
       }
     },
+    "Get started" : {
+
+    },
     "Go to dashboard" : {
+      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
@@ -170,6 +180,9 @@
           }
         }
       }
+    },
+    "Important!" : {
+
     },
     "Look for a movie" : {
       "localizations" : {
@@ -331,6 +344,9 @@
         }
       }
     },
+    "or login with" : {
+
+    },
     "Overview" : {
       "localizations" : {
         "es" : {
@@ -430,6 +446,9 @@
           }
         }
       }
+    },
+    "Sign in" : {
+
     },
     "Sort by Date" : {
       "localizations" : {
