@@ -25,13 +25,13 @@ struct MovieResultResponse: Decodable, Identifiable, Hashable {
     let originalLanguage: String
     let originalTitle: String
     let overview: String?
-    let popularity: Double
+    let popularity: Double?
     let posterPath: String?
-    let releaseDate: String
+    let releaseDate: String?
     let title: String
-    let video: Bool
-    let voteAverage: Float
-    let voteCount: Int
+    let video: Bool?
+    let voteAverage: Float?
+    let voteCount: Int?
     
     var backdropURLImage: URL {
         guard let url = URL(string: Constants.imageURL) else {return URL(filePath: "URL ERROR")}
@@ -41,5 +41,9 @@ struct MovieResultResponse: Decodable, Identifiable, Hashable {
     var posterURLImage: URL {
         guard let url = URL(string: Constants.imageURL) else {return URL(filePath: "URL ERROR")}
         return url.appending(path: posterPath ?? "no image")
+    }
+    
+    var releaseDateFormatted: String {
+        return releaseDate ?? ""
     }
 }

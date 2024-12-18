@@ -97,14 +97,12 @@ struct SpokenLanguages: Decodable, Identifiable, Hashable {
     
     var countryCodeName: String {
         switch iso6391 {
-        case "en":
+        case "en": // English US
             return "US"
-        case "ja":
+        case "ja": // Japan
             return "JP"
         case "he":
             return "IL"
-        case "xx":
-            return ""
         case "ko":
             return "KR"
         case "hi":
@@ -115,6 +113,12 @@ struct SpokenLanguages: Decodable, Identifiable, Hashable {
             return "CZ"
         case "ka":
             return "GE"
+        case "uk": // Ukraine
+            return "UA"
+        case "fa": // Persian
+            return "IR"
+        case "xx": // No language found in api moviedb
+            return ""
         default:
             return iso6391.uppercased()
         }

@@ -154,6 +154,19 @@
         }
       }
     },
+    "Delete account" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar cuenta"
+          }
+        }
+      }
+    },
+    "Delete password from keychain" : {
+
+    },
     "Filtered Movies" : {
       "localizations" : {
         "es" : {
@@ -163,6 +176,9 @@
           }
         }
       }
+    },
+    "Get password from keychain" : {
+
     },
     "Get started" : {
       "localizations" : {
@@ -185,7 +201,14 @@
       }
     },
     "Home" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicio"
+          }
+        }
+      }
     },
     "Important details" : {
       "localizations" : {
@@ -617,16 +640,6 @@
         }
       }
     },
-    "Try again" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Intentalo de nuevo"
-          }
-        }
-      }
-    },
     "Upcoming" : {
       "localizations" : {
         "es" : {
@@ -672,6 +685,15 @@
           }
         }
       }
+    },
+    "You will delete all your data from keychain and there is no coming back." : {
+
+    },
+    "You will delete all your data, and there is no coming back." : {
+
+    },
+    "You will get your data from keychain." : {
+
     }
   },
   "version" : "1.0"

@@ -263,7 +263,7 @@ extension MediaDetailView {
             
             VStack(alignment: .leading, spacing: 5) {
                 HStack(spacing: 4) {
-                    Label("\(movie.releaseDate.toYear())", systemImage: "calendar")
+                    Label("\(movie.releaseDateFormatted.toYear())", systemImage: "calendar")
                     Text(verbatim: "|")
                     
                     if let runtime = movieVM.detailMovie?.runtime.description {

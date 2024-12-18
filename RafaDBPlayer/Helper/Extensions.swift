@@ -88,6 +88,10 @@ extension PersonDetailModel {
     static let preview = PersonDetailModel(alsoKnownAs: ["마가렛 퀄리", "マーガレット・クアリー", "Sarah Margaret Qualley", "Маргарет Кволлі"], biography: "Sarah Margaret Qualley (born October 23, 1994). Edward Thomas Hardy CBE (born 15 September 1977) is an English actor, producer, writer and former model. After studying acting at the Drama Centre London, he made his film debut in Ridley Scott\'s Black Hawk Down (2001). He has since been nominated for the Academy Award for Best Supporting Actor", birthday: "", deathday: "", gender: 1, homepage: "", id: 1, imdbId: "", knownForDepartment: "Acting", name: "Margaret", placeOfBirth: "", popularity: 1.1)
 }
 
+extension UserModel {
+    static let preview = UserModel(email: "rafaglg9@gmail.com", password: "aA@123456", fullName: "Rafael Loggiodice")
+}
+
 extension Data {
     var html2AttributedString: NSAttributedString? {
         do {
@@ -136,6 +140,16 @@ extension Array {
     func removingDuplicates<T: Hashable>(by keyPath: KeyPath<Element, T>) -> [Element] {
         var seen = Set<T>()
         return filter { seen.insert($0[keyPath: keyPath]).inserted }
+    }
+}
+
+extension View {
+    func customTabBarAppearance(forSelectedItem: UIColor? = nil, forUnselectedItem unselectedColor: UIColor) -> some View {
+        self.onAppear {
+            let appearance = UITabBar.appearance()
+            appearance.unselectedItemTintColor = unselectedColor
+            appearance.tintColor = forSelectedItem
+        }
     }
 }
 

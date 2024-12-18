@@ -16,7 +16,8 @@ protocol BiometricAuthentication {
     var isAuthenticating: Bool { get }
     
     func getBiometricType()
-    func mapLaError(_ error: LAError) -> AuthenticationError
+    func mapLaError(_ error: LAError) -> BiometricAuthenticationError
+    func showBiometricError(_ error: KeychainError)
     @MainActor
     func biometricAuthentication() async
 }
@@ -49,12 +50,13 @@ final class BiometricAuthenticationImpl: BiometricAuthentication {
             isAuthenticating = false
         }
         
-        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+        if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
             
             do {
-                let success = try await context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason)
+                let success = try await context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: reason)
                 isAuthenticated = success
             } catch {
+                isAuthenticated = false
                 showingAlert.toggle()
                 alertMessage = error.localizedDescription
             }
@@ -63,11 +65,12 @@ final class BiometricAuthenticationImpl: BiometricAuthentication {
                 let errorMessage = mapLaError(laError)
                 alertMessage = errorMessage.localizedDescription
             }
+            isAuthenticated = false
             showingAlert.toggle()
         }
     }
     
-    func mapLaError(_ error: LAError) -> AuthenticationError {
+    func mapLaError(_ error: LAError) -> BiometricAuthenticationError {
         switch error.code {
         case .biometryNotEnrolled:
             return .noBiometricEnrolled(biometricType == .faceID ? "face ID" : "touch ID")
@@ -77,21 +80,9 @@ final class BiometricAuthenticationImpl: BiometricAuthentication {
             return .uknown
         }
     }
-}
-
-enum AuthenticationError: Error, LocalizedError {
-    case noBiometricEnrolled(String)
-    case notAvailableBiometry(String)
-    case uknown
     
-    var errorDescription: String? {
-        switch self {
-        case .noBiometricEnrolled(let device):
-            return "You have denied access. Please go to your settings app and turn on the \(device) authentication."
-        case .uknown:
-            return "Uknown error"
-        case .notAvailableBiometry(let device):
-            return "Authentication could not start because \(device) is not available on the device."
-        }
+    func showBiometricError(_ error: KeychainError) {
+        alertMessage = error.localizedDescription
+        showingAlert = true
     }
 }

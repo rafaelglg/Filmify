@@ -39,6 +39,7 @@ extension PasswordView {
                 setPasswordText
                 
                 CustomSecureField(placeholder: "min. 8 char", passwordText: $signUpVM.passwordText)
+                    .textContentType(.newPassword)
                     .focused($focusState, equals: .password)
                     .submitLabel(.go)
                     .onSubmit {

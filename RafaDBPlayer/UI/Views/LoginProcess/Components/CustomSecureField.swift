@@ -16,7 +16,6 @@ struct CustomSecureField: View {
         ZStack(alignment: .leading) {
             SecureField("", text: $passwordText)
                 .padding()
-                .textContentType(.password)
                 .frame(height: 55)
                 .background(.textfieldBackground,
                             in: RoundedRectangle(cornerRadius: 15))

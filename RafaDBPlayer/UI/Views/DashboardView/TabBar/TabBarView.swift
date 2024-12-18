@@ -32,6 +32,7 @@ struct TabBarView: View {
                     .environment(authViewModel)
             }
         }
+        .customTabBarAppearance(forUnselectedItem: .white)
     }
 }
 

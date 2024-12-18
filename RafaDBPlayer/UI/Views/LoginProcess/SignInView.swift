@@ -17,19 +17,13 @@ struct SignInView: View {
     @Environment(AppStateImpl.self) private var appState
     
     var body: some View {
-        @Bindable var authViewModel = authViewModel
         ZStack {
             dismissKeyboardTapInBackground
             VStack {
                 loginView
             }
-            .animation(.smooth, value: authViewModel.biometricAuthentication.isAuthenticated)
+            .animation(.smooth, value: authViewModel.biometricAuth.isAuthenticated)
             .preferredColorScheme(.dark)
-            .alert(isPresented: $authViewModel.biometricAuthentication.showingAlert) {
-                Alert(title: Text("Authentication failed"),
-                      message: Text(authViewModel.biometricAuthentication.alertMessage),
-                      dismissButton: .cancel())
-            }
         }
     }
 }
@@ -96,9 +90,10 @@ extension SignInView {
     
     @ViewBuilder
     var biometricButton: some View {
-        let authentication = authViewModel.biometricAuthentication
+        @Bindable var authViewModel = authViewModel
+        let authentication = authViewModel.biometricAuth
         Button {
-            authViewModel.authenticate()
+            authViewModel.biometricAuthentication(email: signInVM.emailText)
         } label: {
             Image(systemName: authentication.biometricType == .touchID ? "touchid" : "faceid" )
                 .resizable()
@@ -109,6 +104,11 @@ extension SignInView {
         }
         .frame(height: 50)
         .padding(.vertical, 30)
+        .alert(isPresented: $authViewModel.biometricAuth.showingAlert) {
+            Alert(title: Text("Authentication failed"),
+                  message: Text(authViewModel.biometricAuth.alertMessage),
+                  dismissButton: .cancel())
+        }
     }
     
     var authenticationButtons: some View {
