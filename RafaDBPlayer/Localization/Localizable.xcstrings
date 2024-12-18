@@ -2,7 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "" : {
-
+      "shouldTranslate" : false
     },
     "%@" : {
       "localizations" : {
@@ -65,7 +65,14 @@
       }
     },
     "Authentication failed" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autenticación fallida"
+          }
+        }
+      }
     },
     "Be the first one to leave a review" : {
       "localizations" : {
@@ -103,6 +110,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cerrar"
+          }
+        }
+      }
+    },
+    "Continue" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar"
           }
         }
       }
@@ -148,15 +165,11 @@
       }
     },
     "Get started" : {
-
-    },
-    "Go to dashboard" : {
-      "extractionState" : "stale",
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ir al dashboard"
+            "value" : "Empezar"
           }
         }
       }
@@ -171,6 +184,9 @@
         }
       }
     },
+    "Home" : {
+
+    },
     "Important details" : {
       "localizations" : {
         "es" : {
@@ -180,9 +196,6 @@
           }
         }
       }
-    },
-    "Important!" : {
-
     },
     "Look for a movie" : {
       "localizations" : {
@@ -210,6 +223,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Trailer"
+          }
+        }
+      }
+    },
+    "New to RafaDB?" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Nuevo en RafaDB?"
           }
         }
       }
@@ -345,7 +368,14 @@
       }
     },
     "or login with" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O inicia sesión con"
+          }
+        }
+      }
     },
     "Overview" : {
       "localizations" : {
@@ -383,6 +413,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Productoras"
+          }
+        }
+      }
+    },
+    "Profile" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Perfil"
           }
         }
       }
@@ -427,6 +467,16 @@
         }
       }
     },
+    "Search" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buscar"
+          }
+        }
+      }
+    },
     "See less" : {
       "localizations" : {
         "es" : {
@@ -447,8 +497,45 @@
         }
       }
     },
+    "Set a password" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Coloca tu contraseña"
+          }
+        }
+      }
+    },
     "Sign in" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inicia sesión"
+          }
+        }
+      }
+    },
+    "Sign out" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cerrar sesión"
+          }
+        }
+      }
+    },
+    "Sign Up" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registrate"
+          }
+        }
+      }
     },
     "Sort by Date" : {
       "localizations" : {
@@ -562,6 +649,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pagina web:"
+          }
+        }
+      }
+    },
+    "What's your e-mail" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cual es tu email?"
           }
         }
       }

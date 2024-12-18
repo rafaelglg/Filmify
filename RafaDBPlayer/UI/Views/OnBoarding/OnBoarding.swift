@@ -10,15 +10,19 @@ import Vortex
 
 struct OnBoarding: View {
     
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @State private var onboardingVM: OnboardingViewModel = OnboardingViewModelImpl()
     @State private var startAnimating: Bool = false
     @State private var startVortex: VortexProxy?
+    @Environment(AppStateImpl.self) private var appState
+    @Environment(AuthViewModelImpl.self) private var authViewModel
     
     var body: some View {
-        
         VStack(alignment: .center, spacing: 5) {
             if onboardingVM.goToSignIn {
                 SignInView()
+                    .environment(authViewModel)
+                    .environment(appState)
             } else {
                 ZStack {
                     VortexViewReader { proxy in
@@ -93,15 +97,17 @@ struct OnBoarding: View {
 
 #Preview {
     OnBoarding()
-        .environment(MovieViewModel())
-        .environment(NetworkMonitorImpl())
+        .environment(AuthViewModelImpl())
 }
 
 extension OnBoarding {
     
     var startButton: some View {
         Button {
-            onboardingVM.goToSignIn.toggle()
+            withAnimation {
+                hasCompletedOnboarding = true
+                onboardingVM.goToSignIn.toggle()
+            }
         } label: {
             HStack {
                 Text("Get started")

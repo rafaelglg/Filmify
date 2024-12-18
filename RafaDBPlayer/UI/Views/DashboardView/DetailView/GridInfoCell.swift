@@ -54,6 +54,7 @@ extension GridInfoCell {
                     .font(.caption)
                     .foregroundStyle(.black)
             }
+            .offset(x: -5)
             .frame(width: 60, height: 60, alignment: .center)
     }
     

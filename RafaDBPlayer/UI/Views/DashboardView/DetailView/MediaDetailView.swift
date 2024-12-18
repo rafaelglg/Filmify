@@ -24,7 +24,6 @@ struct MediaDetailView: View {
     @State private var sectionSelected: SectionSelected = .aboutMovie
     
     var body: some View {
-        @Bindable var movieVM = movieVM
         NavigationStack {
             ZStack(alignment: .bottom) {
                 backgroundImage

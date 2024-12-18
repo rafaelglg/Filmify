@@ -6,53 +6,56 @@
 //
 
 import SwiftUI
-import LocalAuthentication
 
 struct SignInView: View {
     
-    @Environment(MovieViewModel.self) var movieVM
-    @Environment(NetworkMonitorImpl.self) var network
-    @State private var authentication: BiometricAuthentication = BiometricAuthenticationImpl()
-    @State private var signInVM: SignInViewModel  = SignInViewModelImpl()
     @FocusState private var focusFieldEmail: FieldState?
     @FocusState private var focusFieldPassword: FieldState?
     
+    @State private var signInVM: SignInViewModel = SignInViewModelImpl()
+    @Environment(AuthViewModelImpl.self) private var authViewModel
+    @Environment(AppStateImpl.self) private var appState
+    
     var body: some View {
+        @Bindable var authViewModel = authViewModel
         ZStack {
-            Color(.systemBackground)
-                .ignoresSafeArea()
-                .onTapGesture {
-                    focusFieldEmail = nil
-                    focusFieldPassword = nil
-                }
-            
+            dismissKeyboardTapInBackground
             VStack {
-                if authentication.isAuthenticated {
-                    Dashboard()
-                        .environment(movieVM)
-                        .environment(network)
-                } else {
-                    loginView
-                }
+                loginView
             }
+            .animation(.smooth, value: authViewModel.biometricAuthentication.isAuthenticated)
             .preferredColorScheme(.dark)
-            .alert(isPresented: $authentication.showingAlert) {
+            .alert(isPresented: $authViewModel.biometricAuthentication.showingAlert) {
                 Alert(title: Text("Authentication failed"),
-                      message: Text(authentication.alertMessage),
+                      message: Text(authViewModel.biometricAuthentication.alertMessage),
                       dismissButton: .cancel())
             }
         }
     }
 }
 
-#Preview(traits: .environments) {
+#Preview {
+    @Previewable @State var authViewModel = AuthViewModelImpl()
     SignInView()
+        .environment(authViewModel)
+        .environment(AppStateImpl())
 }
 
 extension SignInView {
     
+    var dismissKeyboardTapInBackground: some View {
+        // To dismiss the keyboard when tap the background
+        Color(.systemBackground)
+            .ignoresSafeArea()
+            .onTapGesture {
+                focusFieldEmail = nil
+                focusFieldPassword = nil
+            }
+    }
+    
     var loginView: some View {
         VStack {
+            Spacer()
             Text("Sign in")
                 .font(.title)
                 .bold()
@@ -60,21 +63,27 @@ extension SignInView {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding()
             
-            CustomTextfield(placeholder: "Email", text: $signInVM.emailText, focusField: _focusFieldEmail)
+            CustomTextfield(placeholder: "Email", text: $signInVM.emailText)
                 .focused($focusFieldEmail, equals: .email)
+                .submitLabel(.next)
             
-            CustomSecureField(placeholder: "Password", passwordText: $signInVM.passwordText, focusField: _focusFieldPassword)
+            CustomSecureField(placeholder: "Password", passwordText: $signInVM.passwordText)
                 .focused($focusFieldPassword, equals: .password)
+                .submitLabel(.done)
             
             signInButton
             biometricButton
             authenticationButtons
+            Spacer()
+            registerButton
         }
     }
     
     var signInButton: some View {
         Button {
-            
+            withAnimation {
+                authViewModel.signIn(email: signInVM.emailText, password: signInVM.passwordText)
+            }
         } label: {
             Text("Sign in")
                 .tint(.primary)
@@ -87,20 +96,18 @@ extension SignInView {
     
     @ViewBuilder
     var biometricButton: some View {
-        let biometryType = authentication.biometricType
+        let authentication = authViewModel.biometricAuthentication
         Button {
-            Task {
-                await authentication.biometricAuthentication()
-            }
+            authViewModel.authenticate()
         } label: {
-            Image(systemName: biometryType == .faceID ? "faceid" : "touchid" )
+            Image(systemName: authentication.biometricType == .touchID ? "touchid" : "faceid" )
                 .resizable()
                 .tint(.primary)
                 .scaledToFit()
-                .frame(width: 50)
                 .symbolEffect(.variableColor.iterative, isActive: authentication.isAuthenticating)
                 .symbolEffect(.bounce, value: authentication.isAuthenticated)
         }
+        .frame(height: 50)
         .padding(.vertical, 30)
     }
     
@@ -114,7 +121,7 @@ extension SignInView {
                         .resizable()
                         .tint(.primary)
                         .scaledToFit()
-                        .frame(width: 20)
+                        .frame(height: 25)
                 }
                 Button {
                 } label: {
@@ -122,10 +129,36 @@ extension SignInView {
                         .resizable()
                         .tint(.primary)
                         .scaledToFit()
-                        .frame(width: 20)
+                        .frame(height: 25)
                 }
             }
             .padding(.top, 10)
+        }
+    }
+    
+    @ViewBuilder
+    var registerButton: some View {
+        @Bindable var appState = appState
+        HStack {
+            Text("New to RafaDB?")
+                .font(.headline)
+                .foregroundStyle(Color(.systemGray))
+            Button {
+                appState.changeSignUpState(newValue: .signUp)
+            } label: {
+                Text("Sign Up")
+                    .font(.headline)
+            }
+            .tint(.buttonBG)
+            .buttonStyle(.borderedProminent)
+            .buttonBorderShape(.capsule)
+        }
+        .sheet(item: $appState.currentState) {
+            appState.resetNavigationPath()
+        } content: { state in
+            if state == .signUp {
+                SignUpView()
+            }
         }
     }
 }

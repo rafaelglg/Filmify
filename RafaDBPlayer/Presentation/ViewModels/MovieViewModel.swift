@@ -89,6 +89,7 @@ final class MovieViewModel {
     func getUpcomingMovies() {
         isLoading = true
         movieUsesCase.executeUpcomingMovies()
+            .receive(on: DispatchQueue.main)
             .map(\.results)
             .sink { [weak self] completion in
                 

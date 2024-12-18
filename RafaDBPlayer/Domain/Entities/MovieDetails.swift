@@ -113,6 +113,8 @@ struct SpokenLanguages: Decodable, Identifiable, Hashable {
             return "AM"
         case "cs":
             return "CZ"
+        case "ka":
+            return "GE"
         default:
             return iso6391.uppercased()
         }

@@ -30,10 +30,6 @@ final class BiometricAuthenticationImpl: BiometricAuthentication {
     var alertMessage: String = ""
     var isAuthenticating: Bool = false
     
-    init() {
-        getBiometricType()
-    }
-    
     func getBiometricType() {
         let context = LAContext()
         if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil) {

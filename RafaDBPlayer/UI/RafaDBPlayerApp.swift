@@ -9,13 +9,28 @@ import SwiftUI
 
 @main
 struct RafaDBPlayerApp: App {
-    let movieVM = MovieViewModel()
-    let networkMonitor = NetworkMonitorImpl()
+    
+    let authViewModel = AuthViewModelImpl()
+    let appState = AppStateImpl()
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    
     var body: some Scene {
         WindowGroup {
-            OnBoarding()
-                .environment(movieVM)
-                .environment(networkMonitor)
+            Group {
+                if !hasCompletedOnboarding {
+                    OnBoarding()
+                        .environment(authViewModel)
+                        .environment(appState)
+                } else if authViewModel.currentUser == nil {
+                    SignInView()
+                        .environment(appState)
+                        .environment(authViewModel)
+                } else {
+                    TabBarView()
+                        .environment(authViewModel)
+                        .transition(.blurReplace())
+                }
+            }
         }
     }
 }
