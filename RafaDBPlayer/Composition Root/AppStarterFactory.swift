@@ -17,8 +17,10 @@ final class AppStarterFactory {
     static private let createProfileView = ProfileViewFactory()
     
     @ViewBuilder
-    static func createInitialView() -> some View {
-        if EnvironmentFactory.authViewModel.currentUser == nil {
+    static func startApp(hasCompletedOnboarding: Bool) -> some View {
+        if !hasCompletedOnboarding {
+            createOnboarding()
+        } else if EnvironmentFactory.authViewModel.currentUser == nil {
             onboardingFactory.create()
         } else {
             createTabBarView()

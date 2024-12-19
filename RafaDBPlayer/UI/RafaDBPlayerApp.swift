@@ -14,13 +14,7 @@ struct RafaDBPlayerApp: App {
     
     var body: some Scene {
         WindowGroup {
-            Group {
-                if !hasCompletedOnboarding {
-                    AppStarterFactory.createOnboarding()
-                } else {
-                    AppStarterFactory.createInitialView()
-                }
-            }
+            AppStarterFactory.startApp(hasCompletedOnboarding: hasCompletedOnboarding)
         }
     }
 }
