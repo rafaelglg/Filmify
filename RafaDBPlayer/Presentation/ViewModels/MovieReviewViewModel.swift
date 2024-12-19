@@ -42,7 +42,7 @@ final class MovieReviewViewModel {
         }
     }
     
-    init(movieReviewUsesCase: MovieReviewUsesCase = MovieReviewUsesCaseImpl()) {
+    init(movieReviewUsesCase: MovieReviewUsesCase) {
         self.movieReviewUsesCase = movieReviewUsesCase
     }
     

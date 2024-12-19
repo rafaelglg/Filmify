@@ -11,6 +11,12 @@ struct SearchView: View {
     
     @Environment(MovieViewModel.self) private var movieVM
     
+    private let createSearchingMovie: CreateSearchingMovie
+    
+    init(createSearchingMovie: CreateSearchingMovie) {
+        self.createSearchingMovie = createSearchingMovie
+    }
+    
     var body: some View {
         @Bindable var movieVM = movieVM
         NavigationStack {
@@ -23,8 +29,10 @@ struct SearchView: View {
 }
 
 #Preview {
-    SearchView()
-        .environment(MovieViewModel())
+    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
+
+    SearchView(createSearchingMovie: SearchingMovieFactory())
+        .environment(MovieViewModel(movieUsesCase: movieUsesCasesImpl))
 }
 
 extension SearchView {
@@ -46,7 +54,7 @@ extension SearchView {
         if movieVM.filteredMovies.isEmpty && movieVM.noSearchResult {
             ContentUnavailableView("No movies found", systemImage: "binoculars.circle.fill", description: Text("No found for the movie ''\(movieVM.searchText.value)''"))
         } else {
-            SearchingMovieView(title: "Filtered Movies", movie: movieVM.filteredMovies)
+            createSearchingMovie.createSearchingMovieView(title: "Filtered Movies", movie: movieVM.filteredMovies)
         }
     }
 }

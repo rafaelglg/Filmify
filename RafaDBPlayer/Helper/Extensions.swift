@@ -49,7 +49,7 @@ extension MovieDetails {
 
 extension MovieReviewViewModel {
     @MainActor static let preview: MovieReviewViewModel = {
-        var viewModel = MovieReviewViewModel(movieReviewUsesCase: MovieReviewUsesCaseImpl() )
+        var viewModel = MovieReviewViewModel(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkService.shared))))
         viewModel.movieReviews = [.preview]
         return viewModel
     }()
@@ -161,7 +161,7 @@ struct EnvironmentTraits: PreviewModifier {
     
     func body(content: Content, context: Void) -> some View {
         @Previewable @State var network = NetworkMonitorImpl()
-        @Previewable @State var movieVM = MovieViewModel()
+        @Previewable @State var movieVM = MovieViewModel(movieUsesCase: MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared)))
         content
             .environment(movieVM)
             .environment(network)

@@ -12,9 +12,16 @@ struct SignInView: View {
     @FocusState private var focusFieldEmail: FieldState?
     @FocusState private var focusFieldPassword: FieldState?
     
-    @State private var signInVM: SignInViewModel = SignInViewModelImpl()
+    @State private var signInVM: SignInViewModel
     @Environment(AuthViewModelImpl.self) private var authViewModel
     @Environment(AppStateImpl.self) private var appState
+    
+    private let createSignUpView: CreateSignUpView
+    
+    init(signInVM: SignInViewModel, createSignUpView: CreateSignUpView) {
+        self.signInVM = signInVM
+        self.createSignUpView = createSignUpView
+    }
     
     var body: some View {
         ZStack {
@@ -30,7 +37,8 @@ struct SignInView: View {
 
 #Preview {
     @Previewable @State var authViewModel = AuthViewModelImpl()
-    SignInView()
+    SignInView(signInVM: SignInViewModelImpl(),
+               createSignUpView: SignUpFactory())
         .environment(authViewModel)
         .environment(AppStateImpl())
 }
@@ -157,7 +165,7 @@ extension SignInView {
             appState.resetNavigationPath()
         } content: { state in
             if state == .signUp {
-                SignUpView()
+                createSignUpView.createSignUpView()
             }
         }
     }

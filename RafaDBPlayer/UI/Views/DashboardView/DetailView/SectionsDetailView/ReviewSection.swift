@@ -45,7 +45,11 @@ struct ReviewSection<ImageView: View>: View {
 
 #Preview {
     @Previewable @State var review: MovieReviewResponse = .preview
-    ReviewSection(review: .preview, movieReviewVM: MovieReviewViewModel(), imageView: {
+    @Previewable @State var movieReviewViewModel = MovieReviewViewModel(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkService.shared))))
+    
+    ReviewSection(review: .preview,
+                  movieReviewVM: movieReviewViewModel,
+                  imageView: {
         AsyncImage(url: review.authorDetails.avatarPathURL) {
             $0.image?.resizable()
                 .frame(width: 100, height: 100)

@@ -25,13 +25,12 @@ final class MovieViewModel {
     var filteredMovies: [MovieResultResponse] = []
     var noSearchResult: Bool = false
     
-    var showProfile: Bool = false
     var isLoading: Bool = false
     var isLoadingDetailView: Bool = false
     var alertMessage: String = ""
     var showingAlert: Bool = false
     
-    init(movieUsesCase: MovieUsesCases = MovieUsesCasesImpl()) {
+    init(movieUsesCase: MovieUsesCases) {
         self.movieUsesCase = movieUsesCase
         addSubscribers()
     }

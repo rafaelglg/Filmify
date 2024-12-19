@@ -9,13 +9,20 @@ import SwiftUI
 
 struct SearchingMovieView: View {
     @Environment(MovieViewModel.self) private var movieVM
-    @State private var movieReviewVM = MovieReviewViewModel()
-    @State private var castMemberVM = MovieCastMembersViewModel()
+    @State private var movieReviewVM: MovieReviewViewModel
+    @State private var castMemberVM: MovieCastMembersViewModel
     let columns = Array(repeating: GridItem(.flexible()), count: 3)
     @State private var selectedMovie: MovieResultResponse?
     
     let title: LocalizedStringKey
     let movie: [MovieResultResponse]
+    
+    init(movieReviewVM: MovieReviewViewModel, castMemberVM: MovieCastMembersViewModel, title: LocalizedStringKey, movie: [MovieResultResponse]) {
+        self.movieReviewVM = movieReviewVM
+        self.castMemberVM = castMemberVM
+        self.title = title
+        self.movie = movie
+    }
     
     var body: some View {
         @Bindable var movieVM = movieVM
@@ -45,6 +52,13 @@ struct SearchingMovieView: View {
 }
 
 #Preview {
-    SearchingMovieView(title: "Filtered", movie: [.preview])
-        .environment(MovieViewModel())
+    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
+    @Previewable @State var movieReviewViewModel = MovieReviewViewModel(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkService.shared))))
+    @Previewable @State var movieCastViewModel = MovieCastMembersViewModel(castMemberUseCase: MovieCastMemberUsesCaseImpl(repository: CastMembersServiceImpl(networkService: NetworkService.shared)))
+    
+    SearchingMovieView(movieReviewVM: movieReviewViewModel,
+                       castMemberVM: movieCastViewModel,
+                       title: "Filtered",
+                       movie: [.preview])
+        .environment(MovieViewModel(movieUsesCase: movieUsesCasesImpl))
 }

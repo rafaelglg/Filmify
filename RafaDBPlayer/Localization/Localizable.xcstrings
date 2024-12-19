@@ -104,16 +104,6 @@
         }
       }
     },
-    "Close" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cerrar"
-          }
-        }
-      }
-    },
     "Continue" : {
       "localizations" : {
         "es" : {
@@ -446,16 +436,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Perfil"
-          }
-        }
-      }
-    },
-    "Rafa" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rafa"
           }
         }
       }

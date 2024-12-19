@@ -11,6 +11,11 @@ struct Dashboard: View {
     
     @Environment(MovieViewModel.self) var movieVM
     @Environment(NetworkMonitorImpl.self) var network
+    private let createSectionMovie: CreateSectionMovie
+    
+    init(createSectionMovie: CreateSectionMovie) {
+        self.createSectionMovie = createSectionMovie
+    }
     
     var body: some View {
         ZStack {
@@ -37,8 +42,10 @@ struct Dashboard: View {
 }
 
 #Preview {
-    Dashboard()
-        .environment(MovieViewModel())
+    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
+
+    Dashboard(createSectionMovie: SectionMovieFactory())
+        .environment(MovieViewModel(movieUsesCase: movieUsesCasesImpl))
         .environment(NetworkMonitorImpl())
 }
 
@@ -69,25 +76,10 @@ extension Dashboard {
                 .alert("App error", isPresented: $movieVM.showingAlert) {
                     Button("Ok") {}
                 } message: { Text(movieVM.alertMessage) }
-            
-                .sheet(isPresented: $movieVM.showProfile) { RafaView() }
-            
-                .toolbar {
-                    ToolbarItem(placement: .topBarLeading) {
-                        Button {
-                            movieVM.showProfile.toggle()
-                        } label: {
-                            Text("Rafa")
-                                .font(.callout)
-                                .fontWeight(.bold)
-                                .foregroundStyle(Color(.label))
-                        }
-                    }
-                }
         }
     }
     
     var sectionMovies: some View {
-        SectionMovies()
+        createSectionMovie.createSectionView()
     }
 }

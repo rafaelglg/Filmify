@@ -20,7 +20,7 @@ final class MovieCastMembersViewModel {
     var alertMessage: String = ""
     var showAlert: Bool = false
     
-    init(castMemberUseCase: MovieCastMemberUsesCase = MoviecasMemberUsesCaseImpl()) {
+    init(castMemberUseCase: MovieCastMemberUsesCase) {
         self.castMemberUseCase = castMemberUseCase
     }
     

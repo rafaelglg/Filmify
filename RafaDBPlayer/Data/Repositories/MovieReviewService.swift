@@ -16,7 +16,7 @@ final class MovieReviewServiceImpl: MovieReviewService {
     
     private let productService: ReviewProductService
     
-    init(productService: ReviewProductService = ReviewProductServiceImpl()) {
+    init(productService: ReviewProductService) {
         self.productService = productService
     }
     

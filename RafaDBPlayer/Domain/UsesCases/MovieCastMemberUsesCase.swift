@@ -12,10 +12,10 @@ protocol MovieCastMemberUsesCase {
     func executePersonDetail(from path: MovieEndingPath) -> AnyPublisher<PersonDetailModel, Error>
 }
 
-final class MoviecasMemberUsesCaseImpl: MovieCastMemberUsesCase {
+final class MovieCastMemberUsesCaseImpl: MovieCastMemberUsesCase {
     private let repository: CastMembersService
     
-    init(repository: CastMembersService = CastMembersServiceImpl()) {
+    init(repository: CastMembersService) {
         self.repository = repository
     }
     

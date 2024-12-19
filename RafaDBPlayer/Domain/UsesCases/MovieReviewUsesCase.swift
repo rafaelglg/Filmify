@@ -15,7 +15,7 @@ final class MovieReviewUsesCaseImpl: MovieReviewUsesCase {
     
     private let repository: MovieReviewService
     
-    init(repository: MovieReviewService = MovieReviewServiceImpl() ) {
+    init(repository: MovieReviewService) {
         self.repository = repository
     }
     

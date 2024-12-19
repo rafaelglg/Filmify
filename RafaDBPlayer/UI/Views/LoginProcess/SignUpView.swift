@@ -9,12 +9,19 @@ import SwiftUI
 
 struct SignUpView: View {
     
-    @State private var signUpVM: SignUpViewModel = SignUpViewModelImpl()
+    @State private var signUpVM: SignUpViewModel
     @FocusState private var focusState: FieldState?
     
     @Environment(\.dismiss) private var dismiss
     @Environment(AppStateImpl.self) private var appState
     @Environment(AuthViewModelImpl.self) private var authViewModel
+    
+    private let createSignUpView: CreateSignUpView
+    
+    init(signUpVM: SignUpViewModel, createSignUpView: CreateSignUpView) {
+        self.signUpVM = signUpVM
+        self.createSignUpView = createSignUpView
+    }
     
     var body: some View {
         @Bindable var appState = appState
@@ -35,7 +42,7 @@ struct SignUpView: View {
 }
 
 #Preview {
-    SignUpView()
+    SignUpView(signUpVM: SignUpViewModelImpl(), createSignUpView: SignUpFactory())
         .environment(AuthViewModelImpl())
         .environment(AppStateImpl())
 }
@@ -92,7 +99,7 @@ extension SignUpView {
             }
             .navigationDestination(for: SignUpState.self) { state in
                 if state == .password {
-                    PasswordView()
+                    createSignUpView.createPasswordView()
                 }
             }
             

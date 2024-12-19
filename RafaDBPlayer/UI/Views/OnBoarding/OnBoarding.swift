@@ -11,18 +11,23 @@ import Vortex
 struct OnBoarding: View {
     
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
-    @State private var onboardingVM: OnboardingViewModel = OnboardingViewModelImpl()
+    @State private var onboardingVM: OnboardingViewModel
     @State private var startAnimating: Bool = false
     @State private var startVortex: VortexProxy?
     @Environment(AppStateImpl.self) private var appState
     @Environment(AuthViewModelImpl.self) private var authViewModel
     
+    private let createSignInView: any CreateSignInView
+    
+    init(onboardingVM: OnboardingViewModel, createSignInView: any CreateSignInView) {
+        self.onboardingVM = onboardingVM
+        self.createSignInView = createSignInView
+    }
+    
     var body: some View {
         VStack(alignment: .center, spacing: 5) {
             if onboardingVM.goToSignIn {
-                SignInView()
-                    .environment(authViewModel)
-                    .environment(appState)
+                createSignInView.create()
             } else {
                 ZStack {
                     VortexViewReader { proxy in
@@ -96,7 +101,8 @@ struct OnBoarding: View {
 }
 
 #Preview {
-    OnBoarding()
+    OnBoarding(onboardingVM: OnboardingViewModelImpl(), createSignInView: OnboardingFactory())
+        .environment(AppStateImpl())
         .environment(AuthViewModelImpl())
 }
 

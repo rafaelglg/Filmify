@@ -21,7 +21,7 @@ final class MovieUsesCasesImpl: MovieUsesCases {
     private let repository: MovieProductService
     typealias PublisherResult = AnyPublisher<MovieModel, Error>
     
-    init(repository: MovieProductService = MovieProductServiceImpl()) {
+    init(repository: MovieProductService) {
         self.repository = repository
     }
     

@@ -9,11 +9,15 @@ import SwiftUI
 
 struct PasswordView: View {
     
-    @State private var signUpVM: SignUpViewModel = SignUpViewModelImpl()
+    @State private var signUpVM: SignUpViewModel
     
     @FocusState private var focusState: FieldState?
     @Environment(AppStateImpl.self) private var appState
     @Environment(AuthViewModelImpl.self) private var authViewModel
+    
+    init(signUpVM: SignUpViewModel) {
+        self.signUpVM = signUpVM
+    }
     
     var body: some View {
         passwordView
@@ -25,7 +29,7 @@ struct PasswordView: View {
 }
 
 #Preview {
-    PasswordView()
+    PasswordView(signUpVM: SignUpViewModelImpl())
         .environment(AuthViewModelImpl())
         .environment(AppStateImpl())
 }

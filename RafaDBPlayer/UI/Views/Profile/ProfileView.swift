@@ -20,7 +20,7 @@ struct ProfileView: View {
                     NavigationLink {
                         RafaView()
                     } label: {
-                        SettingsRowView(initials: authViewModel.currentUser?.initials ?? "", name: authViewModel.currentUser?.fullName ?? "", email: authViewModel.currentUser?.email ?? "")
+                        SettingsRowView(initials: authViewModel.currentUser?.initials ?? "RL", name: authViewModel.currentUser?.fullName ?? "rafael lo", email: authViewModel.currentUser?.email ?? "rafaelglg9")
                     }
                 }
                 

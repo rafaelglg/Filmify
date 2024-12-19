@@ -9,27 +9,35 @@ import SwiftUI
 
 struct TabBarView: View {
     
-    @State private var movieVM = MovieViewModel()
-    @State private var network = NetworkMonitorImpl()
+    @State private var movieVM: MovieViewModel
+    @State private var network: NetworkMonitorImpl
     @Environment(AuthViewModelImpl.self) private var authViewModel
+    
+    private let createDashboard: CreateDashboard
+    private let createSearchView: CreateSearchView
+    private let createProfileView: CreateProfileView
+    
+    init(movieVM: MovieViewModel, network: NetworkMonitorImpl, createDashboard: CreateDashboard, createSearchView: CreateSearchView, createProfileView: CreateProfileView) {
+        self.movieVM = movieVM
+        self.network = network
+        self.createDashboard = createDashboard
+        self.createSearchView = createSearchView
+        self.createProfileView = createProfileView
+    }
     
     var body: some View {
         TabView {
             
             Tab("Home", systemImage: "house") {
-                Dashboard()
-                    .environment(network)
-                    .environment(movieVM)
+                createDashboard.createDashboardView()
             }
             
             Tab("Search", systemImage: "magnifyingglass") {
-                SearchView()
-                    .environment(movieVM)
+                createSearchView.createSearchView()
             }
             
             Tab("Profile", systemImage: "person.crop.circle.fill") {
-                ProfileView()
-                    .environment(authViewModel)
+                createProfileView.createProfile()
             }
         }
         .customTabBarAppearance(forUnselectedItem: .white)
@@ -37,6 +45,12 @@ struct TabBarView: View {
 }
 
 #Preview(traits: .environments) {
-    TabBarView()
+    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
+
+    TabBarView(movieVM: MovieViewModel(movieUsesCase: movieUsesCasesImpl),
+               network: NetworkMonitorImpl(),
+               createDashboard: DashboardFactory(),
+               createSearchView: SearchViewFactory(),
+               createProfileView: ProfileViewFactory())
         .environment(AuthViewModelImpl())
 }

@@ -40,10 +40,13 @@ struct GridInfoCell: View {
 }
 
 #Preview {
+    
+    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
+    
     GridInfoCell()
         .padding()
         .preferredColorScheme(.dark)
-        .environment(MovieViewModel())
+        .environment(MovieViewModel(movieUsesCase: movieUsesCasesImpl))
 }
 
 extension GridInfoCell {

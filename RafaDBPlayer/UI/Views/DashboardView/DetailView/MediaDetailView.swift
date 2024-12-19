@@ -61,8 +61,16 @@ struct MediaDetailView: View {
 }
 
 #Preview {
-    MediaDetailView(movie: .preview, movieReviewVM: .preview, castMembersVM: .constant(MovieCastMembersViewModel()))
-        .environment(MovieViewModel())
+    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
+    @Previewable @State var movieCastMembersViewModel = MovieCastMembersViewModel(
+        castMemberUseCase: MovieCastMemberUsesCaseImpl(
+            repository: CastMembersServiceImpl(
+                networkService: NetworkService.shared)))
+    
+    MediaDetailView(movie: .preview,
+                    movieReviewVM: .preview,
+                    castMembersVM: .constant(movieCastMembersViewModel))
+        .environment(MovieViewModel(movieUsesCase: movieUsesCasesImpl))
         .preferredColorScheme(.dark)
 }
 

@@ -18,5 +18,4 @@ struct NoInternetConnectionView: View {
 
 #Preview {
     NoInternetConnectionView()
-        .environment(MovieViewModel())
 }
