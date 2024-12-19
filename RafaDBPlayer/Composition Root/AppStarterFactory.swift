@@ -11,7 +11,7 @@ import SwiftUICore
 @MainActor
 final class AppStarterFactory {
     
-    static private let onboardingFactory = OnboardingFactory()
+    static private let signInFactory = SignInFactory()
     static private let searchViewFactory = SearchViewFactory()
     static private let dashboardFactory = DashboardFactory()
     static private let createProfileView = ProfileViewFactory()
@@ -21,15 +21,15 @@ final class AppStarterFactory {
         if !hasCompletedOnboarding {
             createOnboarding()
         } else if EnvironmentFactory.authViewModel.currentUser == nil {
-            onboardingFactory.create()
+            signInFactory.create()
         } else {
             createTabBarView()
         }
     }
     
     static func createOnboarding() -> some View {
-        return OnBoarding(onboardingVM: OnboardingViewModelImpl(),
-                          createSignInView: onboardingFactory)
+        return OnBoarding(onboardingVM: createOnboardingViewModel(),
+                          createSignInView: signInFactory)
         .environment(EnvironmentFactory.authViewModel)
         .environment(EnvironmentFactory.appState)
     }
@@ -41,6 +41,10 @@ final class AppStarterFactory {
                           createSearchView: searchViewFactory,
                           createProfileView: createProfileView)
         .environment(EnvironmentFactory.authViewModel)
+    }
+    
+    private static func createOnboardingViewModel() -> OnboardingViewModel {
+        OnboardingViewModelImpl()
     }
     
     private static func createMovieVieModel() -> MovieViewModel {
@@ -89,7 +93,7 @@ final class ProfileViewFactory: CreateProfileView {
     }
 }
 
-final class OnboardingFactory: CreateSignInView {
+final class SignInFactory: CreateSignInView {
     
     @MainActor func create() -> AnyView {
         AnyView(SignInView(signInVM: createSignInViewModel(),

@@ -101,7 +101,7 @@ struct OnBoarding: View {
 }
 
 #Preview {
-    OnBoarding(onboardingVM: OnboardingViewModelImpl(), createSignInView: OnboardingFactory())
+    OnBoarding(onboardingVM: OnboardingViewModelImpl(), createSignInView: SignInFactory())
         .environment(AppStateImpl())
         .environment(AuthViewModelImpl())
 }
