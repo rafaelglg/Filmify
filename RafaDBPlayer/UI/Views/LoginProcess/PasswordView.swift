@@ -83,9 +83,7 @@ extension PasswordView {
                 appState.popToRoot()
                 authViewModel.setPassword(password: signUpVM.passwordText)
                 authViewModel.setFullName(fullName: "Rafael Lo")
-                withAnimation(.smooth) {
-                    authViewModel.createUser()
-                }
+                authViewModel.createUser()
             } label: {
                 Text("Continue")
                     .bold()

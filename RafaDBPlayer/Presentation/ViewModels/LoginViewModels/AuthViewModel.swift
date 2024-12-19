@@ -6,12 +6,14 @@
 //
 
 import Foundation
+import SwiftUI
 
 protocol AuthViewModel {
     var currentUser: UserModel? { get }
     var userBuilder: UserBuilder? { get }
     
     func signIn(email: String, password: String)
+    @MainActor
     func createUser()
 }
 
@@ -57,13 +59,19 @@ final class AuthViewModelImpl: AuthViewModel {
         currentUser = UserModel(email: emailLowercased, password: password, fullName: userBuilder?.email ?? "")
     }
     
+    @MainActor
     func createUser() {
+        
         guard let user = userBuilder?.build() else {
             print("Error: Missing data to create user")
             return
         }
-        self.currentUser = user
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            withAnimation {
+                self.currentUser = user
+            }
+        }
         saveToKeychain(email: user.email, password: user.password)
     }
     

@@ -24,6 +24,8 @@ final class AppStarterFactory {
             signInFactory.create()
         } else {
             createTabBarView()
+                .transition(.blurReplace())
+            
         }
     }
     
