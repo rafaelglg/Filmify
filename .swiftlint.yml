@@ -5,7 +5,7 @@ opt_in_rules:
 - empty_string
 excluded:
 - Carthage
-- /Users/rafael/Rafael/RafaDBPlayer/RafaDBPlayer/Helper/ApiKey.swift
+- /Users/rafael/Rafael/Filmify/Filmify/Helper/ApiKey.swift
 - Pods
 - SwiftLint/Common/3rdPartyLib
 line_length:
