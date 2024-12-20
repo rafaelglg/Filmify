@@ -1,0 +1,28 @@
+{
+  "configurations" : [
+    {
+      "id" : "D10ECFD2-0DAE-41DC-84B3-B07BB1113755",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:RafaDBPlayer.xcodeproj",
+      "identifier" : "532C42D92CDB99C40031E732",
+      "name" : "RafaDBPlayer"
+    }
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:Filmify.xcodeproj",
+        "identifier" : "539062752D03172500478604",
+        "name" : "FilmifyTests"
+      }
+    }
+  ],
+  "version" : 1
+}
