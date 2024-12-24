@@ -46,11 +46,17 @@ struct TabBarView: View {
 
 #Preview(traits: .environments) {
     @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
-
+    
+    @Previewable @State var authViewModel = AuthViewModelImpl(
+        biometricAuthentication: BiometricAuthenticationImpl(),
+        authManager: AuthManagerImpl(userBuilder: UserBuilderImpl()),
+        keychain: KeychainManagerImpl.shared,
+        enterAsGuestUseCase: EnterAsGuestUseCaseImpl(repository: GuestResponseServiceImpl(networkService: NetworkService.shared)))
+    
     TabBarView(movieVM: MovieViewModel(movieUsesCase: movieUsesCasesImpl),
                network: NetworkMonitorImpl(),
                createDashboard: DashboardFactory(),
                createSearchView: SearchViewFactory(),
                createProfileView: ProfileViewFactory())
-        .environment(AuthViewModelImpl())
+    .environment(authViewModel)
 }

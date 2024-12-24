@@ -11,7 +11,7 @@ struct MediaDetailView: View {
     
     @Environment(MovieViewModel.self) private var movieVM
     let movie: MovieResultResponse
-    let movieReviewVM: MovieReviewViewModel
+    @Binding var movieReviewVM: MovieReviewViewModel
     @Binding var castMembersVM: MovieCastMembersViewModel
     
     @State private var progressButtonSelected: CGFloat = 37
@@ -68,7 +68,7 @@ struct MediaDetailView: View {
                 networkService: NetworkService.shared)))
     
     MediaDetailView(movie: .preview,
-                    movieReviewVM: .preview,
+                    movieReviewVM: .constant(MovieReviewViewModelImpl.preview),
                     castMembersVM: .constant(movieCastMembersViewModel))
         .environment(MovieViewModel(movieUsesCase: movieUsesCasesImpl))
         .preferredColorScheme(.dark)
@@ -113,12 +113,11 @@ extension MediaDetailView {
             ProgressView()
                 .frame(width: 60, height: 100, alignment: .center)
         } else if movieReviewVM.movieReviews.isEmpty {
-            ContentUnavailableView("No review for this movie", systemImage: "pencil.slash", description: Text("Be the first one to leave a review"))
+            ContentUnavailableView("No review for this movie", systemImage: "pencil.slash", description: Text("It's empty here..."))
                 .padding(.top, 80)
         } else {
             HStack(alignment: .top) {
                 LazyVStack(alignment: .leading) {
-                    
                     ForEach(movieReviewVM.movieReviews) { review in
                         ReviewSection(review: review, movieReviewVM: movieReviewVM) {
                             AsyncImage(url: review.authorDetails.avatarPathURL) { image in
@@ -285,12 +284,45 @@ extension MediaDetailView {
                 } icon: {
                     Image(systemName: "ticket")
                 }
+                
                 if let revenue = movieVM.detailMovie?.revenueFormatted {
                     Label("revenue: \(revenue)", systemImage: "dollarsign")
                 }
+                
+                rateThisMovieButton
             }
             .font(.caption)
             .foregroundStyle(.secondary)
+        }
+    }
+    
+    var rateThisMovieButton: some View {
+        Button {
+            movieReviewVM.showRatingPopover.toggle()
+        } label: {
+            HStack {
+                if movieReviewVM.isMovieRated(movieId: movie.id.description) {
+                    Image(systemName: "party.popper.fill")
+                        .foregroundStyle(.white)
+                        .symbolEffect(.bounce.wholeSymbol, options: .speed(1.5).repeat(4))
+                    Text("Movie rated")
+                        .foregroundStyle(.white)
+                        .bold()
+                } else {
+                    Image(systemName: "star.fill")
+                        .foregroundStyle(.yellow)
+                    Text("Rate this movie")
+                        .foregroundStyle(.white)
+                        .bold()
+                    Image(systemName: "chevron.forward.circle")
+                }
+            }
+        }
+        .popover(isPresented: $movieReviewVM.showRatingPopover, attachmentAnchor: .point(.trailing), arrowEdge: .trailing) {
+            RatingPopoverView(movie: movie,
+                              movieReviewVM: $movieReviewVM)
+                .frame(width: 300, height: 250)
+                .presentationCompactAdaptation(.popover)
         }
     }
     

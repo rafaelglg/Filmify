@@ -47,9 +47,9 @@ extension MovieDetails {
     ]
 }
 
-extension MovieReviewViewModel {
-    @MainActor static let preview: MovieReviewViewModel = {
-        var viewModel = MovieReviewViewModel(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkService.shared))))
+extension MovieReviewViewModelImpl {
+    @MainActor static let preview: MovieReviewViewModelImpl = {
+        var viewModel = MovieReviewViewModelImpl(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkService.shared))))
         viewModel.movieReviews = [.preview]
         return viewModel
     }()
@@ -89,7 +89,7 @@ extension PersonDetailModel {
 }
 
 extension UserModel {
-    static let preview = UserModel(email: "rafaglg9@gmail.com", password: "aA@123456", fullName: "Rafael Loggiodice")
+    static let preview = UserModel(id: "1", email: "rafaglg9@gmail.com", password: "aA@123456", fullName: "Rafael Loggiodice")
 }
 
 extension Data {

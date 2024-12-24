@@ -74,16 +74,6 @@
         }
       }
     },
-    "Be the first one to leave a review" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se el primero en dejar una reseña"
-          }
-        }
-      }
-    },
     "Birthday: %@" : {
       "localizations" : {
         "es" : {
@@ -154,8 +144,18 @@
         }
       }
     },
-    "Delete password from keychain" : {
+    "Delete all keychains" : {
 
+    },
+    "Enter as a guest" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrar como invitado"
+          }
+        }
+      }
     },
     "Filtered Movies" : {
       "localizations" : {
@@ -176,6 +176,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Empezar"
+          }
+        }
+      }
+    },
+    "Give stars to this movie" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade una calificación"
           }
         }
       }
@@ -210,6 +220,19 @@
         }
       }
     },
+    "It's empty here..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta vacío por aqui…"
+          }
+        }
+      }
+    },
+    "keychain" : {
+
+    },
     "Look for a movie" : {
       "localizations" : {
         "es" : {
@@ -226,6 +249,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Menor a mayor"
+          }
+        }
+      }
+    },
+    "Movie already rated" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Película ya calificada."
+          }
+        }
+      }
+    },
+    "Movie rated" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Películas calificada"
           }
         }
       }
@@ -440,6 +483,26 @@
         }
       }
     },
+    "Rate this movie" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Califica esta pelicula"
+          }
+        }
+      }
+    },
+    "Rating Value: %.f" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calificación: %.f"
+          }
+        }
+      }
+    },
     "Rating: %@ out of 10" : {
       "localizations" : {
         "es" : {
@@ -500,6 +563,16 @@
         }
       }
     },
+    "Send rate" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar calificación"
+          }
+        }
+      }
+    },
     "Set a password" : {
       "localizations" : {
         "es" : {
@@ -515,7 +588,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inicia sesión"
+            "value" : "Iniciar sesión"
           }
         }
       }
@@ -620,6 +693,16 @@
         }
       }
     },
+    "Try again" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intenta de nuevo"
+          }
+        }
+      }
+    },
     "Upcoming" : {
       "localizations" : {
         "es" : {
@@ -666,14 +749,25 @@
         }
       }
     },
-    "You will delete all your data from keychain and there is no coming back." : {
-
+    "You rated with %.f" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calificaste con %.f"
+          }
+        }
+      }
     },
     "You will delete all your data, and there is no coming back." : {
-
-    },
-    "You will get your data from keychain." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminaras toda tu información, no hay vuelta atrás."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

@@ -10,6 +10,7 @@ import Combine
 
 protocol ReviewProductService {
     func fetchMovieReviews(from path: MovieEndingPath) -> AnyPublisher <MovieReviewModel, Error>
+    func postRatingToMovie(movieId: MovieEndingPath, ratingValue: Float) -> AnyPublisher <RatingResponseModel, Error>
 }
 
 final class ReviewProductServiceImpl: ReviewProductService {
@@ -21,5 +22,9 @@ final class ReviewProductServiceImpl: ReviewProductService {
     
     func fetchMovieReviews(from path: MovieEndingPath) -> AnyPublisher <MovieReviewModel, Error> {
         return networkService.fetchMovieReviews(endingPath: path)
+    }
+    
+    func postRatingToMovie(movieId: MovieEndingPath, ratingValue: Float) -> AnyPublisher <RatingResponseModel, Error> {
+        return networkService.postRatingToMovie(movieId: movieId, ratingValue: ratingValue)
     }
 }

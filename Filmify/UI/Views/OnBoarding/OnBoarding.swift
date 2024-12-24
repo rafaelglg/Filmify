@@ -101,9 +101,16 @@ struct OnBoarding: View {
 }
 
 #Preview {
+    
+    @Previewable @State var authViewModel = AuthViewModelImpl(
+        biometricAuthentication: BiometricAuthenticationImpl(),
+        authManager: AuthManagerImpl(userBuilder: UserBuilderImpl()),
+        keychain: KeychainManagerImpl.shared,
+        enterAsGuestUseCase: EnterAsGuestUseCaseImpl(repository: GuestResponseServiceImpl(networkService: NetworkService.shared)))
+    
     OnBoarding(onboardingVM: OnboardingViewModelImpl(), createSignInView: SignInFactory())
         .environment(AppStateImpl())
-        .environment(AuthViewModelImpl())
+        .environment(authViewModel)
 }
 
 extension OnBoarding {

@@ -10,7 +10,7 @@ import SwiftUI
 struct SettingsRowView: View {
     let initials: String
     let name: String
-    let email: String
+    let email: String?
     
     var body: some View {
         HStack {
@@ -21,15 +21,17 @@ struct SettingsRowView: View {
                 .background(Color(.systemGray3))
                 .clipShape(.circle)
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 5) {
                 Text(name)
                     .font(.subheadline)
                     .fontWeight(.semibold)
-                    .padding(.top, 4)
                 
-                Text(email)
-                    .font(.footnote)
-                    .tint(.gray)
+                if let email = email, !email.isEmpty {
+                    Text(email)
+                        .font(.footnote)
+                        .tint(.gray)
+                        
+                }
             }
         }
     }

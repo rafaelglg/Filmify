@@ -42,7 +42,7 @@ struct SearchingMovieView: View {
             }
         }
         .sheet(item: $selectedMovie) { movie in
-            MediaDetailView(movie: movie, movieReviewVM: movieReviewVM, castMembersVM: $castMemberVM)
+            MediaDetailView(movie: movie, movieReviewVM: $movieReviewVM, castMembersVM: $castMemberVM)
         }
         .presentationCornerRadius(15)
         .scrollIndicators(.hidden)
@@ -53,10 +53,10 @@ struct SearchingMovieView: View {
 
 #Preview {
     @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
-    @Previewable @State var movieReviewViewModel = MovieReviewViewModel(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkService.shared))))
+    @Previewable @State var movieReviewVM = MovieReviewViewModelImpl(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkService.shared))))
     @Previewable @State var movieCastViewModel = MovieCastMembersViewModel(castMemberUseCase: MovieCastMemberUsesCaseImpl(repository: CastMembersServiceImpl(networkService: NetworkService.shared)))
     
-    SearchingMovieView(movieReviewVM: movieReviewViewModel,
+    SearchingMovieView(movieReviewVM: movieReviewVM,
                        castMemberVM: movieCastViewModel,
                        title: "Filtered",
                        movie: [.preview])

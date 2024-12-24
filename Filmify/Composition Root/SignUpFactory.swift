@@ -12,8 +12,8 @@ final class SignUpFactory: CreateSignUpView {
                    createSignUpView: SignUpFactory())
     }
     
-    private func createSignUpViewModel() -> SignUpViewModel {
-        SignUpViewModelImpl()
+    @MainActor private func createSignUpViewModel() -> SignUpViewModel {
+        SignUpViewModelImpl(authViewModel: EnvironmentFactory.authViewModel)
     }
     
     func createPasswordView() -> PasswordView {

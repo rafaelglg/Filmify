@@ -18,14 +18,16 @@ final class AppStarterFactory {
     
     @ViewBuilder
     static func startApp(hasCompletedOnboarding: Bool) -> some View {
+        
+        let authViewModel = EnvironmentFactory.authViewModel
+        
         if !hasCompletedOnboarding {
             createOnboarding()
-        } else if EnvironmentFactory.authViewModel.currentUser == nil {
-            signInFactory.create()
-        } else {
+        } else if authViewModel.guestModel?.success == true || authViewModel.authManager.userSession != nil {
             createTabBarView()
                 .transition(.blurReplace())
-            
+        } else {
+            signInFactory.create()
         }
     }
     
@@ -104,7 +106,7 @@ final class SignInFactory: CreateSignInView {
             .environment(EnvironmentFactory.appState))
     }
     
-    private func createSignInViewModel() -> SignInViewModel {
+    @MainActor private func createSignInViewModel() -> SignInViewModel {
         SignInViewModelImpl()
     }
     

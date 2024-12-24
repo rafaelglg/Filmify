@@ -31,5 +31,4 @@ final class MovieProductServiceImpl: MovieProductService {
     func fetchSearchMovies(query: String) -> AnyPublisher<MovieModel, Error> {
         return networkService.fetchSearchMovies(query: query)
     }
-    
 }

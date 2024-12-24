@@ -12,6 +12,7 @@ struct ProfileView: View {
     @Environment(AuthViewModelImpl.self) private var authViewModel
     
     var body: some View {
+        @Bindable var authViewModel = authViewModel
         NavigationStack {
             
             List {
@@ -20,7 +21,7 @@ struct ProfileView: View {
                     NavigationLink {
                         RafaView()
                     } label: {
-                        SettingsRowView(initials: authViewModel.currentUser?.initials ?? "RL", name: authViewModel.currentUser?.fullName ?? "rafael lo", email: authViewModel.currentUser?.email ?? "rafaelglg9")
+                        SettingsRowView(initials: authViewModel.currentUser?.initials ?? "", name: authViewModel.currentUser?.fullName ?? "", email: authViewModel.currentUser?.email ?? "")
                     }
                 }
                 
@@ -32,42 +33,36 @@ struct ProfileView: View {
                     } label: {
                         Text("Sign out")
                     }
-                }
-                
-                Section {
+                    
                     Button(role: .cancel) {
-                        withAnimation {
-                            
-                            authViewModel.getkeyFromKeychain()
-                        }
+                        authViewModel.getkeyFromKeychain()
                     } label: {
                         Text("Get password from keychain")
                     }
-                } footer: {
-                    Text("You will get your data from keychain.")
                 }
-                
-                Section {
-                    Button(role: .destructive) {
-                        withAnimation {
-                            
-                            authViewModel.deleteFromKeychain(email: authViewModel.currentUser?.email ?? "")
-                        }
-                    } label: {
-                        Text("Delete password from keychain")
+                .alert("keychain", isPresented: $authViewModel.showErrorAlert) {
+                    Button("Ok") {
+                        authViewModel.showErrorAlert = false
                     }
-                } footer: {
-                    Text("You will delete all your data from keychain and there is no coming back.")
+                } message: {
+                    Text(authViewModel.authErrorMessage)
                 }
                 
                 Section {
                     Button(role: .destructive) {
                         withAnimation {
-                            authViewModel.deleteFromKeychain(email: authViewModel.currentUser?.email ?? "")
-                            authViewModel.signOut()
+                            authViewModel.deleteUser()
                         }
                     } label: {
                         Text("Delete account")
+                    }
+                    
+                    Button(role: .destructive) {
+                        withAnimation {
+                            authViewModel.clearKeychain()
+                        }
+                    } label: {
+                        Text("Delete all keychains")
                     }
                 } footer: {
                     Text("You will delete all your data, and there is no coming back.")
@@ -75,12 +70,12 @@ struct ProfileView: View {
                 
             }
             .navigationTitle("Profile")
-            
         }
     }
 }
 
 #Preview {
+    
     ProfileView()
-        .environment(AuthViewModelImpl())
+        .environment(AuthViewModelImpl.preview)
 }

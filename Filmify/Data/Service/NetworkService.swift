@@ -15,6 +15,8 @@ protocol NetworkServiceProtocol: AnyObject {
     func fetchCastMembers<T: Decodable>(baseURL: String, id path: MovieEndingPath, endingPath: MovieEndingPath) -> AnyPublisher<T, Error>
     func fetchDetailMovies<T: Decodable>(id: MovieEndingPath, endingPath path: [MovieEndingPath]) -> AnyPublisher<T, Error>
     func fetchSearchMovies<T: Decodable>(query: String) -> AnyPublisher<T, Error>
+    func fetchGuestResponse() -> AnyPublisher<GuestModel, Error>
+    func postRatingToMovie(movieId: MovieEndingPath, ratingValue: Float) -> AnyPublisher<RatingResponseModel, Error>
 }
 
 final class NetworkService: Sendable, NetworkServiceProtocol {
@@ -29,17 +31,63 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
         return output.data
     }
     
-    func handleRequest(url: String) -> URLRequest {
+    func handleRequest(url: String, method: HTTPMethod = .get, body: [String: Any]? = nil) -> URLRequest {
         guard let url = URL(string: url) else {
             return URLRequest(url: URL(filePath: "empty url"))
         }
         
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
+        request.httpMethod = method.rawValue
         request.setValue("Bearer \(ApiKey.movieToken)", forHTTPHeaderField: "Authorization")
-        
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+        if let body = body {
+            do {
+                // This value is set to POST https methods
+                request.setValue("application/json;charset=utf-8", forHTTPHeaderField: "Content-Type")
+                request.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+            } catch {
+                fatalError("Failed to serialize JSON body: \(error.localizedDescription)")
+            }
+        }
         return request
+    }
         
+    func postRatingToMovie(movieId: MovieEndingPath, ratingValue: Float) -> AnyPublisher<RatingResponseModel, Error> {
+        
+        let body: [String: Any] = ["value": ratingValue]
+        let request = handleRequest(url: "\(Constants.movieGeneralPath + movieId.pathValue)/rating",
+                                    method: .post,
+                                    body: body)
+        
+        let publisher = URLSession.shared.dataTaskPublisher(for: request)
+            .tryMap(handleResponse)
+            .mapError { error -> Error in
+                if (error as? URLError)?.code == .unsupportedURL {
+                    return ErrorManager.badURL
+                }
+                return error
+            }
+            .decode(type: RatingResponseModel.self, decoder: Utils.jsonDecoder)
+            .eraseToAnyPublisher()
+        return publisher
+    }
+    
+    func fetchGuestResponse() -> AnyPublisher<GuestModel, Error> {
+        
+        let request = handleRequest(url: Constants.guestSessionPath)
+        
+        let publisher = URLSession.shared.dataTaskPublisher(for: request)
+            .tryMap(handleResponse)
+            .mapError { error -> Error in
+                if (error as? URLError)?.code == .unsupportedURL {
+                    return ErrorManager.badURL
+                }
+                return error
+            }
+            .decode(type: GuestModel.self, decoder: Utils.jsonDecoder)
+            .eraseToAnyPublisher()
+        return publisher
     }
     
     func fetchNowPlayingMovies(basePath: String, endingPath path: MovieEndingPath) -> AnyPublisher<MovieModel, Error> {

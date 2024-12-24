@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 protocol SignUpViewModel {
     var emailText: String { get set }
@@ -18,6 +19,7 @@ protocol SignUpViewModel {
     
     func verifyUserEmail(email: String)
     func validatePassword(password: String)
+    func createUser()
 }
 
 @Observable
@@ -36,6 +38,17 @@ final class SignUpViewModelImpl: SignUpViewModel {
             - At least one number
             - At least one special character (!@#$%^&*(),.?":{}|<>)
             """
+    
+    let authViewModel: AuthViewModel
+    var cancellable = Set<AnyCancellable>()
+    
+    init(authViewModel: AuthViewModel) {
+        self.authViewModel = authViewModel
+    }
+    
+    func createUser() {
+        authViewModel.createUser()
+    }
     
     func verifyUserEmail(email: String) {
         

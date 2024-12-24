@@ -42,8 +42,15 @@ struct SignUpView: View {
 }
 
 #Preview {
-    SignUpView(signUpVM: SignUpViewModelImpl(), createSignUpView: SignUpFactory())
-        .environment(AuthViewModelImpl())
+    
+    @Previewable @State var authViewModel = AuthViewModelImpl(
+        biometricAuthentication: BiometricAuthenticationImpl(),
+        authManager: AuthManagerImpl(userBuilder: UserBuilderImpl()),
+        keychain: KeychainManagerImpl.shared,
+        enterAsGuestUseCase: EnterAsGuestUseCaseImpl(repository: GuestResponseServiceImpl(networkService: NetworkService.shared)))
+    
+    SignUpView(signUpVM: SignUpViewModelImpl(authViewModel: authViewModel), createSignUpView: SignUpFactory())
+        .environment(authViewModel)
         .environment(AppStateImpl())
 }
 
@@ -71,7 +78,7 @@ extension SignUpView {
                     guard signUpVM.emailTextValid else {
                         return
                     }
-                    authViewModel.setEmail(withEmail: signUpVM.emailText)
+                    authViewModel.authManager.setEmail(withEmail: signUpVM.emailText)
                     appState.pushTo(.password)
                 }
             
@@ -89,7 +96,7 @@ extension SignUpView {
     var continueButton: some View {
         VStack {
             Button {
-                authViewModel.setEmail(withEmail: signUpVM.emailText)
+                authViewModel.authManager.setEmail(withEmail: signUpVM.emailText)
                 appState.pushTo(.password)
             } label: {
                 Text("Continue")

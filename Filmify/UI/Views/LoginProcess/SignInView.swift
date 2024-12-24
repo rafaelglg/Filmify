@@ -9,8 +9,7 @@ import SwiftUI
 
 struct SignInView: View {
     
-    @FocusState private var focusFieldEmail: FieldState?
-    @FocusState private var focusFieldPassword: FieldState?
+    @FocusState private var focusField: FieldState?
     
     @State private var signInVM: SignInViewModel
     @Environment(AuthViewModelImpl.self) private var authViewModel
@@ -36,7 +35,12 @@ struct SignInView: View {
 }
 
 #Preview {
-    @Previewable @State var authViewModel = AuthViewModelImpl()
+    @Previewable @State var authViewModel = AuthViewModelImpl(
+        biometricAuthentication: BiometricAuthenticationImpl(),
+        authManager: AuthManagerImpl(userBuilder: UserBuilderImpl()),
+        keychain: KeychainManagerImpl.shared,
+        enterAsGuestUseCase: EnterAsGuestUseCaseImpl(repository: GuestResponseServiceImpl(networkService: NetworkService.shared)))
+    
     SignInView(signInVM: SignInViewModelImpl(),
                createSignUpView: SignUpFactory())
         .environment(authViewModel)
@@ -50,8 +54,7 @@ extension SignInView {
         Color(.systemBackground)
             .ignoresSafeArea()
             .onTapGesture {
-                focusFieldEmail = nil
-                focusFieldPassword = nil
+                focusField = nil
             }
     }
     
@@ -66,19 +69,47 @@ extension SignInView {
                 .padding()
             
             CustomTextfield(placeholder: "Email", text: $signInVM.emailText)
-                .focused($focusFieldEmail, equals: .email)
+                .focused($focusField, equals: .email)
                 .submitLabel(.next)
+                .onSubmit {
+                    focusField = .password
+                }
             
             CustomSecureField(placeholder: "Password", passwordText: $signInVM.passwordText)
-                .focused($focusFieldPassword, equals: .password)
+                .focused($focusField, equals: .password)
                 .submitLabel(.done)
+                .onSubmit {
+                    withAnimation {
+                        authViewModel.signIn(email: signInVM.emailText, password: signInVM.passwordText)
+                    }
+                }
             
             signInButton
+            guestButton
             biometricButton
             authenticationButtons
             Spacer()
             registerButton
         }
+    }
+    
+    var guestButton: some View {
+        Button {
+            withAnimation {
+                authViewModel.signInAsGuest()
+            }
+        } label: {
+            if authViewModel.isLoading {
+                ProgressView()
+            } else {
+                Text("Enter as a guest")
+                    .tint(.primary)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .center)
+        .frame(height: 50)
+        .background(.indigo, in: RoundedRectangle(cornerRadius: 15))
+        .padding()
     }
     
     var signInButton: some View {
@@ -87,10 +118,14 @@ extension SignInView {
                 authViewModel.signIn(email: signInVM.emailText, password: signInVM.passwordText)
             }
         } label: {
-            Text("Sign in")
-                .tint(.primary)
-                .frame(maxWidth: .infinity, alignment: .center)
+            if authViewModel.isLoadingSignInSession {
+                ProgressView()
+            } else {
+                Text("Sign in")
+                    .tint(.primary)
+            }
         }
+        .frame(maxWidth: .infinity, alignment: .center)
         .frame(height: 50)
         .background(.buttonBG, in: RoundedRectangle(cornerRadius: 15))
         .padding()
@@ -101,7 +136,7 @@ extension SignInView {
         @Bindable var authViewModel = authViewModel
         let authentication = authViewModel.biometricAuth
         Button {
-            authViewModel.biometricAuthentication(email: signInVM.emailText)
+            authViewModel.biometricAuthentication()
         } label: {
             Image(systemName: authentication.biometricType == .touchID ? "touchid" : "faceid" )
                 .resizable()
@@ -146,6 +181,7 @@ extension SignInView {
     
     @ViewBuilder
     var registerButton: some View {
+        @Bindable var authViewModel = authViewModel
         @Bindable var appState = appState
         HStack {
             Text("New to RafaDB?")
@@ -160,6 +196,11 @@ extension SignInView {
             .tint(.buttonBG)
             .buttonStyle(.borderedProminent)
             .buttonBorderShape(.capsule)
+        }
+        .alert("Authentication failed", isPresented: $authViewModel.showErrorAlert) {
+            Button("Try again") {}
+        } message: {
+            Text(authViewModel.authErrorMessage)
         }
         .sheet(item: $appState.currentState) {
             appState.resetNavigationPath()
