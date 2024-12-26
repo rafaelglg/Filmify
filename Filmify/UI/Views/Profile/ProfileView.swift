@@ -21,18 +21,11 @@ struct ProfileView: View {
                     NavigationLink {
                         RafaView()
                     } label: {
-                        SettingsRowView(initials: authViewModel.currentUser?.initials ?? "", name: authViewModel.currentUser?.fullName ?? "", email: authViewModel.currentUser?.email ?? "")
+                        SettingsRowView(user: authViewModel.currentUser ?? UserModel.none)
                     }
                 }
                 
                 Section {
-                    Button(role: .cancel) {
-                        withAnimation {
-                            authViewModel.signOut()
-                        }
-                    } label: {
-                        Text("Sign out")
-                    }
                     
                     Button(role: .cancel) {
                         authViewModel.getkeyFromKeychain()
@@ -49,6 +42,15 @@ struct ProfileView: View {
                 }
                 
                 Section {
+                    
+                    Button(role: .destructive) {
+                        withAnimation {
+                            authViewModel.signOut()
+                        }
+                    } label: {
+                        Text("Sign out")
+                    }
+                    
                     Button(role: .destructive) {
                         withAnimation {
                             authViewModel.deleteUser()
@@ -64,6 +66,10 @@ struct ProfileView: View {
                     } label: {
                         Text("Delete all keychains")
                     }
+                } header: {
+                    Text("Sign out options")
+                        .font(.headline)
+                        .textCase(.lowercase)
                 } footer: {
                     Text("You will delete all your data, and there is no coming back.")
                 }

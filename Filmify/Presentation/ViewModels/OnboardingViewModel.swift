@@ -23,11 +23,11 @@ final class OnboardingViewModelImpl: OnboardingViewModel {
     var goToDashboard: Bool = false
     let welcoming = [
         "Welcome to",
-        "Rafa DB Player"
+        "Filmify"
     ]
     
     func isBoldCharacter(line: String, charIndex: Int) -> Bool {
-        let target = "DB Player"
+        let target = "Filmify"
         guard let range = line.range(of: target) else { return false }
         let targetIndices = line.distance(from: line.startIndex, to: range.lowerBound)..<line.distance(from: line.startIndex, to: range.upperBound)
         return targetIndices.contains(charIndex)

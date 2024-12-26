@@ -7,6 +7,7 @@
 
 import Foundation
 import FirebaseAuth
+import FirebaseCore
 
 protocol UserBuilder {
     var email: String { get set }
@@ -42,7 +43,11 @@ final class UserBuilderImpl: UserBuilder {
     var fullName: String = ""
     
     func build(user: AuthDataResult) -> UserModel? {
-        return UserModel(id: user.user.uid, email: user.user.email ?? "", password: password, fullName: fullName)
+        return UserModel(id: user.user.uid,
+                         email: user.user.email ?? "",
+                         password: password,
+                         fullName: fullName,
+                         createdAt: Timestamp(date: Date()))
     }
     
     func reset() {

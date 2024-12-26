@@ -99,20 +99,24 @@ extension SignInView {
                 authViewModel.signInAsGuest()
             }
         } label: {
+            
             if authViewModel.isLoading {
                 ProgressView()
+                    .frame(maxWidth: .infinity, alignment: .center)
             } else {
                 Text("Enter as a guest")
                     .tint(.primary)
+                    .frame(maxWidth: .infinity, alignment: .center)
             }
         }
-        .frame(maxWidth: .infinity, alignment: .center)
         .frame(height: 50)
         .background(.indigo, in: RoundedRectangle(cornerRadius: 15))
         .padding()
     }
     
+    @ViewBuilder
     var signInButton: some View {
+        @Bindable var authViewModel = authViewModel
         Button {
             withAnimation {
                 authViewModel.signIn(email: signInVM.emailText, password: signInVM.passwordText)
@@ -120,15 +124,21 @@ extension SignInView {
         } label: {
             if authViewModel.isLoadingSignInSession {
                 ProgressView()
+                    .frame(maxWidth: .infinity, alignment: .center)
             } else {
                 Text("Sign in")
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .tint(.primary)
             }
         }
-        .frame(maxWidth: .infinity, alignment: .center)
         .frame(height: 50)
         .background(.buttonBG, in: RoundedRectangle(cornerRadius: 15))
         .padding()
+        .alert("Successful", isPresented: $authViewModel.authManager.showAlert) {
+            Button("Bye") {}
+        } message: {
+            Text(authViewModel.authManager.didDeleteUserMessage)
+        }
     }
     
     @ViewBuilder

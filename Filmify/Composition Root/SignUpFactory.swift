@@ -19,4 +19,8 @@ final class SignUpFactory: CreateSignUpView {
     func createPasswordView() -> PasswordView {
         PasswordView(signUpVM: createSignUpViewModel())
     }
+    
+    func createFullNameView() -> FullNameView {
+        FullNameView(signUpVM: createSignUpViewModel())
+    }
 }

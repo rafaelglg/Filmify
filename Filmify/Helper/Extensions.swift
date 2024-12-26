@@ -90,6 +90,7 @@ extension PersonDetailModel {
 
 extension UserModel {
     static let preview = UserModel(id: "1", email: "rafaglg9@gmail.com", password: "aA@123456", fullName: "Rafael Loggiodice")
+    static let none = UserModel(id: "", email: "", password: "", fullName: "")
 }
 
 extension Data {
@@ -144,7 +145,7 @@ extension Array {
 }
 
 extension View {
-    func customTabBarAppearance(forSelectedItem: UIColor? = nil, forUnselectedItem unselectedColor: UIColor) -> some View {
+    func customTabBarAppearance(forSelectedItem: UIColor? = nil, forUnselectedItem unselectedColor: UIColor? = nil) -> some View {
         self.onAppear {
             let appearance = UITabBar.appearance()
             appearance.unselectedItemTintColor = unselectedColor

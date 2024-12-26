@@ -10,14 +10,14 @@ enum SignUpState: Identifiable {
     case signUp
     case signOut
     case password
-    case dashboard
+    case fullName
     
     var id: String {
         switch self {
         case .signIn: return "signIn"
         case .signUp: return "signUp"
         case .password: return "password"
-        case .dashboard: return "dashboard"
+        case .fullName: return "fullName"
         case .signOut: return "signOut"
         }
     }

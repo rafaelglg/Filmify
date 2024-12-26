@@ -8,13 +8,11 @@
 import SwiftUI
 
 struct SettingsRowView: View {
-    let initials: String
-    let name: String
-    let email: String?
+    let user: UserModel
     
     var body: some View {
         HStack {
-            Text(initials)
+            Text(user.initials)
                 .font(.title)
                 .fontWeight(.semibold)
                 .frame(width: 73, height: 73)
@@ -22,15 +20,14 @@ struct SettingsRowView: View {
                 .clipShape(.circle)
             
             VStack(alignment: .leading, spacing: 5) {
-                Text(name)
+                Text(user.fullName)
                     .font(.subheadline)
                     .fontWeight(.semibold)
                 
-                if let email = email, !email.isEmpty {
-                    Text(email)
+                if !user.email.isEmpty {
+                    Text(user.email)
                         .font(.footnote)
                         .tint(.gray)
-                        
                 }
             }
         }
@@ -38,5 +35,5 @@ struct SettingsRowView: View {
 }
 
 #Preview {
-    SettingsRowView(initials: "MJ", name: "Rafael Loggiodice", email: "rafael@gmail.com")
+    SettingsRowView(user: UserModel(id: "1", email: "mj@gmail.com", password: "", fullName: "Michael Jackson"))
 }

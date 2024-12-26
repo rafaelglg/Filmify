@@ -5,7 +5,7 @@
 //  Created by Rafael Loggiodice on 21/12/24.
 //
 
-import Firebase
+import FirebaseFirestore
 import FirebaseAuth
 import Combine
 import SwiftUICore
@@ -13,6 +13,8 @@ import SwiftUICore
 protocol AuthManager {
     var userSession: User? { get set }
     var userBuilder: UserBuilder? { get }
+    var showAlert: Bool { get set }
+    var didDeleteUserMessage: LocalizedStringKey { get }
     
     func setEmail(withEmail email: String)
     func setPassword(password: String)
@@ -22,12 +24,15 @@ protocol AuthManager {
     func signIn(email: String, password: String) -> Future<UserModel, FirebaseAuthError>
     func signOut() -> Future<Void, FirebaseAuthError>
     func deleteUser() -> Future< User, FirebaseAuthError>
+    func loadCurrentUser(completion: @escaping (Result<UserModel, FirebaseAuthError>) -> Void)
 }
 
 @Observable
 final class AuthManagerImpl: AuthManager {
     var userSession: User?
     var userBuilder: UserBuilder?
+    var didDeleteUserMessage: LocalizedStringKey = ""
+    var showAlert: Bool = false
     
     init(userBuilder: UserBuilder) {
         self.userBuilder = userBuilder
@@ -66,7 +71,15 @@ final class AuthManagerImpl: AuthManager {
                 withAnimation {
                     self?.userSession = createdUser.user
                 }
-                promise(.success(userModel))
+                
+                self?.saveUserData(from: userModel, completion: { result in
+                    switch result {
+                    case .success(let success):
+                        promise(.success(success))
+                    case .failure(let failure):
+                        promise(.failure(failure))
+                    }
+                })
             }
         }
     }
@@ -89,15 +102,22 @@ final class AuthManagerImpl: AuthManager {
                     return promise(.failure(FirebaseAuthError.emailAlreadyInUse))
                 }
                 
-                guard let userModel = self?.userBuilder?.build(user: createdUser) else {
+                guard self?.userBuilder?.build(user: createdUser) != nil else {
                     print("Error: Missing data to create user")
                     return
                 }
                 
-                withAnimation {
-                    self?.userSession = createdUser.user
+                self?.loadCurrentUser { [weak self] result in
+                    switch result {
+                    case .success(let success):
+                        withAnimation {
+                            self?.userSession = createdUser.user
+                        }
+                        promise(.success(success))
+                    case .failure(let error):
+                        promise(.failure(error))
+                    }
                 }
-                promise(.success(userModel))
             }
         }
     }
@@ -123,10 +143,19 @@ final class AuthManagerImpl: AuthManager {
                 return
             }
             
-            promise(.success(user))
-            self.userSession = nil
-            self.userBuilder?.reset()
-            user.delete()
+            self.deleteUserFromDB { [weak self] result in
+                switch result {
+                case .success(let message):
+                    self?.userSession = nil
+                    self?.userBuilder?.reset()
+                    user.delete()
+                    self?.didDeleteUserMessage = message
+                    self?.showAlert = true
+                    promise(.success(user))
+                case .failure(let error):
+                    promise(.failure(error))
+                }
+            }
         }
     }
 }
@@ -142,7 +171,64 @@ extension AuthManagerImpl {
     }
     
     func setFullName(fullName: String) {
-        userBuilder?.setFullName(fullName)
+        let formatName = fullName
+            .lowercased()
+            .capitalized
+            .replacingOccurrences(of: "  ", with: " ")
+        
+        userBuilder?.setFullName(formatName)
+    }
+    
+    // MARK: Firestore methods
+    func saveUserData(from user: UserModel, completion: @escaping (Result<UserModel, FirebaseAuthError>) -> Void) {
+        let userDTO = user.toDTO()
+            do {
+                let encodedUser = try Firestore.Encoder().encode(userDTO)
+                
+                let database = Firestore.firestore()
+                database.collection("users").document(user.id).setData(encodedUser) { error in
+                    if let error = error {
+                        completion(.failure(FirebaseAuthError.firestoreError(error.localizedDescription)))
+                    } else {
+                        completion(.success(user))
+                    }
+                }
+            } catch {
+                completion(.failure(FirebaseAuthError.encodingError(error.localizedDescription)))
+            }
+    }
+    
+    func loadCurrentUser(completion: @escaping (Result<UserModel, FirebaseAuthError>) -> Void) {
+        
+        let userSession = Auth.auth().currentUser
+        
+        let database = Firestore.firestore()
+        database.collection("users").document(userSession?.uid ?? "").getDocument { snapshot, error in
+            guard let data = snapshot?.data(), error == nil else {
+                return completion(.failure(.unknownError(1)))
+            }
+            
+            do {
+                let decodedUserDTO = try Firestore.Decoder().decode(UserModelDTO.self, from: data)
+                let userModel = decodedUserDTO.toUserModel()
+                completion(.success(userModel))
+            } catch {
+                print(error.localizedDescription)
+                completion(.failure(FirebaseAuthError.decodingError(error.localizedDescription)))
+            }
+        }
+    }
+    
+    func deleteUserFromDB(completion: @escaping (Result<LocalizedStringKey, FirebaseAuthError>) -> Void) {
+        let database = Firestore.firestore()
+        let userSession = Auth.auth().currentUser
+        database.collection("users").document(userSession?.uid ?? "").delete { error in
+            guard error == nil else {
+                completion(.failure(FirebaseAuthError.deleteUserError))
+                return
+            }
+            completion(.success(("User deleted successfully")))
+        }
     }
 }
 
@@ -159,6 +245,9 @@ enum FirebaseAuthError: LocalizedError, Error {
     case signOutError
     case deleteUserError
     case sessionExpired
+    case encodingError(String)
+    case firestoreError(String)
+    case decodingError(String)
     
     init(errorCode: Int) {
         if let authError = AuthErrorCode(rawValue: errorCode) {
@@ -213,6 +302,12 @@ enum FirebaseAuthError: LocalizedError, Error {
             return "Error deleting user, try again later"
         case .sessionExpired:
             return "Session expired, try again authentication methods"
+        case .encodingError(let error):
+            return "User could not be sent to database: \(error)"
+        case .firestoreError(let error):
+            return "Something happened in the database of firestore: \(error)"
+        case .decodingError(let error):
+            return "Something happened retrieving data from firestore \(error)"
         }
     }
 }

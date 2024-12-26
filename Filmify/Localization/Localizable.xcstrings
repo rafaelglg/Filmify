@@ -94,6 +94,16 @@
         }
       }
     },
+    "Bye" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adios"
+          }
+        }
+      }
+    },
     "Continue" : {
       "localizations" : {
         "es" : {
@@ -153,6 +163,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Entrar como invitado"
+          }
+        }
+      }
+    },
+    "Enter your full name" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cómo te llamas?"
           }
         }
       }
@@ -603,6 +623,9 @@
         }
       }
     },
+    "Sign out options" : {
+
+    },
     "Sign Up" : {
       "localizations" : {
         "es" : {
@@ -649,6 +672,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estado de pelicula:"
+          }
+        }
+      }
+    },
+    "Successful" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exitoso"
           }
         }
       }
@@ -709,6 +742,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Próximos estrenos"
+          }
+        }
+      }
+    },
+    "User deleted successfully" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuario eliminado con éxito"
           }
         }
       }

@@ -72,6 +72,7 @@ extension SignUpView {
             yourEmailText
             
             CustomTextfield(placeholder: "jane@appleseed.com", text: $signUpVM.emailText)
+                .textContentType(.emailAddress)
                 .focused($focusState, equals: .email)
                 .submitLabel(.continue)
                 .onSubmit {
@@ -79,7 +80,7 @@ extension SignUpView {
                         return
                     }
                     authViewModel.authManager.setEmail(withEmail: signUpVM.emailText)
-                    appState.pushTo(.password)
+                    appState.pushTo(.fullName)
                 }
             
             Spacer()
@@ -97,7 +98,7 @@ extension SignUpView {
         VStack {
             Button {
                 authViewModel.authManager.setEmail(withEmail: signUpVM.emailText)
-                appState.pushTo(.password)
+                appState.pushTo(.fullName)
             } label: {
                 Text("Continue")
                     .bold()
@@ -107,6 +108,8 @@ extension SignUpView {
             .navigationDestination(for: SignUpState.self) { state in
                 if state == .password {
                     createSignUpView.createPasswordView()
+                } else if state == .fullName {
+                    createSignUpView.createFullNameView()
                 }
             }
             

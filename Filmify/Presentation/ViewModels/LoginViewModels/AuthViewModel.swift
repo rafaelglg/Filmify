@@ -41,7 +41,7 @@ protocol KeychainAuth {
 final class AuthViewModelImpl: AuthViewModel {
     var currentUser: UserModel?
     var biometricAuth: BiometricAuthentication
-    let authManager: AuthManager
+    var authManager: AuthManager
     let enterAsGuestUseCase: EnterAsGuestUseCase
     let biometricErrorMessage: String = ""
     var authErrorMessage: String = ""
@@ -50,7 +50,7 @@ final class AuthViewModelImpl: AuthViewModel {
     var guestModel: GuestModel?
     var isLoading: Bool = false
     var isLoadingSignInSession: Bool = false
-
+    
     @ObservationIgnored var cancellable = Set<AnyCancellable>()
     @ObservationIgnored @AppStorage("userID") var currentUserId: String?
     
@@ -59,6 +59,10 @@ final class AuthViewModelImpl: AuthViewModel {
         self.authManager = authManager
         self.keychain = keychain
         self.enterAsGuestUseCase = enterAsGuestUseCase
+        
+        if authManager.userSession != nil {
+            self.loadCurrentUser()
+        }
     }
     
     func signInAsGuest() {
@@ -82,7 +86,7 @@ final class AuthViewModelImpl: AuthViewModel {
                 print(guestResponse)
                 self?.setGuestModel(model: guestResponse)
             }.store(in: &cancellable)
-
+        
     }
     
     func signIn(email: String, password: String) {
@@ -104,7 +108,6 @@ final class AuthViewModelImpl: AuthViewModel {
                     self?.showErrorAlert = true
                 }
             } receiveValue: { [weak self] user in
-                print(user)
                 self?.currentUserId = user.id
                 self?.currentUser = user
                 self?.saveKeychainFromLogin(userId: user.id, email: user.email, password: password)
@@ -144,7 +147,7 @@ final class AuthViewModelImpl: AuthViewModel {
                     self?.showErrorAlert = true
                 }
             } receiveValue: { [weak self]  _ in
-                self?.guestModel = nil
+                self?.setGuestModel(model: nil)
             }.store(in: &cancellable)
     }
     
@@ -171,6 +174,24 @@ final class AuthViewModelImpl: AuthViewModel {
         } else {
             // Guest session
             setGuestModel(model: nil)
+        }
+    }
+    
+    func loadCurrentUser() {
+        isLoadingSignInSession = true
+        authManager.loadCurrentUser { [weak self] result in
+            
+            defer {
+                self?.isLoadingSignInSession = false
+            }
+            
+            switch result {
+            case .success(let user):
+                self?.currentUser = user
+            case .failure(let error):
+                self?.authErrorMessage = error.localizedDescription
+                self?.showErrorAlert = true
+            }
         }
     }
     
@@ -211,8 +232,8 @@ extension AuthViewModelImpl: BiometricAuthenticationType {
 }
 
 extension AuthViewModelImpl: KeychainAuth {
-    // MARK: keychain methods
     
+    // MARK: keychain methods
     func getkeyFromKeychain() {
         do {
             let email = try keychain.getEmail(userID: currentUserId ?? "")
@@ -266,7 +287,7 @@ extension AuthViewModelImpl: KeychainAuth {
             try keychain.save(uid: userId, email: email, password: password)
         } catch {
             if error == .duplicateEntry {
-             print("duplicated aqui")
+                print("duplicated aqui")
             }
             print(error)
             print("error")
@@ -311,7 +332,27 @@ extension AuthViewModelImpl {
             email: "rafael@example.com",
             password: "password123",
             fullName: "Rafael Loggiodice")
-
+        
         return viewModel
     }()
+}
+
+@Observable
+final class AuthViewModelMock: AuthViewModel {
+    
+    var currentUser: UserModel? = UserModel(id: "1", email: "example@gmail.com", password: "", fullName: "Rafael Loggiodice")
+    
+    var authManager: AuthManager = AuthManagerImpl(userBuilder: UserBuilderImpl())
+    
+    var authErrorMessage: String = ""
+    var showErrorAlert: Bool = false
+    var guestModel: GuestModel?
+    var isLoading: Bool = false
+    var isLoadingSignInSession: Bool = false
+    
+    func signIn(email: String, password: String) {}
+    func signInAsGuest() {}
+    func createUser() {}
+    func signOut() {}
+    func deleteUser() {}
 }
