@@ -42,7 +42,7 @@ struct Dashboard: View {
 }
 
 #Preview {
-    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
+    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkServiceImpl.shared))
 
     Dashboard(createSectionMovie: SectionMovieFactory())
         .environment(MovieViewModel(movieUsesCase: movieUsesCasesImpl))

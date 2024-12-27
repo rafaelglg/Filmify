@@ -49,7 +49,7 @@ extension MovieDetails {
 
 extension MovieReviewViewModelImpl {
     @MainActor static let preview: MovieReviewViewModelImpl = {
-        var viewModel = MovieReviewViewModelImpl(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkService.shared))))
+        var viewModel = MovieReviewViewModelImpl(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkServiceImpl.shared))))
         viewModel.movieReviews = [.preview]
         return viewModel
     }()
@@ -89,8 +89,8 @@ extension PersonDetailModel {
 }
 
 extension UserModel {
-    static let preview = UserModel(id: "1", email: "rafaglg9@gmail.com", password: "aA@123456", fullName: "Rafael Loggiodice")
-    static let none = UserModel(id: "", email: "", password: "", fullName: "")
+    static let preview = UserModel(id: "1", email: "rafaglg9@gmail.com", password: "aA@123456", fullName: "Rafael Loggiodice", sessionId: "")
+    static let none = UserModel(id: "", email: "", password: "", fullName: "", sessionId: "")
 }
 
 extension Data {
@@ -162,7 +162,7 @@ struct EnvironmentTraits: PreviewModifier {
     
     func body(content: Content, context: Void) -> some View {
         @Previewable @State var network = NetworkMonitorImpl()
-        @Previewable @State var movieVM = MovieViewModel(movieUsesCase: MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared)))
+        @Previewable @State var movieVM = MovieViewModel(movieUsesCase: MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkServiceImpl.shared)))
         content
             .environment(movieVM)
             .environment(network)

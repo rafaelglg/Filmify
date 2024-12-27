@@ -56,9 +56,9 @@ struct MediaSectionView: View {
 }
 
 #Preview {
-    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
-    @Previewable @State var movieReviewViewModel = MovieReviewViewModelImpl(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkService.shared))))
-    @Previewable @State var movieCastViewModel = MovieCastMembersViewModel(castMemberUseCase: MovieCastMemberUsesCaseImpl(repository: CastMembersServiceImpl(networkService: NetworkService.shared)))
+    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkServiceImpl.shared))
+    @Previewable @State var movieReviewViewModel = MovieReviewViewModelImpl(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkServiceImpl.shared))))
+    @Previewable @State var movieCastViewModel = MovieCastMembersViewModel(castMemberUseCase: MovieCastMemberUsesCaseImpl(repository: CastMembersServiceImpl(networkService: NetworkServiceImpl.shared)))
 
     MediaSectionView(movieReviewVM: movieReviewViewModel,
                      castMemberVM: movieCastViewModel,

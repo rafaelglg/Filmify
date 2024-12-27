@@ -18,15 +18,15 @@ final class EnvironmentFactory {
         AuthViewModelImpl(biometricAuthentication: createBiometricAuthentication(),
                           authManager: createAuthManager(),
                           keychain: createKeychain(),
-                          enterAsGuestUseCase: createGuestUseCase())
+                          createSession: createGuestUseCase())
     }
     
-    static func createGuestUseCase() -> EnterAsGuestUseCase {
-        EnterAsGuestUseCaseImpl(repository: createGuestRepositoty())
+    static func createGuestUseCase() -> CreateSessionUseCase {
+        CreateSessionUseCaseImpl(repository: createGuestRepositoty())
     }
     
-    static func createGuestRepositoty() -> GuestResponseService {
-        GuestResponseServiceImpl(networkService: createNetworkService())
+    static func createGuestRepositoty() -> CreateSessionService {
+        CreateSessionServiceImpl(networkService: NetworkServiceImpl.shared)
     }
     
     static private func createKeychain() -> KeychainManager {
@@ -45,7 +45,7 @@ final class EnvironmentFactory {
         UserBuilderImpl()
     }
     
-    static func createNetworkService() -> NetworkService {
-        NetworkService.shared
+    static func createNetworkService() -> NetworkServiceImpl {
+        NetworkServiceImpl.shared
     }
 }

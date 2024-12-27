@@ -19,6 +19,7 @@ protocol AuthManager {
     func setEmail(withEmail email: String)
     func setPassword(password: String)
     func setFullName(fullName: String)
+    func setSessionId(sessionId: String)
     
     func createUser() -> Future<UserModel, FirebaseAuthError>
     func signIn(email: String, password: String) -> Future<UserModel, FirebaseAuthError>
@@ -168,6 +169,10 @@ extension AuthManagerImpl {
     
     func setPassword(password: String) {
         userBuilder?.setPassword(password)
+    }
+    
+    func setSessionId(sessionId: String) {
+        userBuilder?.setSessionId(sessionId)
     }
     
     func setFullName(fullName: String) {

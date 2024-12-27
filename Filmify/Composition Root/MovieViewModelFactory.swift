@@ -45,8 +45,8 @@ final class MovieViewModelFactory {
         ReviewProductServiceImpl(networkService: createMovieReviewNetwork())
     }
     
-    private static func createMovieReviewNetwork() -> NetworkServiceProtocol {
-        NetworkService.shared
+    private static func createMovieReviewNetwork() -> NetworkService {
+        NetworkServiceImpl.shared
     }
     
     private static func createMovieCastMembersUsesCase() -> MovieCastMemberUsesCase {
@@ -57,7 +57,7 @@ final class MovieViewModelFactory {
         CastMembersServiceImpl(networkService: createMovieCastNetwork())
     }
     
-    private static func createMovieCastNetwork() -> NetworkServiceProtocol {
-        NetworkService.shared
+    private static func createMovieCastNetwork() -> NetworkService {
+        NetworkServiceImpl.shared
     }
 }

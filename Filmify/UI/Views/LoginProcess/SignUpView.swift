@@ -47,7 +47,7 @@ struct SignUpView: View {
         biometricAuthentication: BiometricAuthenticationImpl(),
         authManager: AuthManagerImpl(userBuilder: UserBuilderImpl()),
         keychain: KeychainManagerImpl.shared,
-        enterAsGuestUseCase: EnterAsGuestUseCaseImpl(repository: GuestResponseServiceImpl(networkService: NetworkService.shared)))
+        createSession: CreateSessionUseCaseImpl(repository: CreateSessionServiceImpl(networkService: NetworkServiceImpl.shared)))
     
     SignUpView(signUpVM: SignUpViewModelImpl(authViewModel: authViewModel), createSignUpView: SignUpFactory())
         .environment(authViewModel)

@@ -13,6 +13,7 @@ struct UserModel: Codable, Identifiable, Sendable {
     let email: String
     let password: String
     let fullName: String
+    let sessionId: String?
     var createdAt = Timestamp()
         
     var initials: String {
@@ -27,6 +28,7 @@ struct UserModel: Codable, Identifiable, Sendable {
     enum CodingKeys: CodingKey {
         case id
         case email, password, fullName, createdAt
+        case sessionId
     }
 }
 
@@ -36,6 +38,7 @@ extension UserModel {
             id: id,
             email: email,
             fullName: fullName,
+            sessionId: sessionId,
             createdAt: createdAt)
     }
 }

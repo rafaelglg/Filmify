@@ -61,11 +61,11 @@ struct MediaDetailView: View {
 }
 
 #Preview {
-    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
+    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkServiceImpl.shared))
     @Previewable @State var movieCastMembersViewModel = MovieCastMembersViewModel(
         castMemberUseCase: MovieCastMemberUsesCaseImpl(
             repository: CastMembersServiceImpl(
-                networkService: NetworkService.shared)))
+                networkService: NetworkServiceImpl.shared)))
     
     MediaDetailView(movie: .preview,
                     movieReviewVM: .constant(MovieReviewViewModelImpl.preview),

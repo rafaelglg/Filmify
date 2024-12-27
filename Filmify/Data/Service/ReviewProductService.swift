@@ -14,9 +14,9 @@ protocol ReviewProductService {
 }
 
 final class ReviewProductServiceImpl: ReviewProductService {
-    private let networkService: NetworkServiceProtocol
+    private let networkService: NetworkService
     
-    init(networkService: NetworkServiceProtocol) {
+    init(networkService: NetworkService) {
         self.networkService = networkService
     }
     

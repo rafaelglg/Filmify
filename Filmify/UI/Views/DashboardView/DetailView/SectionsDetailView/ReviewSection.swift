@@ -46,7 +46,7 @@ struct ReviewSection<ImageView: View>: View {
 
 #Preview {
     @Previewable @State var review: MovieReviewResponse = .preview
-    @Previewable @State var movieReviewVM = MovieReviewViewModelImpl(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkService.shared))))
+    @Previewable @State var movieReviewVM = MovieReviewViewModelImpl(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkServiceImpl.shared))))
     
     ReviewSection(review: .preview,
                   movieReviewVM: movieReviewVM,

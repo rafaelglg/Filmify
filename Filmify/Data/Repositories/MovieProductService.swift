@@ -14,9 +14,9 @@ protocol MovieProductService {
 }
 
 final class MovieProductServiceImpl: MovieProductService {
-    private let networkService: NetworkServiceProtocol
+    private let networkService: NetworkService
     
-    init(productService: NetworkServiceProtocol) {
+    init(productService: NetworkService) {
         self.networkService = productService
     }
     

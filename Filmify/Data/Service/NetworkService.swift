@@ -1,5 +1,5 @@
 //
-//  NetworkService.swift
+//  NetworkServiceImpl.swift
 //  Filmify
 //
 //  Created by Rafael Loggiodice on 6/11/24.
@@ -8,19 +8,24 @@
 import Foundation
 import Combine
 
-protocol NetworkServiceProtocol: AnyObject {
+protocol NetworkService: AnyObject {
     
     func fetchNowPlayingMovies(basePath: String, endingPath path: MovieEndingPath) -> AnyPublisher<MovieModel, Error>
     func fetchMovieReviews(endingPath path: MovieEndingPath) -> AnyPublisher<MovieReviewModel, Error>
     func fetchCastMembers<T: Decodable>(baseURL: String, id path: MovieEndingPath, endingPath: MovieEndingPath) -> AnyPublisher<T, Error>
     func fetchDetailMovies<T: Decodable>(id: MovieEndingPath, endingPath path: [MovieEndingPath]) -> AnyPublisher<T, Error>
+    
     func fetchSearchMovies<T: Decodable>(query: String) -> AnyPublisher<T, Error>
+    
+    func createToken() -> AnyPublisher<TokenResponseModel, Error>
     func fetchGuestResponse() -> AnyPublisher<GuestModel, Error>
     func postRatingToMovie(movieId: MovieEndingPath, ratingValue: Float) -> AnyPublisher<RatingResponseModel, Error>
+    func createSessionID(token: String) -> AnyPublisher<SessionIdResponseModel, Error>
+    func deleteSessionID(sessionId: String) -> AnyPublisher<DeleteSessionIdResponseModel, Error>
 }
 
-final class NetworkService: Sendable, NetworkServiceProtocol {
-    static let shared = NetworkService()
+final class NetworkServiceImpl: Sendable, NetworkService {
+    static let shared = NetworkServiceImpl()
     
     private init() {}
     
@@ -52,7 +57,47 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
         }
         return request
     }
+}
+
+extension NetworkServiceImpl {
+    
+    // MARK: - Search movie Methods
+    func fetchSearchMovies<T: Decodable>(query: String) -> AnyPublisher<T, Error> {
         
+        let request = handleRequest(url: "https://api.themoviedb.org/3/search/movie?query=\(query)&\(Utils.getCurrentLanguage)")
+        
+        return URLSession.shared
+            .dataTaskPublisher(for: request)
+            .tryMap(handleResponse)
+            .mapError { error -> Error in
+                if (error as? URLError)?.code == .unsupportedURL {
+                    return ErrorManager.badURL
+                }
+                return error
+            }
+            .decode(type: T.self, decoder: Utils.jsonDecoder)
+            .eraseToAnyPublisher()
+    }
+    
+    // MARK: - Sign in methods with movieDB
+    
+    func fetchGuestResponse() -> AnyPublisher<GuestModel, Error> {
+        
+        let request = handleRequest(url: Constants.guestSessionPath)
+        
+        let publisher = URLSession.shared.dataTaskPublisher(for: request)
+            .tryMap(handleResponse)
+            .mapError { error -> Error in
+                if (error as? URLError)?.code == .unsupportedURL {
+                    return ErrorManager.badURL
+                }
+                return error
+            }
+            .decode(type: GuestModel.self, decoder: Utils.jsonDecoder)
+            .eraseToAnyPublisher()
+        return publisher
+    }
+    
     func postRatingToMovie(movieId: MovieEndingPath, ratingValue: Float) -> AnyPublisher<RatingResponseModel, Error> {
         
         let body: [String: Any] = ["value": ratingValue]
@@ -73,23 +118,47 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
         return publisher
     }
     
-    func fetchGuestResponse() -> AnyPublisher<GuestModel, Error> {
+    func createToken() -> AnyPublisher<TokenResponseModel, Error> {
         
-        let request = handleRequest(url: Constants.guestSessionPath)
+        let request = handleRequest(url: Constants.createTokenPath)
         
         let publisher = URLSession.shared.dataTaskPublisher(for: request)
             .tryMap(handleResponse)
-            .mapError { error -> Error in
-                if (error as? URLError)?.code == .unsupportedURL {
-                    return ErrorManager.badURL
-                }
-                return error
-            }
-            .decode(type: GuestModel.self, decoder: Utils.jsonDecoder)
+            .decode(type: TokenResponseModel.self, decoder: Utils.jsonDecoder)
             .eraseToAnyPublisher()
+        
         return publisher
     }
     
+    func createSessionID(token: String) -> AnyPublisher<SessionIdResponseModel, Error> {
+        let body: [String: Any] = [
+            "request_token": token
+        ]
+        let request = handleRequest(url: Constants.createNewSessionPath, method: .post, body: body)
+        
+        let publisher = URLSession.shared.dataTaskPublisher(for: request)
+            .tryMap(handleResponse)
+            .decode(type: SessionIdResponseModel.self, decoder: Utils.jsonDecoder)
+            .eraseToAnyPublisher()
+        
+        return publisher
+    }
+    
+    func deleteSessionID(sessionId: String) -> AnyPublisher<DeleteSessionIdResponseModel, Error> {
+        let body: [String: Any] = [
+            "session_id": sessionId
+        ]
+        let request = handleRequest(url: Constants.deleteSessionIdPath, method: .delete, body: body)
+        
+        let publisher = URLSession.shared.dataTaskPublisher(for: request)
+            .tryMap(handleResponse)
+            .decode(type: DeleteSessionIdResponseModel.self, decoder: Utils.jsonDecoder)
+            .eraseToAnyPublisher()
+        
+        return publisher
+    }
+    
+    // MARK: - Fetch movie properties
     func fetchNowPlayingMovies(basePath: String, endingPath path: MovieEndingPath) -> AnyPublisher<MovieModel, Error> {
         
         let request = handleRequest(url: Utils.movieURL(basePath: basePath, endingPath: path))
@@ -139,23 +208,6 @@ final class NetworkService: Sendable, NetworkServiceProtocol {
         return URLSession.shared
             .dataTaskPublisher(for: request)
             .tryMap(handleResponse)
-            .decode(type: T.self, decoder: Utils.jsonDecoder)
-            .eraseToAnyPublisher()
-    }
-    
-    func fetchSearchMovies<T: Decodable>(query: String) -> AnyPublisher<T, Error> {
-        
-        let request = handleRequest(url: "https://api.themoviedb.org/3/search/movie?query=\(query)&\(Utils.getCurrentLanguage)")
-        
-        return URLSession.shared
-            .dataTaskPublisher(for: request)
-            .tryMap(handleResponse)
-            .mapError { error -> Error in
-                if (error as? URLError)?.code == .unsupportedURL {
-                    return ErrorManager.badURL
-                }
-                return error
-            }
             .decode(type: T.self, decoder: Utils.jsonDecoder)
             .eraseToAnyPublisher()
     }

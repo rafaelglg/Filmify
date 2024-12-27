@@ -35,5 +35,5 @@ struct SettingsRowView: View {
 }
 
 #Preview {
-    SettingsRowView(user: UserModel(id: "1", email: "mj@gmail.com", password: "", fullName: "Michael Jackson"))
+    SettingsRowView(user: UserModel(id: "1", email: "mj@gmail.com", password: "", fullName: "Michael Jackson", sessionId: ""))
 }

@@ -63,8 +63,8 @@ final class AppStarterFactory {
         MovieProductServiceImpl(productService: createNetworkService())
     }
     
-    private static func createNetworkService() -> NetworkServiceProtocol {
-        NetworkService.shared
+    private static func createNetworkService() -> NetworkService {
+        NetworkServiceImpl.shared
     }
 }
 

@@ -39,7 +39,7 @@ struct SignInView: View {
         biometricAuthentication: BiometricAuthenticationImpl(),
         authManager: AuthManagerImpl(userBuilder: UserBuilderImpl()),
         keychain: KeychainManagerImpl.shared,
-        enterAsGuestUseCase: EnterAsGuestUseCaseImpl(repository: GuestResponseServiceImpl(networkService: NetworkService.shared)))
+        createSession: CreateSessionUseCaseImpl(repository: CreateSessionServiceImpl(networkService: NetworkServiceImpl.shared)))
     
     SignInView(signInVM: SignInViewModelImpl(),
                createSignUpView: SignUpFactory())
@@ -164,29 +164,33 @@ extension SignInView {
         }
     }
     
+    @ViewBuilder
     var authenticationButtons: some View {
+        @Bindable var authViewModel = authViewModel
         VStack {
             Text("or login with")
-            HStack {
-                Button {
-                } label: {
-                    Image(systemName: "applelogo" )
-                        .resizable()
-                        .tint(.primary)
-                        .scaledToFit()
-                        .frame(height: 25)
-                }
-                Button {
-                } label: {
-                    Image(systemName: "applelogo" )
-                        .resizable()
-                        .tint(.primary)
-                        .scaledToFit()
-                        .frame(height: 25)
+            Button {
+               authViewModel.createToken()
+            } label: {
+                Image(.movieDBLogo)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 180, height: 50)
+                    .padding(.horizontal)
+            }
+            .background(.logoMovieDB, in: RoundedRectangle(cornerRadius: 15))
+            .overlay(
+                RoundedRectangle(cornerRadius: 15)
+                    .stroke(Color.white.opacity(0.6), lineWidth: 1))
+            .buttonStyle(.borderless)
+            .padding(.top, 10)
+            .sheet(isPresented: $authViewModel.canOpenURL) {
+                if let url = authViewModel.urlToOpen {
+                    SafariView(url: url, isPresented: $authViewModel.canOpenURL)
                 }
             }
-            .padding(.top, 10)
         }
+        .onOpenURL(perform: authViewModel.handleRedirectURL)
     }
     
     @ViewBuilder

@@ -16,3 +16,18 @@ struct RatingResponseModel: Codable {
     let statusCode: Int
     let statusMessage: String
 }
+
+struct TokenResponseModel: Codable {
+    let success: Bool
+    let expiresAt: String
+    let requestToken: String
+}
+
+struct SessionIdResponseModel: Codable {
+    let success: Bool
+    let sessionId: String
+}
+
+struct DeleteSessionIdResponseModel: Codable {
+    let success: Bool
+}

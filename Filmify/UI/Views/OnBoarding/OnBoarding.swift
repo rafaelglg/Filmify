@@ -106,7 +106,7 @@ struct OnBoarding: View {
         biometricAuthentication: BiometricAuthenticationImpl(),
         authManager: AuthManagerImpl(userBuilder: UserBuilderImpl()),
         keychain: KeychainManagerImpl.shared,
-        enterAsGuestUseCase: EnterAsGuestUseCaseImpl(repository: GuestResponseServiceImpl(networkService: NetworkService.shared)))
+        createSession: CreateSessionUseCaseImpl(repository: CreateSessionServiceImpl(networkService: NetworkServiceImpl.shared)))
     
     OnBoarding(onboardingVM: OnboardingViewModelImpl(), createSignInView: SignInFactory())
         .environment(AppStateImpl())

@@ -42,7 +42,7 @@ final class AuthViewModelImpl: AuthViewModel {
     var currentUser: UserModel?
     var biometricAuth: BiometricAuthentication
     var authManager: AuthManager
-    let enterAsGuestUseCase: EnterAsGuestUseCase
+    let createSession: CreateSessionUseCase
     let biometricErrorMessage: String = ""
     var authErrorMessage: String = ""
     var showErrorAlert: Bool = false
@@ -50,43 +50,21 @@ final class AuthViewModelImpl: AuthViewModel {
     var guestModel: GuestModel?
     var isLoading: Bool = false
     var isLoadingSignInSession: Bool = false
+    var urlToOpen: URL?
+    var canOpenURL: Bool = false
     
     @ObservationIgnored var cancellable = Set<AnyCancellable>()
     @ObservationIgnored @AppStorage("userID") var currentUserId: String?
     
-    init(biometricAuthentication: BiometricAuthentication, authManager: AuthManager, keychain: KeychainManager, enterAsGuestUseCase: EnterAsGuestUseCase) {
+    init(biometricAuthentication: BiometricAuthentication, authManager: AuthManager, keychain: KeychainManager, createSession: CreateSessionUseCase) {
         self.biometricAuth = biometricAuthentication
         self.authManager = authManager
         self.keychain = keychain
-        self.enterAsGuestUseCase = enterAsGuestUseCase
+        self.createSession = createSession
         
         if authManager.userSession != nil {
             self.loadCurrentUser()
         }
-    }
-    
-    func signInAsGuest() {
-        isLoading = true
-        enterAsGuestUseCase.execute()
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] completion in
-                
-                defer {
-                    self?.isLoading = false
-                }
-                
-                switch completion {
-                case .finished:
-                    break
-                case .failure(let error):
-                    self?.authErrorMessage = error.localizedDescription
-                    self?.showErrorAlert = true
-                }
-            } receiveValue: { [weak self] guestResponse in
-                print(guestResponse)
-                self?.setGuestModel(model: guestResponse)
-            }.store(in: &cancellable)
-        
     }
     
     func signIn(email: String, password: String) {
@@ -170,6 +148,7 @@ final class AuthViewModelImpl: AuthViewModel {
                     self?.currentUser = nil
                     self?.deleteFromKeychain(userID: user.uid)
                     self?.clearKeychain()
+                    self?.deleteSessionId(sessionId: self?.currentUser?.sessionId ?? "")
                 }.store(in: &cancellable)
         } else {
             // Guest session
@@ -197,7 +176,7 @@ final class AuthViewModelImpl: AuthViewModel {
     
     func setGuestModel(model: GuestModel?) {
         withAnimation {
-            currentUser = UserModel(id: "1", email: "", password: "", fullName: "Guest")
+            currentUser = UserModel(id: "1", email: "", password: "", fullName: "Guest", sessionId: "")
             guestModel = model
             
             if guestModel == nil {
@@ -312,6 +291,104 @@ extension AuthViewModelImpl: KeychainAuth {
             print("keychain could not be clear completely")
         }
     }
+    
+    // MARK: - Create session methods
+    func createToken() {
+        createSession.executeCreateToken()
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                    
+                case .finished:
+                    break
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            } receiveValue: { [weak self] response in
+                self?.openURL(response.requestToken)
+            }.store(in: &cancellable)
+    }
+    
+    func openURL(_ token: String) {
+        let redirectURL = "filmify://auth-callback"
+        guard let url = URL(string: "https://www.themoviedb.org/authenticate/\(token)?redirect_to=\(redirectURL)") else {
+            print("Invalid URL")
+            return
+        }
+        canOpenURL = true
+        urlToOpen = url
+    }
+    
+    func handleRedirectURL(_ url: URL) {
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+        if url.scheme == "filmify", url.host == "auth-callback",
+           let token = components?.queryItems?.first(where: { $0.name == "request_token" })?.value,
+           let approved = components?.queryItems?.first(where: { $0.name == "approved" })?.value,
+           approved == "true" {
+            print("Token aprobado: \(token)")
+            createSessionId(token)
+            canOpenURL = false // close safari after success
+        } else {
+            canOpenURL = false // close safari after even if fails
+        }
+    }
+    
+    func createSessionId(_ token: String) {
+        createSession.executeSessionID(token: token)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                    
+                case .finished:
+                    break
+                case .failure(let error):
+                    print(error)
+                }
+            } receiveValue: {[weak self] response in
+                print(response.sessionId)
+                self?.authManager.setSessionId(sessionId: response.sessionId)
+            }.store(in: &cancellable)
+    }
+    
+    func deleteSessionId(sessionId: String) {
+        createSession.executeDeleteSessionID(sessionId: sessionId)
+            .receive(on: DispatchQueue.main)
+            .sink { completion in
+                switch completion {
+                    
+                case .finished:
+                    break
+                case .failure(let error):
+                    print(error)
+                }
+            } receiveValue: { response in
+                print(response.success.description)
+            }.store(in: &cancellable)
+    }
+    
+    func signInAsGuest() {
+        isLoading = true
+        createSession.executeSignInAsGuest()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                
+                defer {
+                    self?.isLoading = false
+                }
+                
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    self?.authErrorMessage = error.localizedDescription
+                    self?.showErrorAlert = true
+                }
+            } receiveValue: { [weak self] guestResponse in
+                print(guestResponse)
+                self?.setGuestModel(model: guestResponse)
+            }.store(in: &cancellable)
+        
+    }
 }
 
 extension AuthViewModelImpl {
@@ -323,7 +400,7 @@ extension AuthViewModelImpl {
             biometricAuthentication: BiometricAuthenticationImpl(),
             authManager: mockAuthManager,
             keychain: KeychainManagerImpl.shared,
-            enterAsGuestUseCase: EnterAsGuestUseCaseImpl(repository: GuestResponseServiceImpl(networkService: NetworkService.shared))
+            createSession: CreateSessionUseCaseImpl(repository: CreateSessionServiceImpl(networkService: NetworkServiceImpl.shared))
         )
         
         // Simulamos un usuario actual en el preview
@@ -331,7 +408,8 @@ extension AuthViewModelImpl {
             id: "1",
             email: "rafael@example.com",
             password: "password123",
-            fullName: "Rafael Loggiodice")
+            fullName: "Rafael Loggiodice",
+            sessionId: "")
         
         return viewModel
     }()
@@ -340,7 +418,7 @@ extension AuthViewModelImpl {
 @Observable
 final class AuthViewModelMock: AuthViewModel {
     
-    var currentUser: UserModel? = UserModel(id: "1", email: "example@gmail.com", password: "", fullName: "Rafael Loggiodice")
+    var currentUser: UserModel? = UserModel(id: "1", email: "example@gmail.com", password: "", fullName: "Rafael Loggiodice", sessionId: "")
     
     var authManager: AuthManager = AuthManagerImpl(userBuilder: UserBuilderImpl())
     

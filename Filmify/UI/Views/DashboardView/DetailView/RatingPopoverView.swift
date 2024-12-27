@@ -26,7 +26,7 @@ struct RatingPopoverView: View {
 
 #Preview {
     
-    @Previewable @State var movieReviewVM = MovieReviewViewModelImpl(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkService.shared))))
+    @Previewable @State var movieReviewVM = MovieReviewViewModelImpl(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkServiceImpl.shared))))
     movieReviewVM.movieRatedStatus["1"] = true
     movieReviewVM.ratingValue = 5
     
