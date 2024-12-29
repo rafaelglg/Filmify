@@ -544,7 +544,14 @@
       }
     },
     "Recommendations" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recomendaciones"
+          }
+        }
+      }
     },
     "revenue: %@" : {
       "localizations" : {
@@ -627,7 +634,14 @@
       }
     },
     "Sign out options" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opciones para cerrar sesión"
+          }
+        }
+      }
     },
     "Sign Up" : {
       "localizations" : {
