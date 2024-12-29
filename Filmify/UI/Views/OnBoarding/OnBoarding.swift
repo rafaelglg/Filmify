@@ -63,7 +63,7 @@ struct OnBoarding: View {
         }
         .onAppear {
             startAnimating.toggle()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.2) {
                 withAnimation {
                     onboardingVM.showButton = true
                     startVortex?.burst()
