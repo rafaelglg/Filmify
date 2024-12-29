@@ -93,10 +93,15 @@ final class AuthViewModelImpl: AuthViewModel {
     }
     
     func createUser() {
-        
+        isLoadingSignInSession = true
         authManager.createUser()
             .receive(on: DispatchQueue.main)
             .sink { [weak self] completion in
+                
+                defer {
+                    self?.isLoadingSignInSession = false
+                }
+                
                 switch completion {
                 case .finished:
                     break
@@ -175,13 +180,22 @@ final class AuthViewModelImpl: AuthViewModel {
     
     func setGuestModel(model: GuestModel?) {
         withAnimation {
-            currentUser = UserModel(id: "1", email: "", password: "", fullName: "Guest", sessionId: "")
+            currentUser = UserModel(id: "1", email: "", password: "", fullName: "Guest", sessionId: "", isAdmin: false)
             guestModel = model
             
             if guestModel == nil {
                 currentUser = nil
             }
         }
+    }
+    
+    /// This method is to add the user as admin to have access to keychain
+    func setUserAsAdmin(_ newValue: Bool) {
+        currentUser?.isAdmin = newValue
+    }
+    
+    func getAdminUser() -> Bool {
+        return currentUser?.isAdmin == true
     }
 }
 
@@ -335,7 +349,8 @@ extension AuthViewModelImpl {
             email: "rafael@example.com",
             password: "password123",
             fullName: "Rafael Loggiodice",
-            sessionId: "")
+            sessionId: "",
+            isAdmin: true)
         
         return viewModel
     }()

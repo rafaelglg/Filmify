@@ -64,6 +64,9 @@
         }
       }
     },
+    "Are you sure you want to delete your user?" : {
+
+    },
     "Authentication failed" : {
       "localizations" : {
         "es" : {
@@ -144,6 +147,9 @@
         }
       }
     },
+    "delete" : {
+
+    },
     "Delete account" : {
       "localizations" : {
         "es" : {
@@ -155,6 +161,9 @@
       }
     },
     "Delete all keychains" : {
+
+    },
+    "Delete user" : {
 
     },
     "Enter as a guest" : {

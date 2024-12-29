@@ -15,6 +15,7 @@ struct UserModel: Codable, Identifiable, Sendable {
     let fullName: String
     let sessionId: String?
     var createdAt = Timestamp()
+    var isAdmin: Bool
         
     var initials: String {
         let formatter = PersonNameComponentsFormatter()
@@ -28,7 +29,7 @@ struct UserModel: Codable, Identifiable, Sendable {
     enum CodingKeys: CodingKey {
         case id
         case email, password, fullName, createdAt
-        case sessionId
+        case sessionId, isAdmin
     }
 }
 
@@ -39,6 +40,8 @@ extension UserModel {
             email: email,
             fullName: fullName,
             sessionId: sessionId,
-            createdAt: createdAt)
+            createdAt: createdAt,
+            isAdmin: isAdmin
+        )
     }
 }

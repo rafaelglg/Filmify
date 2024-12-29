@@ -89,8 +89,8 @@ extension PersonDetailModel {
 }
 
 extension UserModel {
-    static let preview = UserModel(id: "1", email: "rafaglg9@gmail.com", password: "aA@123456", fullName: "Rafael Loggiodice", sessionId: "")
-    static let none = UserModel(id: "", email: "", password: "", fullName: "", sessionId: "")
+    static let preview = UserModel(id: "1", email: "rafaglg9@gmail.com", password: "aA@123456", fullName: "Rafael Loggiodice", sessionId: "", isAdmin: true)
+    static let none = UserModel(id: "", email: "", password: "", fullName: "", sessionId: "", isAdmin: false)
 }
 
 extension Data {

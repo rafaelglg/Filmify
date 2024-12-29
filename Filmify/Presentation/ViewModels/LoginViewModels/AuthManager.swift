@@ -20,6 +20,7 @@ protocol AuthManager {
     func setPassword(password: String)
     func setFullName(fullName: String)
     func setSessionId(sessionId: String)
+    func setUserAsAdmin(_ newValue: Bool)
     
     func createUser() -> Future<UserModel, FirebaseAuthError>
     func signIn(email: String, password: String) -> Future<UserModel, FirebaseAuthError>
@@ -175,6 +176,10 @@ extension AuthManagerImpl {
         userBuilder?.setSessionId(sessionId)
     }
     
+    func setUserAsAdmin(_ newValue: Bool) {
+        userBuilder?.setUserAsAdmin(newValue)
+    }
+    
     func setFullName(fullName: String) {
         let formatName = fullName
             .lowercased()
@@ -219,7 +224,7 @@ extension AuthManagerImpl {
                 completion(.success(userModel))
             } catch {
                 print(error.localizedDescription)
-                completion(.failure(FirebaseAuthError.decodingError(error.localizedDescription)))
+                completion(.failure(FirebaseAuthError.decodingError(error)))
             }
         }
     }
@@ -252,7 +257,7 @@ enum FirebaseAuthError: LocalizedError, Error {
     case sessionExpired
     case encodingError(String)
     case firestoreError(String)
-    case decodingError(String)
+    case decodingError(Error)
     
     init(errorCode: Int) {
         if let authError = AuthErrorCode(rawValue: errorCode) {

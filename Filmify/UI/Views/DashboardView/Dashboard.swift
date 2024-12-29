@@ -25,8 +25,6 @@ struct Dashboard: View {
                     } else {
                         showDashboard
                     }
-                } else {
-                    customProgressView
                 }
             if movieVM.isLoadingDetailView {
                 customProgressView
@@ -79,7 +77,13 @@ extension Dashboard {
         }
     }
     
+    @ViewBuilder
     var sectionMovies: some View {
-        createSectionMovie.createSectionView()
+        if movieVM.isLoading {
+            customProgressView
+                .frame(height: UIScreen.main.bounds.height / 3.5)
+        } else {
+            createSectionMovie.createSectionView()
+        }
     }
 }

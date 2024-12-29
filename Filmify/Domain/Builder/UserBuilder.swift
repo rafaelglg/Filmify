@@ -14,11 +14,13 @@ protocol UserBuilder {
     var password: String { get set }
     var fullName: String { get set }
     var sessionId: String { get set }
+    var isAdmin: Bool { get set }
     
     mutating func setEmail(_ email: String)
     mutating func setPassword(_ password: String)
     mutating func setFullName(_ fullName: String)
     mutating func setSessionId(_ sessionId: String)
+    mutating func setUserAsAdmin(_ newValue: Bool)
 
     func build(user: AuthDataResult) -> UserModel?
     func reset()
@@ -40,6 +42,10 @@ extension UserBuilder {
     mutating func setSessionId(_ sessionId: String) {
         self.sessionId = sessionId
     }
+    
+    mutating func setUserAsAdmin(_ newValue: Bool) {
+        self.isAdmin = newValue
+    }
 }
 
 final class UserBuilderImpl: UserBuilder {
@@ -48,6 +54,7 @@ final class UserBuilderImpl: UserBuilder {
     var password: String = ""
     var fullName: String = ""
     var sessionId: String = ""
+    var isAdmin: Bool = false
     
     func build(user: AuthDataResult) -> UserModel? {
         return UserModel(id: user.user.uid,
@@ -55,7 +62,8 @@ final class UserBuilderImpl: UserBuilder {
                          password: password,
                          fullName: fullName,
                          sessionId: sessionId,
-                         createdAt: Timestamp(date: Date()))
+                         createdAt: Timestamp(date: Date()),
+                         isAdmin: isAdmin)
     }
     
     func reset() {

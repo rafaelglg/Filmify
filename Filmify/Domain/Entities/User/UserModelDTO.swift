@@ -14,6 +14,7 @@ struct UserModelDTO: Codable, Identifiable {
     var fullName: String
     let sessionId: String?
     var createdAt = Timestamp()
+    let isAdmin: Bool
 }
 
 extension UserModelDTO {
@@ -24,7 +25,8 @@ extension UserModelDTO {
             password: "",
             fullName: fullName,
             sessionId: sessionId,
-            createdAt: createdAt
+            createdAt: createdAt,
+            isAdmin: isAdmin
         )
     }
 }
