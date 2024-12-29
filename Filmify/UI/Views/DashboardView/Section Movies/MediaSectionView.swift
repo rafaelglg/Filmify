@@ -32,9 +32,8 @@ struct MediaSectionView: View {
         VStack(alignment: .leading) {
             movieTitle
             
-            MovieListView(movies: cachedMovies) { selectedMovie in
+            MovieRowView(movies: cachedMovies) { selectedMovie in
                 movieVM.selectedMovie = selectedMovie
-                movieVM.getMovieDetails(id: selectedMovie.id.description)
             }
             .sheet(item: $movieVM.selectedMovie) { movie in
                 MediaDetailView(movie: movie, movieReviewVM: $movieReviewVM, castMembersVM: $castMemberVM)

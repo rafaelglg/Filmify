@@ -11,6 +11,7 @@ protocol MovieProductService {
     func fetchMoviesProducts(basePath: String, endingPath: MovieEndingPath) -> AnyPublisher<MovieModel, Error>
     func fetchDetailMovie(id: MovieEndingPath, endingPath: [MovieEndingPath]) -> AnyPublisher<MovieDetails, Error>
     func fetchSearchMovies(query: String) -> AnyPublisher<MovieModel, Error>
+    func fetchMovieRecommendation(id path: MovieEndingPath) -> AnyPublisher<MovieModel, Error>
 }
 
 final class MovieProductServiceImpl: MovieProductService {
@@ -30,5 +31,9 @@ final class MovieProductServiceImpl: MovieProductService {
     
     func fetchSearchMovies(query: String) -> AnyPublisher<MovieModel, Error> {
         return networkService.fetchSearchMovies(query: query)
+    }
+    
+    func fetchMovieRecommendation(id path: MovieEndingPath) -> AnyPublisher<MovieModel, Error> {
+        return networkService.fetchMovieRecommendation(id: path, endingPath: .recommendations)
     }
 }

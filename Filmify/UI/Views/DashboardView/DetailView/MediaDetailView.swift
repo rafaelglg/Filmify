@@ -49,9 +49,10 @@ struct MediaDetailView: View {
                 }
                 .scrollIndicators(.hidden)
             }
-            
             .onAppear {
+                movieVM.getMovieDetails(id: movie.id.description)
                 castMembersVM.getCastMembers(id: movie.id.description)
+                movieVM.getRecommendations(id: movie.id.description)
             }
             .onDisappear {
                 movieReviewVM.onDisappear()
@@ -83,7 +84,12 @@ extension MediaDetailView {
         statusFilm
         productionCompaniesTitle
         GridInfoCell()
-        
+        movieTrailer
+       // recommendations
+    }
+    
+    @ViewBuilder
+    var movieTrailer: some View {
         let trailerKey = movieVM.detailMovie?.videos.results
             .filter { $0.type.lowercased().contains("trailer") }
             .first?.key ?? ""
@@ -102,6 +108,29 @@ extension MediaDetailView {
                     if isLoading {
                         ProgressView()
                     }
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
+    var recommendations: some View {
+        @Bindable var movieVM = movieVM
+        if !movieVM.recommendations.isEmpty {
+            Text("Recommendations")
+                .font(.title2)
+                .bold()
+            
+            VStack {
+                MovieRowView(movies: movieVM.recommendations) { selectedMovie in
+                    movieVM.recommendationSelected = selectedMovie
+                }
+                .navigationDestination(item: $movieVM.recommendationSelected) { movie in
+                    MediaDetailView(
+                        movie: movie,
+                        movieReviewVM: $movieReviewVM,
+                        castMembersVM: $castMembersVM)
+                    .environment(movieVM)
                 }
             }
         }

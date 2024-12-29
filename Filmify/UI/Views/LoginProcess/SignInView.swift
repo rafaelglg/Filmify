@@ -164,13 +164,11 @@ extension SignInView {
         }
     }
     
-    @ViewBuilder
     var authenticationButtons: some View {
-        @Bindable var authViewModel = authViewModel
         VStack {
             Text("or login with")
             Button {
-               authViewModel.createToken()
+                // add login to use google button
             } label: {
                 Image(.movieDBLogo)
                     .resizable()
@@ -184,13 +182,7 @@ extension SignInView {
                     .stroke(Color.white.opacity(0.6), lineWidth: 1))
             .buttonStyle(.borderless)
             .padding(.top, 10)
-            .sheet(isPresented: $authViewModel.canOpenURL) {
-                if let url = authViewModel.urlToOpen {
-                    SafariView(url: url, isPresented: $authViewModel.canOpenURL)
-                }
-            }
         }
-        .onOpenURL(perform: authViewModel.handleRedirectURL)
     }
     
     @ViewBuilder

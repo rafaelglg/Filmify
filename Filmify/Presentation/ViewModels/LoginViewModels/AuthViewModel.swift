@@ -148,7 +148,6 @@ final class AuthViewModelImpl: AuthViewModel {
                     self?.currentUser = nil
                     self?.deleteFromKeychain(userID: user.uid)
                     self?.clearKeychain()
-                    self?.deleteSessionId(sessionId: self?.currentUser?.sessionId ?? "")
                 }.store(in: &cancellable)
         } else {
             // Guest session
@@ -293,79 +292,6 @@ extension AuthViewModelImpl: KeychainAuth {
     }
     
     // MARK: - Create session methods
-    func createToken() {
-        createSession.executeCreateToken()
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                    
-                case .finished:
-                    break
-                case .failure(let error):
-                    print(error.localizedDescription)
-                }
-            } receiveValue: { [weak self] response in
-                self?.openURL(response.requestToken)
-            }.store(in: &cancellable)
-    }
-    
-    func openURL(_ token: String) {
-        let redirectURL = "filmify://auth-callback"
-        guard let url = URL(string: "https://www.themoviedb.org/authenticate/\(token)?redirect_to=\(redirectURL)") else {
-            print("Invalid URL")
-            return
-        }
-        canOpenURL = true
-        urlToOpen = url
-    }
-    
-    func handleRedirectURL(_ url: URL) {
-        let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
-        if url.scheme == "filmify", url.host == "auth-callback",
-           let token = components?.queryItems?.first(where: { $0.name == "request_token" })?.value,
-           let approved = components?.queryItems?.first(where: { $0.name == "approved" })?.value,
-           approved == "true" {
-            print("Token aprobado: \(token)")
-            createSessionId(token)
-            canOpenURL = false // close safari after success
-        } else {
-            canOpenURL = false // close safari after even if fails
-        }
-    }
-    
-    func createSessionId(_ token: String) {
-        createSession.executeSessionID(token: token)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                    
-                case .finished:
-                    break
-                case .failure(let error):
-                    print(error)
-                }
-            } receiveValue: {[weak self] response in
-                print(response.sessionId)
-                self?.authManager.setSessionId(sessionId: response.sessionId)
-            }.store(in: &cancellable)
-    }
-    
-    func deleteSessionId(sessionId: String) {
-        createSession.executeDeleteSessionID(sessionId: sessionId)
-            .receive(on: DispatchQueue.main)
-            .sink { completion in
-                switch completion {
-                    
-                case .finished:
-                    break
-                case .failure(let error):
-                    print(error)
-                }
-            } receiveValue: { response in
-                print(response.success.description)
-            }.store(in: &cancellable)
-    }
-    
     func signInAsGuest() {
         isLoading = true
         createSession.executeSignInAsGuest()
@@ -413,24 +339,4 @@ extension AuthViewModelImpl {
         
         return viewModel
     }()
-}
-
-@Observable
-final class AuthViewModelMock: AuthViewModel {
-    
-    var currentUser: UserModel? = UserModel(id: "1", email: "example@gmail.com", password: "", fullName: "Rafael Loggiodice", sessionId: "")
-    
-    var authManager: AuthManager = AuthManagerImpl(userBuilder: UserBuilderImpl())
-    
-    var authErrorMessage: String = ""
-    var showErrorAlert: Bool = false
-    var guestModel: GuestModel?
-    var isLoading: Bool = false
-    var isLoadingSignInSession: Bool = false
-    
-    func signIn(email: String, password: String) {}
-    func signInAsGuest() {}
-    func createUser() {}
-    func signOut() {}
-    func deleteUser() {}
 }

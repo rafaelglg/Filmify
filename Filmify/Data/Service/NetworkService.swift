@@ -14,14 +14,12 @@ protocol NetworkService: AnyObject {
     func fetchMovieReviews(endingPath path: MovieEndingPath) -> AnyPublisher<MovieReviewModel, Error>
     func fetchCastMembers<T: Decodable>(baseURL: String, id path: MovieEndingPath, endingPath: MovieEndingPath) -> AnyPublisher<T, Error>
     func fetchDetailMovies<T: Decodable>(id: MovieEndingPath, endingPath path: [MovieEndingPath]) -> AnyPublisher<T, Error>
+    func fetchMovieRecommendation(id path: MovieEndingPath, endingPath: MovieEndingPath) -> AnyPublisher<MovieModel, Error>
     
     func fetchSearchMovies<T: Decodable>(query: String) -> AnyPublisher<T, Error>
     
-    func createToken() -> AnyPublisher<TokenResponseModel, Error>
     func fetchGuestResponse() -> AnyPublisher<GuestModel, Error>
     func postRatingToMovie(movieId: MovieEndingPath, ratingValue: Float) -> AnyPublisher<RatingResponseModel, Error>
-    func createSessionID(token: String) -> AnyPublisher<SessionIdResponseModel, Error>
-    func deleteSessionID(sessionId: String) -> AnyPublisher<DeleteSessionIdResponseModel, Error>
 }
 
 final class NetworkServiceImpl: Sendable, NetworkService {
@@ -80,7 +78,6 @@ extension NetworkServiceImpl {
     }
     
     // MARK: - Sign in methods with movieDB
-    
     func fetchGuestResponse() -> AnyPublisher<GuestModel, Error> {
         
         let request = handleRequest(url: Constants.guestSessionPath)
@@ -115,46 +112,6 @@ extension NetworkServiceImpl {
             }
             .decode(type: RatingResponseModel.self, decoder: Utils.jsonDecoder)
             .eraseToAnyPublisher()
-        return publisher
-    }
-    
-    func createToken() -> AnyPublisher<TokenResponseModel, Error> {
-        
-        let request = handleRequest(url: Constants.createTokenPath)
-        
-        let publisher = URLSession.shared.dataTaskPublisher(for: request)
-            .tryMap(handleResponse)
-            .decode(type: TokenResponseModel.self, decoder: Utils.jsonDecoder)
-            .eraseToAnyPublisher()
-        
-        return publisher
-    }
-    
-    func createSessionID(token: String) -> AnyPublisher<SessionIdResponseModel, Error> {
-        let body: [String: Any] = [
-            "request_token": token
-        ]
-        let request = handleRequest(url: Constants.createNewSessionPath, method: .post, body: body)
-        
-        let publisher = URLSession.shared.dataTaskPublisher(for: request)
-            .tryMap(handleResponse)
-            .decode(type: SessionIdResponseModel.self, decoder: Utils.jsonDecoder)
-            .eraseToAnyPublisher()
-        
-        return publisher
-    }
-    
-    func deleteSessionID(sessionId: String) -> AnyPublisher<DeleteSessionIdResponseModel, Error> {
-        let body: [String: Any] = [
-            "session_id": sessionId
-        ]
-        let request = handleRequest(url: Constants.deleteSessionIdPath, method: .delete, body: body)
-        
-        let publisher = URLSession.shared.dataTaskPublisher(for: request)
-            .tryMap(handleResponse)
-            .decode(type: DeleteSessionIdResponseModel.self, decoder: Utils.jsonDecoder)
-            .eraseToAnyPublisher()
-        
         return publisher
     }
     
@@ -209,6 +166,17 @@ extension NetworkServiceImpl {
             .dataTaskPublisher(for: request)
             .tryMap(handleResponse)
             .decode(type: T.self, decoder: Utils.jsonDecoder)
+            .eraseToAnyPublisher()
+    }
+    
+    func fetchMovieRecommendation(id path: MovieEndingPath, endingPath: MovieEndingPath) -> AnyPublisher<MovieModel, Error> {
+        
+        let request = handleRequest(url: Utils.movieURL(baseURL: Constants.movieGeneralPath, id: path, endingPath: endingPath))
+        
+        return URLSession.shared
+            .dataTaskPublisher(for: request)
+            .tryMap(handleResponse)
+            .decode(type: MovieModel.self, decoder: Utils.jsonDecoder)
             .eraseToAnyPublisher()
     }
 }

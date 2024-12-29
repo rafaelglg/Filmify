@@ -18,6 +18,7 @@ enum MovieEndingPath: Equatable {
     case reviews
     case videos
     case none
+    case recommendations
 
     var isTrendingAllow: Bool {
         switch self {
@@ -40,6 +41,7 @@ enum MovieEndingPath: Equatable {
         case .reviews: return "reviews"
         case .videos: return "videos"
         case .none: return ""
+        case .recommendations: return "recommendations"
         }
     }
 }

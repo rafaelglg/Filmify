@@ -1,5 +1,5 @@
 //
-//  MovieListView.swift
+//  MovieRowView.swift
 //  Filmify
 //
 //  Created by Rafael Loggiodice on 3/12/24.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct MovieListView: View {
+struct MovieRowView: View {
     let movies: [MovieResultResponse]
     let onSelect: (MovieResultResponse) -> Void
     
@@ -27,5 +27,5 @@ struct MovieListView: View {
 }
 
 #Preview {
-    MovieListView(movies: [MovieResultResponse.preview]) {_ in }
+    MovieRowView(movies: [MovieResultResponse.preview]) {_ in }
 }
