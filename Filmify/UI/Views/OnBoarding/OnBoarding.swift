@@ -72,20 +72,6 @@ struct OnBoarding: View {
         }
     }
     
-    func createSnow() -> VortexSystem {
-        let system = VortexSystem(tags: ["circle"])
-        system.position = [0.5, 0]
-        system.speed = 0.5
-        system.speedVariation = 0.25
-        system.lifespan = 3
-        system.shape = .box(width: 1, height: 0)
-        system.angle = .degrees(180)
-        system.angleRange = .degrees(20)
-        system.size = 0.25
-        system.sizeVariation = 0.5
-        return system
-    }
-    
     func characterView(char: String, lineIndex: Int, charIndex: Int, isBold: Bool) -> some View {
         Text(char)
             .font(.title)
