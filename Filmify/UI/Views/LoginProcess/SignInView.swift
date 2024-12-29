@@ -168,7 +168,7 @@ extension SignInView {
         @Bindable var authViewModel = authViewModel
         @Bindable var appState = appState
         HStack {
-            Text("New to RafaDB?")
+            Text("New to Filmify?")
                 .font(.headline)
                 .foregroundStyle(Color(.systemGray))
             Button {

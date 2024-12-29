@@ -65,7 +65,14 @@
       }
     },
     "Are you sure you want to delete your user?" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro que quieres eliminar tu usuario?"
+          }
+        }
+      }
     },
     "Authentication failed" : {
       "localizations" : {
@@ -148,7 +155,14 @@
       }
     },
     "delete" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar"
+          }
+        }
+      }
     },
     "Delete account" : {
       "localizations" : {
@@ -161,10 +175,17 @@
       }
     },
     "Delete all keychains" : {
-
+      "shouldTranslate" : false
     },
     "Delete user" : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar usuario"
+          }
+        }
+      }
     },
     "Enter as a guest" : {
       "localizations" : {
@@ -197,7 +218,7 @@
       }
     },
     "Get password from keychain" : {
-
+      "shouldTranslate" : false
     },
     "Get started" : {
       "localizations" : {
@@ -260,7 +281,7 @@
       }
     },
     "keychain" : {
-
+      "shouldTranslate" : false
     },
     "Look for a movie" : {
       "localizations" : {
@@ -312,12 +333,12 @@
         }
       }
     },
-    "New to RafaDB?" : {
+    "New to Filmify?" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Nuevo en RafaDB?"
+            "value" : "Nuevo a Filmify?"
           }
         }
       }
