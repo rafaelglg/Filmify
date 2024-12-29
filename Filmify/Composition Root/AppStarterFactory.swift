@@ -103,6 +103,7 @@ final class SignInFactory: CreateSignInView {
         AnyView(SignInView(signInVM: createSignInViewModel(),
                            createSignUpView: createSignUpFactory())
             .environment(EnvironmentFactory.authViewModel)
+            .transition(.blurReplace())
             .environment(EnvironmentFactory.appState))
     }
     

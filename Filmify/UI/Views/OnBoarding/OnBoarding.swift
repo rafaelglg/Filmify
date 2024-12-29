@@ -25,7 +25,7 @@ struct OnBoarding: View {
     }
     
     var body: some View {
-        VStack(alignment: .center, spacing: 5) {
+        VStack(alignment: .center, spacing: 10) {
             if onboardingVM.goToSignIn {
                 createSignInView.create()
             } else {
