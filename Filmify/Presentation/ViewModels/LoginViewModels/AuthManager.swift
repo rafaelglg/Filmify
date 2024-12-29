@@ -215,7 +215,7 @@ extension AuthManagerImpl {
         let database = Firestore.firestore()
         database.collection("users").document(userSession?.uid ?? "").getDocument { snapshot, error in
             guard let data = snapshot?.data(), error == nil else {
-                return completion(.failure(.unknownError(1)))
+                return completion(.failure(.noUserFound))
             }
             
             do {
@@ -258,6 +258,7 @@ enum FirebaseAuthError: LocalizedError, Error {
     case encodingError(String)
     case firestoreError(String)
     case decodingError(Error)
+    case noUserFound
     
     init(errorCode: Int) {
         if let authError = AuthErrorCode(rawValue: errorCode) {
@@ -318,6 +319,8 @@ enum FirebaseAuthError: LocalizedError, Error {
             return "Something happened in the database of firestore: \(error)"
         case .decodingError(let error):
             return "Something happened retrieving data from firestore \(error)"
+        case .noUserFound:
+            return "Your profile could not be found in our servers."
         }
     }
 }
