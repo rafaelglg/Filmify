@@ -443,16 +443,6 @@
         }
       }
     },
-    "or login with" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O inicia sesión con"
-          }
-        }
-      }
-    },
     "Overview" : {
       "localizations" : {
         "es" : {

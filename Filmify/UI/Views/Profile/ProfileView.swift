@@ -21,7 +21,12 @@ struct ProfileView: View {
                     NavigationLink {
                         RafaView()
                     } label: {
-                        SettingsRowView(user: authViewModel.currentUser ?? UserModel.none)
+                        if authViewModel.isLoadingSignInSession {
+                            SettingsRowView(user: UserModel.preview)
+                                .redacted(reason: .placeholder)
+                        } else {
+                            SettingsRowView(user: authViewModel.currentUser ?? UserModel.none)
+                        }
                     }
                 }
                 

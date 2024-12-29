@@ -87,7 +87,6 @@ extension SignInView {
             signInButton
             guestButton
             biometricButton
-            authenticationButtons
             Spacer()
             registerButton
         }
@@ -161,27 +160,6 @@ extension SignInView {
             Alert(title: Text("Authentication failed"),
                   message: Text(authViewModel.biometricAuth.alertMessage),
                   dismissButton: .cancel())
-        }
-    }
-    
-    var authenticationButtons: some View {
-        VStack {
-            Text("or login with")
-            Button {
-                // add login to use google button
-            } label: {
-                Image(.movieDBLogo)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 180, height: 50)
-                    .padding(.horizontal)
-            }
-            .background(.logoMovieDB, in: RoundedRectangle(cornerRadius: 15))
-            .overlay(
-                RoundedRectangle(cornerRadius: 15)
-                    .stroke(Color.white.opacity(0.6), lineWidth: 1))
-            .buttonStyle(.borderless)
-            .padding(.top, 10)
         }
     }
     
