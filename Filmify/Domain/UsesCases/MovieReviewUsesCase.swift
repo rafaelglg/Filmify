@@ -9,6 +9,7 @@ import Combine
 
 protocol MovieReviewUsesCase {
     func execute(from path: MovieEndingPath) -> AnyPublisher<MovieReviewModel, Error>
+    func executeRating(movieId: String, rating: Float) -> AnyPublisher<RatingResponseModel, Error>
 }
 
 final class MovieReviewUsesCaseImpl: MovieReviewUsesCase {
@@ -21,5 +22,9 @@ final class MovieReviewUsesCaseImpl: MovieReviewUsesCase {
     
     func execute(from path: MovieEndingPath) -> AnyPublisher<MovieReviewModel, Error> {
         return repository.fetchMovieReviews(from: path)
+    }
+    
+    func executeRating(movieId: String, rating: Float) -> AnyPublisher<RatingResponseModel, Error> {
+        return repository.postMovieRating(movieID: .id(movieId), rating: rating)
     }
 }

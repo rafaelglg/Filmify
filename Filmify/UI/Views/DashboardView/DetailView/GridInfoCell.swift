@@ -41,7 +41,7 @@ struct GridInfoCell: View {
 
 #Preview {
     
-    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
+    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkServiceImpl.shared))
     
     GridInfoCell()
         .padding()

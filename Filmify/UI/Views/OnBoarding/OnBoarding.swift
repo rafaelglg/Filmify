@@ -25,7 +25,7 @@ struct OnBoarding: View {
     }
     
     var body: some View {
-        VStack(alignment: .center, spacing: 5) {
+        VStack(alignment: .center, spacing: 10) {
             if onboardingVM.goToSignIn {
                 createSignInView.create()
             } else {
@@ -63,27 +63,13 @@ struct OnBoarding: View {
         }
         .onAppear {
             startAnimating.toggle()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.2) {
                 withAnimation {
                     onboardingVM.showButton = true
                     startVortex?.burst()
                 }
             }
         }
-    }
-    
-    func createSnow() -> VortexSystem {
-        let system = VortexSystem(tags: ["circle"])
-        system.position = [0.5, 0]
-        system.speed = 0.5
-        system.speedVariation = 0.25
-        system.lifespan = 3
-        system.shape = .box(width: 1, height: 0)
-        system.angle = .degrees(180)
-        system.angleRange = .degrees(20)
-        system.size = 0.25
-        system.sizeVariation = 0.5
-        return system
     }
     
     func characterView(char: String, lineIndex: Int, charIndex: Int, isBold: Bool) -> some View {
@@ -101,9 +87,16 @@ struct OnBoarding: View {
 }
 
 #Preview {
+    
+    @Previewable @State var authViewModel = AuthViewModelImpl(
+        biometricAuthentication: BiometricAuthenticationImpl(),
+        authManager: AuthManagerImpl(userBuilder: UserBuilderImpl()),
+        keychain: KeychainManagerImpl.shared,
+        createSession: CreateSessionUseCaseImpl(repository: CreateSessionServiceImpl(networkService: NetworkServiceImpl.shared)))
+    
     OnBoarding(onboardingVM: OnboardingViewModelImpl(), createSignInView: SignInFactory())
         .environment(AppStateImpl())
-        .environment(AuthViewModelImpl())
+        .environment(authViewModel)
 }
 
 extension OnBoarding {

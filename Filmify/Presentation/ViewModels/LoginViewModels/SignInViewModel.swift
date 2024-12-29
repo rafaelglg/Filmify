@@ -6,10 +6,11 @@
 //
 
 import Foundation
+import Combine
 
 protocol SignInViewModel {
     var emailText: String { get set }
-    var passwordText: String { get set }
+    var passwordText: String { get set }    
 }
 
 @Observable

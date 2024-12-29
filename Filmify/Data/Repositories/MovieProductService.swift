@@ -11,12 +11,13 @@ protocol MovieProductService {
     func fetchMoviesProducts(basePath: String, endingPath: MovieEndingPath) -> AnyPublisher<MovieModel, Error>
     func fetchDetailMovie(id: MovieEndingPath, endingPath: [MovieEndingPath]) -> AnyPublisher<MovieDetails, Error>
     func fetchSearchMovies(query: String) -> AnyPublisher<MovieModel, Error>
+    func fetchMovieRecommendation(id path: MovieEndingPath) -> AnyPublisher<MovieModel, Error>
 }
 
 final class MovieProductServiceImpl: MovieProductService {
-    private let networkService: NetworkServiceProtocol
+    private let networkService: NetworkService
     
-    init(productService: NetworkServiceProtocol) {
+    init(productService: NetworkService) {
         self.networkService = productService
     }
     
@@ -32,4 +33,7 @@ final class MovieProductServiceImpl: MovieProductService {
         return networkService.fetchSearchMovies(query: query)
     }
     
+    func fetchMovieRecommendation(id path: MovieEndingPath) -> AnyPublisher<MovieModel, Error> {
+        return networkService.fetchMovieRecommendation(id: path, endingPath: .recommendations)
+    }
 }

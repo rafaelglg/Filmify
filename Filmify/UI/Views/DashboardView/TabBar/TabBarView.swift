@@ -32,25 +32,32 @@ struct TabBarView: View {
                 createDashboard.createDashboardView()
             }
             
-            Tab("Search", systemImage: "magnifyingglass") {
+            Tab("Search", systemImage: "magnifyingglass", role: .search) {
                 createSearchView.createSearchView()
             }
             
-            Tab("Profile", systemImage: "person.crop.circle.fill") {
+            Tab("Profile", systemImage: "person.crop.circle") {
                 createProfileView.createProfile()
             }
         }
-        .customTabBarAppearance(forUnselectedItem: .white)
+        .tint(.white)
     }
 }
 
 #Preview(traits: .environments) {
-    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
-
+    
+    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkServiceImpl.shared))
+    
+    @Previewable @State var authViewModel = AuthViewModelImpl(
+        biometricAuthentication: BiometricAuthenticationImpl(),
+        authManager: AuthManagerImpl(userBuilder: UserBuilderImpl()),
+        keychain: KeychainManagerImpl.shared,
+        createSession: CreateSessionUseCaseImpl(repository: CreateSessionServiceImpl(networkService: NetworkServiceImpl.shared)))
+    
     TabBarView(movieVM: MovieViewModel(movieUsesCase: movieUsesCasesImpl),
                network: NetworkMonitorImpl(),
                createDashboard: DashboardFactory(),
                createSearchView: SearchViewFactory(),
                createProfileView: ProfileViewFactory())
-        .environment(AuthViewModelImpl())
+    .environment(authViewModel)
 }

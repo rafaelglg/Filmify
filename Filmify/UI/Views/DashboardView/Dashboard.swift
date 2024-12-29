@@ -25,8 +25,6 @@ struct Dashboard: View {
                     } else {
                         showDashboard
                     }
-                } else {
-                    customProgressView
                 }
             if movieVM.isLoadingDetailView {
                 customProgressView
@@ -42,7 +40,7 @@ struct Dashboard: View {
 }
 
 #Preview {
-    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
+    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkServiceImpl.shared))
 
     Dashboard(createSectionMovie: SectionMovieFactory())
         .environment(MovieViewModel(movieUsesCase: movieUsesCasesImpl))
@@ -79,7 +77,13 @@ extension Dashboard {
         }
     }
     
+    @ViewBuilder
     var sectionMovies: some View {
-        createSectionMovie.createSectionView()
+        if movieVM.isLoading {
+            customProgressView
+                .frame(height: UIScreen.main.bounds.height / 3.5)
+        } else {
+            createSectionMovie.createSectionView()
+        }
     }
 }

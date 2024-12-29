@@ -18,14 +18,16 @@ final class AppStarterFactory {
     
     @ViewBuilder
     static func startApp(hasCompletedOnboarding: Bool) -> some View {
+        
+        let authViewModel = EnvironmentFactory.authViewModel
+        
         if !hasCompletedOnboarding {
             createOnboarding()
-        } else if EnvironmentFactory.authViewModel.currentUser == nil {
-            signInFactory.create()
-        } else {
+        } else if authViewModel.guestModel?.success == true || authViewModel.authManager.userSession != nil {
             createTabBarView()
                 .transition(.blurReplace())
-            
+        } else {
+            signInFactory.create()
         }
     }
     
@@ -61,8 +63,8 @@ final class AppStarterFactory {
         MovieProductServiceImpl(productService: createNetworkService())
     }
     
-    private static func createNetworkService() -> NetworkServiceProtocol {
-        NetworkService.shared
+    private static func createNetworkService() -> NetworkService {
+        NetworkServiceImpl.shared
     }
 }
 
@@ -101,10 +103,11 @@ final class SignInFactory: CreateSignInView {
         AnyView(SignInView(signInVM: createSignInViewModel(),
                            createSignUpView: createSignUpFactory())
             .environment(EnvironmentFactory.authViewModel)
+            .transition(.blurReplace())
             .environment(EnvironmentFactory.appState))
     }
     
-    private func createSignInViewModel() -> SignInViewModel {
+    @MainActor private func createSignInViewModel() -> SignInViewModel {
         SignInViewModelImpl()
     }
     

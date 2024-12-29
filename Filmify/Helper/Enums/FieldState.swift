@@ -7,5 +7,6 @@
 
 enum FieldState: Hashable {
     case email
+    case name
     case password
 }

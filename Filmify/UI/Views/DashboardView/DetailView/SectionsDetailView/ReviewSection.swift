@@ -38,6 +38,7 @@ struct ReviewSection<ImageView: View>: View {
         .onAppear {
             // this is used because some content from reviews has HTML tags.
             movieReviewVM.sinkHTML2String(for: review.id, text: review.content)
+            
         }
         .padding(.top)
     }
@@ -45,10 +46,10 @@ struct ReviewSection<ImageView: View>: View {
 
 #Preview {
     @Previewable @State var review: MovieReviewResponse = .preview
-    @Previewable @State var movieReviewViewModel = MovieReviewViewModel(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkService.shared))))
+    @Previewable @State var movieReviewVM = MovieReviewViewModelImpl(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkServiceImpl.shared))))
     
     ReviewSection(review: .preview,
-                  movieReviewVM: movieReviewViewModel,
+                  movieReviewVM: movieReviewVM,
                   imageView: {
         AsyncImage(url: review.authorDetails.avatarPathURL) {
             $0.image?.resizable()

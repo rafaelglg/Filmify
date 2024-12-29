@@ -33,6 +33,7 @@ protocol CreateSectionMovie {
 protocol CreateSignUpView {
     @MainActor func createSignUpView() -> SignUpView
     @MainActor func createPasswordView() -> PasswordView
+    @MainActor func createFullNameView() -> FullNameView
 }
 
 protocol CreateSignInView {

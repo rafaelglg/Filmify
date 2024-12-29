@@ -47,9 +47,9 @@ extension MovieDetails {
     ]
 }
 
-extension MovieReviewViewModel {
-    @MainActor static let preview: MovieReviewViewModel = {
-        var viewModel = MovieReviewViewModel(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkService.shared))))
+extension MovieReviewViewModelImpl {
+    @MainActor static let preview: MovieReviewViewModelImpl = {
+        var viewModel = MovieReviewViewModelImpl(movieReviewUsesCase: MovieReviewUsesCaseImpl(repository: MovieReviewServiceImpl(productService: ReviewProductServiceImpl(networkService: NetworkServiceImpl.shared))))
         viewModel.movieReviews = [.preview]
         return viewModel
     }()
@@ -89,7 +89,8 @@ extension PersonDetailModel {
 }
 
 extension UserModel {
-    static let preview = UserModel(email: "rafaglg9@gmail.com", password: "aA@123456", fullName: "Rafael Loggiodice")
+    static let preview = UserModel(id: "1", email: "rafaglg9@gmail.com", password: "aA@123456", fullName: "Rafael Loggiodice", sessionId: "", isAdmin: true)
+    static let none = UserModel(id: "", email: "", password: "", fullName: "", sessionId: "", isAdmin: false)
 }
 
 extension Data {
@@ -144,7 +145,7 @@ extension Array {
 }
 
 extension View {
-    func customTabBarAppearance(forSelectedItem: UIColor? = nil, forUnselectedItem unselectedColor: UIColor) -> some View {
+    func customTabBarAppearance(forSelectedItem: UIColor? = nil, forUnselectedItem unselectedColor: UIColor? = nil) -> some View {
         self.onAppear {
             let appearance = UITabBar.appearance()
             appearance.unselectedItemTintColor = unselectedColor
@@ -161,7 +162,7 @@ struct EnvironmentTraits: PreviewModifier {
     
     func body(content: Content, context: Void) -> some View {
         @Previewable @State var network = NetworkMonitorImpl()
-        @Previewable @State var movieVM = MovieViewModel(movieUsesCase: MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared)))
+        @Previewable @State var movieVM = MovieViewModel(movieUsesCase: MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkServiceImpl.shared)))
         content
             .environment(movieVM)
             .environment(network)

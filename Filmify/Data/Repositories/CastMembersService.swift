@@ -13,9 +13,9 @@ protocol CastMembersService {
 }
 
 final class CastMembersServiceImpl: CastMembersService {
-    private let networkService: NetworkServiceProtocol
+    private let networkService: NetworkService
     
-    init(networkService: NetworkServiceProtocol) {
+    init(networkService: NetworkService) {
         self.networkService = networkService
     }
     

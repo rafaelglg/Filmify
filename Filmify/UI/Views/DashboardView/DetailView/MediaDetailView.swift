@@ -11,7 +11,7 @@ struct MediaDetailView: View {
     
     @Environment(MovieViewModel.self) private var movieVM
     let movie: MovieResultResponse
-    let movieReviewVM: MovieReviewViewModel
+    @Binding var movieReviewVM: MovieReviewViewModel
     @Binding var castMembersVM: MovieCastMembersViewModel
     
     @State private var progressButtonSelected: CGFloat = 37
@@ -49,9 +49,10 @@ struct MediaDetailView: View {
                 }
                 .scrollIndicators(.hidden)
             }
-            
             .onAppear {
+                movieVM.getMovieDetails(id: movie.id.description)
                 castMembersVM.getCastMembers(id: movie.id.description)
+                movieVM.getRecommendations(id: movie.id.description)
             }
             .onDisappear {
                 movieReviewVM.onDisappear()
@@ -61,14 +62,14 @@ struct MediaDetailView: View {
 }
 
 #Preview {
-    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
+    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkServiceImpl.shared))
     @Previewable @State var movieCastMembersViewModel = MovieCastMembersViewModel(
         castMemberUseCase: MovieCastMemberUsesCaseImpl(
             repository: CastMembersServiceImpl(
-                networkService: NetworkService.shared)))
+                networkService: NetworkServiceImpl.shared)))
     
     MediaDetailView(movie: .preview,
-                    movieReviewVM: .preview,
+                    movieReviewVM: .constant(MovieReviewViewModelImpl.preview),
                     castMembersVM: .constant(movieCastMembersViewModel))
         .environment(MovieViewModel(movieUsesCase: movieUsesCasesImpl))
         .preferredColorScheme(.dark)
@@ -83,7 +84,12 @@ extension MediaDetailView {
         statusFilm
         productionCompaniesTitle
         GridInfoCell()
-        
+        movieTrailer
+       // recommendations
+    }
+    
+    @ViewBuilder
+    var movieTrailer: some View {
         let trailerKey = movieVM.detailMovie?.videos.results
             .filter { $0.type.lowercased().contains("trailer") }
             .first?.key ?? ""
@@ -108,17 +114,39 @@ extension MediaDetailView {
     }
     
     @ViewBuilder
+    var recommendations: some View {
+        @Bindable var movieVM = movieVM
+        if !movieVM.recommendations.isEmpty {
+            Text("Recommendations")
+                .font(.title2)
+                .bold()
+            
+            VStack {
+                MovieRowView(movies: movieVM.recommendations) { selectedMovie in
+                    movieVM.recommendationSelected = selectedMovie
+                }
+                .navigationDestination(item: $movieVM.recommendationSelected) { movie in
+                    MediaDetailView(
+                        movie: movie,
+                        movieReviewVM: $movieReviewVM,
+                        castMembersVM: $castMembersVM)
+                    .environment(movieVM)
+                }
+            }
+        }
+    }
+    
+    @ViewBuilder
     var reviewInfo: some View {
         if movieReviewVM.isLoading {
             ProgressView()
                 .frame(width: 60, height: 100, alignment: .center)
         } else if movieReviewVM.movieReviews.isEmpty {
-            ContentUnavailableView("No review for this movie", systemImage: "pencil.slash", description: Text("Be the first one to leave a review"))
+            ContentUnavailableView("No review for this movie", systemImage: "pencil.slash", description: Text("It's empty here..."))
                 .padding(.top, 80)
         } else {
             HStack(alignment: .top) {
                 LazyVStack(alignment: .leading) {
-                    
                     ForEach(movieReviewVM.movieReviews) { review in
                         ReviewSection(review: review, movieReviewVM: movieReviewVM) {
                             AsyncImage(url: review.authorDetails.avatarPathURL) { image in
@@ -285,12 +313,45 @@ extension MediaDetailView {
                 } icon: {
                     Image(systemName: "ticket")
                 }
+                
                 if let revenue = movieVM.detailMovie?.revenueFormatted {
                     Label("revenue: \(revenue)", systemImage: "dollarsign")
                 }
+                
+                rateThisMovieButton
             }
             .font(.caption)
             .foregroundStyle(.secondary)
+        }
+    }
+    
+    var rateThisMovieButton: some View {
+        Button {
+            movieReviewVM.showRatingPopover.toggle()
+        } label: {
+            HStack {
+                if movieReviewVM.isMovieRated(movieId: movie.id.description) {
+                    Image(systemName: "party.popper.fill")
+                        .foregroundStyle(.white)
+                        .symbolEffect(.bounce.wholeSymbol, options: .speed(1.5).repeat(4))
+                    Text("Movie rated")
+                        .foregroundStyle(.white)
+                        .bold()
+                } else {
+                    Image(systemName: "star.fill")
+                        .foregroundStyle(.yellow)
+                    Text("Rate this movie")
+                        .foregroundStyle(.white)
+                        .bold()
+                    Image(systemName: "chevron.forward.circle")
+                }
+            }
+        }
+        .popover(isPresented: $movieReviewVM.showRatingPopover, attachmentAnchor: .point(.trailing), arrowEdge: .trailing) {
+            RatingPopoverView(movie: movie,
+                              movieReviewVM: $movieReviewVM)
+                .frame(width: 300, height: 250)
+                .presentationCompactAdaptation(.popover)
         }
     }
     

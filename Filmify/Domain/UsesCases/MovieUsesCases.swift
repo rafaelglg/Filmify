@@ -14,6 +14,7 @@ protocol MovieUsesCases {
     func executeTrendingMovies(timePeriod: MovieEndingPath) -> AnyPublisher<MovieModel, Error>
     func executeDetailMovies(id: String) -> AnyPublisher<MovieDetails, Error>
     func executeSearch(query: String) -> AnyPublisher<MovieModel, Error>
+    func executeRecommendations(id: String) -> AnyPublisher<MovieModel, Error>
 }
 
 final class MovieUsesCasesImpl: MovieUsesCases {
@@ -47,5 +48,9 @@ final class MovieUsesCasesImpl: MovieUsesCases {
     
     func executeSearch(query: String) -> AnyPublisher<MovieModel, Error> {
         return repository.fetchSearchMovies(query: query)
+    }
+    
+    func executeRecommendations(id: String) -> AnyPublisher<MovieModel, Error> {
+        return repository.fetchMovieRecommendation(id: .id(id))
     }
 }

@@ -64,22 +64,22 @@
         }
       }
     },
+    "Are you sure you want to delete your user?" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Estás seguro que quieres eliminar tu usuario?"
+          }
+        }
+      }
+    },
     "Authentication failed" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Autenticación fallida"
-          }
-        }
-      }
-    },
-    "Be the first one to leave a review" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Se el primero en dejar una reseña"
           }
         }
       }
@@ -100,6 +100,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nacido en: %@"
+          }
+        }
+      }
+    },
+    "Bye" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adios"
           }
         }
       }
@@ -144,6 +154,16 @@
         }
       }
     },
+    "delete" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar"
+          }
+        }
+      }
+    },
     "Delete account" : {
       "localizations" : {
         "es" : {
@@ -154,8 +174,38 @@
         }
       }
     },
-    "Delete password from keychain" : {
-
+    "Delete all keychains" : {
+      "shouldTranslate" : false
+    },
+    "Delete user" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminar usuario"
+          }
+        }
+      }
+    },
+    "Enter as a guest" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrar como invitado"
+          }
+        }
+      }
+    },
+    "Enter your full name" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¿Cómo te llamas?"
+          }
+        }
+      }
     },
     "Filtered Movies" : {
       "localizations" : {
@@ -168,7 +218,7 @@
       }
     },
     "Get password from keychain" : {
-
+      "shouldTranslate" : false
     },
     "Get started" : {
       "localizations" : {
@@ -176,6 +226,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Empezar"
+          }
+        }
+      }
+    },
+    "Give stars to this movie" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Añade una calificación"
           }
         }
       }
@@ -210,6 +270,19 @@
         }
       }
     },
+    "It's empty here..." : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esta vacío por aqui…"
+          }
+        }
+      }
+    },
+    "keychain" : {
+      "shouldTranslate" : false
+    },
     "Look for a movie" : {
       "localizations" : {
         "es" : {
@@ -230,6 +303,26 @@
         }
       }
     },
+    "Movie already rated" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Película ya calificada."
+          }
+        }
+      }
+    },
+    "Movie rated" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Películas calificada"
+          }
+        }
+      }
+    },
     "Movie trailer" : {
       "localizations" : {
         "es" : {
@@ -240,12 +333,12 @@
         }
       }
     },
-    "New to RafaDB?" : {
+    "New to Filmify?" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¿Nuevo en RafaDB?"
+            "value" : "Nuevo a Filmify?"
           }
         }
       }
@@ -380,16 +473,6 @@
         }
       }
     },
-    "or login with" : {
-      "localizations" : {
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O inicia sesión con"
-          }
-        }
-      }
-    },
     "Overview" : {
       "localizations" : {
         "es" : {
@@ -440,6 +523,26 @@
         }
       }
     },
+    "Rate this movie" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Califica esta pelicula"
+          }
+        }
+      }
+    },
+    "Rating Value: %.f" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calificación: %.f"
+          }
+        }
+      }
+    },
     "Rating: %@ out of 10" : {
       "localizations" : {
         "es" : {
@@ -456,6 +559,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sin clasificación"
+          }
+        }
+      }
+    },
+    "Recommendations" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recomendaciones"
           }
         }
       }
@@ -500,6 +613,16 @@
         }
       }
     },
+    "Send rate" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar calificación"
+          }
+        }
+      }
+    },
     "Set a password" : {
       "localizations" : {
         "es" : {
@@ -515,7 +638,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Inicia sesión"
+            "value" : "Iniciar sesión"
           }
         }
       }
@@ -526,6 +649,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cerrar sesión"
+          }
+        }
+      }
+    },
+    "Sign out options" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opciones para cerrar sesión"
           }
         }
       }
@@ -580,6 +713,16 @@
         }
       }
     },
+    "Successful" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exitoso"
+          }
+        }
+      }
+    },
     "This app was developed by Rafael Loggiodice, using 100% **SwiftUI** and **Combine**." : {
       "localizations" : {
         "es" : {
@@ -620,12 +763,32 @@
         }
       }
     },
+    "Try again" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intenta de nuevo"
+          }
+        }
+      }
+    },
     "Upcoming" : {
       "localizations" : {
         "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Próximos estrenos"
+          }
+        }
+      }
+    },
+    "User deleted successfully" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usuario eliminado con éxito"
           }
         }
       }
@@ -666,14 +829,25 @@
         }
       }
     },
-    "You will delete all your data from keychain and there is no coming back." : {
-
+    "You rated with %.f" : {
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calificaste con %.f"
+          }
+        }
+      }
     },
     "You will delete all your data, and there is no coming back." : {
-
-    },
-    "You will get your data from keychain." : {
-
+      "localizations" : {
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminaras toda tu información, no hay vuelta atrás."
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

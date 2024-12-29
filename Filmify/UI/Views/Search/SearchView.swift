@@ -29,7 +29,7 @@ struct SearchView: View {
 }
 
 #Preview {
-    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkService.shared))
+    @Previewable @State var movieUsesCasesImpl = MovieUsesCasesImpl(repository: MovieProductServiceImpl(productService: NetworkServiceImpl.shared))
 
     SearchView(createSearchingMovie: SearchingMovieFactory())
         .environment(MovieViewModel(movieUsesCase: movieUsesCasesImpl))

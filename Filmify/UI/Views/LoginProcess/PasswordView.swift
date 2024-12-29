@@ -29,8 +29,15 @@ struct PasswordView: View {
 }
 
 #Preview {
-    PasswordView(signUpVM: SignUpViewModelImpl())
-        .environment(AuthViewModelImpl())
+    
+    @Previewable @State var authViewModel = AuthViewModelImpl(
+        biometricAuthentication: BiometricAuthenticationImpl(),
+        authManager: AuthManagerImpl(userBuilder: UserBuilderImpl()),
+        keychain: KeychainManagerImpl.shared,
+        createSession: CreateSessionUseCaseImpl(repository: CreateSessionServiceImpl(networkService: NetworkServiceImpl.shared)))
+    
+    PasswordView(signUpVM: SignUpViewModelImpl(authViewModel: authViewModel))
+        .environment(authViewModel)
         .environment(AppStateImpl())
 }
 
@@ -50,8 +57,7 @@ extension PasswordView {
                         guard signUpVM.passwordTextValid else {
                             return
                         }
-                        authViewModel.setPassword(password: signUpVM.passwordText)
-                        authViewModel.setFullName(fullName: "Rafael Lo")
+                        authViewModel.authManager.setPassword(password: signUpVM.passwordText)
                         authViewModel.createUser()
                         appState.popToRoot()
                     }
@@ -81,9 +87,8 @@ extension PasswordView {
         VStack {
             Button {
                 appState.popToRoot()
-                authViewModel.setPassword(password: signUpVM.passwordText)
-                authViewModel.setFullName(fullName: "Rafael Lo")
-                authViewModel.createUser()
+                authViewModel.authManager.setPassword(password: signUpVM.passwordText)
+                signUpVM.createUser()
             } label: {
                 Text("Continue")
                     .bold()

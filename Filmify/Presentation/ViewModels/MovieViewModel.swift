@@ -18,8 +18,11 @@ final class MovieViewModel {
     var trendingMoviesByDay: [MovieResultResponse] = []
     var trendingMoviesByWeek: [MovieResultResponse] = []
     var detailMovie: MovieDetails?
+    var recommendations: [MovieResultResponse] = []
     
     var selectedMovie: MovieResultResponse?
+    var recommendationSelected: MovieResultResponse?
+
     @ObservationIgnored var cancellable = Set<AnyCancellable>()
     var searchText = CurrentValueSubject<String, Never>("")
     var filteredMovies: [MovieResultResponse] = []
@@ -168,6 +171,31 @@ final class MovieViewModel {
                 self?.detailMovie = detailMovieResponse
             }
             .store(in: &cancellable)
+    }
+    
+    func getRecommendations(id: String) {
+        isLoadingDetailView = true
+        movieUsesCase.executeRecommendations(id: id)
+            .receive(on: DispatchQueue.main)
+            .map(\.results)
+            .sink { [weak self] completion in
+                
+                defer {
+                    self?.isLoadingDetailView = false
+                }
+                
+                switch completion {
+                    
+                case .finished:
+                    break
+                case .failure(let error):
+                    print(error)
+                    self?.alertMessage = error.localizedDescription
+                    self?.showingAlert = true
+                }
+            } receiveValue: { [weak self] response in
+                self?.recommendations = response
+            }.store(in: &cancellable)
     }
     
     func getSearch(query: String) {

@@ -6,26 +6,34 @@
 //
 
 import Foundation
+import Combine
 
 protocol SignUpViewModel {
     var emailText: String { get set }
     var passwordText: String { get set }
+    var fullNameText: String { get set }
         
     var emailTextValid: Bool { get set }
+    var fullNameTextValid: Bool { get set }
     var passwordTextValid: Bool { get set }
     
     var passwordSuggestion: String { get set }
     
     func verifyUserEmail(email: String)
+    func validateFullName(name: String)
     func validatePassword(password: String)
+    func createUser()
 }
 
 @Observable
 final class SignUpViewModelImpl: SignUpViewModel {
+    
     var goToPasswordView: Bool = false
+    var fullNameText: String = ""
     var emailText: String = ""
     var passwordText: String = ""
     var emailTextValid: Bool = false
+    var fullNameTextValid: Bool = false
     var passwordTextValid: Bool = false
     var passwordSuggestion: String = """
             The password must meet the following requirements:
@@ -36,6 +44,17 @@ final class SignUpViewModelImpl: SignUpViewModel {
             - At least one number
             - At least one special character (!@#$%^&*(),.?":{}|<>)
             """
+    
+    let authViewModel: AuthViewModel
+    var cancellable = Set<AnyCancellable>()
+    
+    init(authViewModel: AuthViewModel) {
+        self.authViewModel = authViewModel
+    }
+    
+    func createUser() {
+        authViewModel.createUser()
+    }
     
     func verifyUserEmail(email: String) {
         
@@ -110,5 +129,14 @@ final class SignUpViewModelImpl: SignUpViewModel {
         }
         
         passwordTextValid = true
+    }
+    
+    func validateFullName(name: String) {
+        guard !name.isEmpty else {
+            fullNameTextValid = false
+            return
+        }
+        
+        fullNameTextValid = true
     }
 }

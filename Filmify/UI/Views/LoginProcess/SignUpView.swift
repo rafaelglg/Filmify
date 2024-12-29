@@ -42,8 +42,15 @@ struct SignUpView: View {
 }
 
 #Preview {
-    SignUpView(signUpVM: SignUpViewModelImpl(), createSignUpView: SignUpFactory())
-        .environment(AuthViewModelImpl())
+    
+    @Previewable @State var authViewModel = AuthViewModelImpl(
+        biometricAuthentication: BiometricAuthenticationImpl(),
+        authManager: AuthManagerImpl(userBuilder: UserBuilderImpl()),
+        keychain: KeychainManagerImpl.shared,
+        createSession: CreateSessionUseCaseImpl(repository: CreateSessionServiceImpl(networkService: NetworkServiceImpl.shared)))
+    
+    SignUpView(signUpVM: SignUpViewModelImpl(authViewModel: authViewModel), createSignUpView: SignUpFactory())
+        .environment(authViewModel)
         .environment(AppStateImpl())
 }
 
@@ -65,14 +72,15 @@ extension SignUpView {
             yourEmailText
             
             CustomTextfield(placeholder: "jane@appleseed.com", text: $signUpVM.emailText)
+                .textContentType(.emailAddress)
                 .focused($focusState, equals: .email)
                 .submitLabel(.continue)
                 .onSubmit {
                     guard signUpVM.emailTextValid else {
                         return
                     }
-                    authViewModel.setEmail(withEmail: signUpVM.emailText)
-                    appState.pushTo(.password)
+                    authViewModel.authManager.setEmail(withEmail: signUpVM.emailText)
+                    appState.pushTo(.fullName)
                 }
             
             Spacer()
@@ -89,8 +97,8 @@ extension SignUpView {
     var continueButton: some View {
         VStack {
             Button {
-                authViewModel.setEmail(withEmail: signUpVM.emailText)
-                appState.pushTo(.password)
+                authViewModel.authManager.setEmail(withEmail: signUpVM.emailText)
+                appState.pushTo(.fullName)
             } label: {
                 Text("Continue")
                     .bold()
@@ -100,6 +108,8 @@ extension SignUpView {
             .navigationDestination(for: SignUpState.self) { state in
                 if state == .password {
                     createSignUpView.createPasswordView()
+                } else if state == .fullName {
+                    createSignUpView.createFullNameView()
                 }
             }
             
