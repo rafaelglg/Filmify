@@ -8,7 +8,7 @@
 import Foundation
 import Testing
 import Combine
-@testable import RafaDBPlayer
+@testable import Filmify
 
 extension Tag {
     @Tag static var resultOK: Self
@@ -18,10 +18,10 @@ extension Tag {
 @Suite("Network service")
 struct NetworkServiceTest {
     
-    let sut: NetworkServiceProtocol
+    let sut: NetworkService
     var networkMock = NetworkServiceMock()
     
-    init(sut: NetworkServiceProtocol = NetworkServiceMock()) {
+    init(sut: NetworkService = NetworkServiceMock()) {
         self.sut = networkMock
     }
     
@@ -248,13 +248,15 @@ struct NetworkServiceTest {
     
 }
 
-final class NetworkServiceMock: NetworkServiceProtocol {
+final class NetworkServiceMock: NetworkService {
     
     var movieModelMock = MovieModel(page: 1, results: [.preview])
     var movieReviewMock = MovieReviewModel(page: 1, results: [.preview])
     var castMock = CastModel(
         id: 1, cast: CastResponseModel.preview, crew: CrewResponseModel.preview)
     var movieDetailMock = MovieDetails.preview
+    var guestModelMock = GuestModel(success: true, guestSessionId: "", expiresAt: "")
+    var ratingResponseMock = RatingResponseModel(success: true, statusCode: 1, statusMessage: "good")
     var basePathMock: String = ""
     var idMock: MovieEndingPath = .none
     var shouldReturnError: Bool = false
@@ -267,6 +269,36 @@ final class NetworkServiceMock: NetworkServiceProtocol {
             return Fail(error: errorToReturn).eraseToAnyPublisher()
         } else {
             return Just(movieModelMock)
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+    }
+    
+    func fetchMovieRecommendation(id path: MovieEndingPath, endingPath: MovieEndingPath) -> AnyPublisher<MovieModel, Error> {
+        if shouldReturnError {
+            return Fail(error: errorToReturn).eraseToAnyPublisher()
+        } else {
+            return Just(movieModelMock)
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+    }
+    
+    func fetchGuestResponse() -> AnyPublisher<GuestModel, Error> {
+        if shouldReturnError {
+            return Fail(error: errorToReturn).eraseToAnyPublisher()
+        } else {
+            return Just(guestModelMock)
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+    }
+    
+    func postRatingToMovie(movieId: MovieEndingPath, ratingValue: Float) -> AnyPublisher<RatingResponseModel, Error> {
+        if shouldReturnError {
+            return Fail(error: errorToReturn).eraseToAnyPublisher()
+        } else {
+            return Just(ratingResponseMock)
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         }

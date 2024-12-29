@@ -8,7 +8,7 @@
 import Testing
 import Foundation
 import Combine
-@testable import RafaDBPlayer
+@testable import Filmify
 
 @Suite("Review product service")
 struct ReviewProductServiceTest {
@@ -71,12 +71,23 @@ final class ReviewProductServiceMock: ReviewProductService {
     
     var shouldReturnError: Bool = false
     let movieReviewMock = MovieReviewModel(page: 1, results: [.preview])
+    var ratingModelMock = RatingResponseModel(success: true, statusCode: 1, statusMessage: "")
     
     func fetchMovieReviews(from path: MovieEndingPath) -> AnyPublisher<MovieReviewModel, Error> {
         if shouldReturnError {
             return Fail(error: ErrorManager.badURL).eraseToAnyPublisher()
         } else {
             return Just(movieReviewMock)
+                .setFailureType(to: Error.self)
+                .eraseToAnyPublisher()
+        }
+    }
+    
+    func postRatingToMovie(movieId: MovieEndingPath, ratingValue: Float) -> AnyPublisher<RatingResponseModel, Error> {
+        if shouldReturnError {
+            return Fail(error: ErrorManager.badURL).eraseToAnyPublisher()
+        } else {
+            return Just(ratingModelMock)
                 .setFailureType(to: Error.self)
                 .eraseToAnyPublisher()
         }

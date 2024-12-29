@@ -6,7 +6,7 @@
 //
 
 import Testing
-@testable import RafaDBPlayer
+@testable import Filmify
 
 @Suite("Error Manager")
 struct ErrorManagerTest {
